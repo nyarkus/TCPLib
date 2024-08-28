@@ -1,0 +1,20 @@
+version: 2
+updates:
+  - package-ecosystem: "nuget"
+    directory: "/"
+    target-branch: "dev"
+    schedule:
+      interval: "daily"
+    groups:
+      tests:
+        applies-to: version-updates
+        patterns:
+          - 'xunit.runner.visualstudio*'
+          - 'coverlet.collector*'
+          - 'Microsoft.NET.Test.Sdk*'
+          - 'xunit*'
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    target-branch: "dev"
+    schedule:
+      interval: "daily"
