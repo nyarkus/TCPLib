@@ -1,6 +1,8 @@
-﻿namespace TCPLib.Client.Net;
-public interface IProtobufSerializable<T>
+﻿namespace TCPLib.Client.Net
 {
-    public byte[] ToByteArray();
-    public abstract static T FromBytes(byte[] bytes);
+    public interface IProtobufSerializable<T>
+    {
+        byte[] ToByteArray();
+        T FromBytes(byte[] bytes);
+    }
 }
