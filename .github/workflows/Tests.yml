@@ -1,0 +1,36 @@
+name: Tests
+
+on:
+  push:
+     branches: [ dev, master ]
+     paths:
+      - '**.cs'
+      - '**.csproj'
+      - '**.proto'
+      - 'build-proto.fsx'
+      - '.github/workflows/Tests.yml'
+  pull_request:
+    branches: [ dev ]
+    paths:
+      - '**.cs'
+      - '**.csproj'
+      - '**.proto'
+      - 'build-proto.fsx'
+      - '.github/workflows/Tests.yml'
+
+
+jobs:
+  build-and-test:
+
+    name: tests
+    runs-on: fedora-40-server
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build
+      run: |
+        dotnet fsi build.fsx
+    - name: Test
+      run: |
+        cd Tests
+        dotnet test Tests.csproj

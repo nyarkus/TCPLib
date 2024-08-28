@@ -92,7 +92,7 @@ let formatTimeSpan (ts: System.TimeSpan) =
     result
 
 let startCompilation = System.DateTime.UtcNow
-printHeader "State: Compilation .proto and .fbs files"
+printHeader "State: Compilation .proto files"
 let csprojfiles =
     getFilesRecursively(Directory.GetCurrentDirectory())
     |> List.filter (fun x -> x.EndsWith(".csproj"))
