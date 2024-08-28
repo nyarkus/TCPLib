@@ -5,6 +5,7 @@ using System.Security.Cryptography;
 using System.Linq;
 using System.IO;
 using System;
+using System.Security.Cryptography.X509Certificates;
 
 namespace TCPLib.Server.Net
 {
@@ -206,8 +207,7 @@ namespace TCPLib.Server.Net
                             var privateKey = ExportPrivateRSAKey(enc.RSA);
                             var publicKey = ExportPublicRSAKey(enc.RSA);
 
-                            enc.priv = privateKey;
-                            enc.pub = publicKey;
+                            
 
                             writer.Write(privateKey.Length);
                             writer.Write(privateKey);
@@ -226,6 +226,9 @@ namespace TCPLib.Server.Net
                         var privateKey = reader.ReadBytes(reader.ReadInt32());
 
                         ImportRSAPrivateKey(enc.RSA, privateKey);
+
+                        enc.priv = privateKey;
+                        enc.pub = ExportPublicRSAKey(enc.RSA);
                     }
                 }
                 ServerEncryptor = enc;

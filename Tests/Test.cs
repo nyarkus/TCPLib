@@ -10,8 +10,6 @@ public class ServerTest
 
     public async Task StartAndConnectionTest()
     {
-        if (File.Exists("Certificate.key"))
-            File.Delete("Certificate.key");
 
         TCPLib.Client.Client client = new(new("testgame", "1.0"));
         TCPLib.Server.Server server = new(new("testgame", "1.0"));
@@ -28,8 +26,6 @@ public class ServerTest
     [Fact]
     public void GetInfoTest()
     {
-        if (File.Exists("Certificate.key"))
-            File.Delete("Certificate.key");
 
         TCPLib.Server.Server server = new(new("testgame", "1.0"));
         TCPLib.Server.Server.TestingMode = true;
