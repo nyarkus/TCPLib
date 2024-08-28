@@ -1,13 +1,15 @@
-namespace TCPLib.Server.Net;
-public enum ResponseCode
+namespace TCPLib.Server.Net
 {
-    Ok,
-    BadResponse,
-    ServerIsFull,
-    DifferentVersions,
-    Timeout,
-    ServerError,
-    ServerShutdown,
-    Blocked,
-    Kicked
+    public enum ResponseCode
+    {
+        Ok,
+        BadResponse,
+        ServerIsFull,
+        DifferentVersions,
+        Timeout,
+        ServerError,
+        ServerShutdown,
+        Blocked,
+        Kicked
+    }
 }

@@ -1,5 +1,7 @@
-﻿namespace TCPLib.Server;
-public class ServerIsNotRunning : Exception
+﻿namespace TCPLib.Server
 {
-    public ServerIsNotRunning() : base("The server is not running") { }
+    public class ServerIsNotRunning : Exception
+    {
+        public ServerIsNotRunning() : base("The server is not running") { }
+    }
 }

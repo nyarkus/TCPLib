@@ -2,26 +2,29 @@
 
 using Google.Protobuf;
 
-namespace TCPLib.Server.Net;
-public class KickMessage : IProtobufSerializable<KickMessage>
+namespace TCPLib.Server.Net
 {
-    public string reason;
-    public ResponseCode code;
-    public KickMessage(ResponseCode code, string reason = "")
+    public class KickMessage : IProtobufSerializable<KickMessage>
     {
-        this.reason = reason;
-        this.code = code;
-    }
+        public string reason;
+        public ResponseCode code;
+        public KickMessage(ResponseCode code, string reason = "")
+        {
+            this.reason = reason;
+            this.code = code;
+        }
 
-    public static KickMessage FromBytes(byte[] bytes)
-    {
-        var km = TCPLib.Protobuf.KickMessage.Parser.ParseFrom(bytes);
+        public KickMessage FromBytes(byte[] bytes)
+        {
+            var km = TCPLib.Protobuf.KickMessage.Parser.ParseFrom(bytes);
 
-        return new KickMessage((ResponseCode)km.Code, km.Reason);
-    }
+            return new KickMessage((ResponseCode)km.Code, km.Reason);
+        }
 
-    public byte[] ToByteArray()
-    {
-        return new TCPLib.Protobuf.KickMessage() { Code = (TCPLib.Protobuf.Code)code, Reason = reason }.ToByteArray();
+        public byte[] ToByteArray()
+        {
+            return new TCPLib.Protobuf.KickMessage() { Code = (TCPLib.Protobuf.Code)code, Reason = reason }.ToByteArray();
+        }
+        public KickMessage() { }
     }
 }

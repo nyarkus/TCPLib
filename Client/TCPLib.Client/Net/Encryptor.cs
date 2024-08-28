@@ -45,11 +45,11 @@ public class Encryptor
     }
     public byte[] AESEncrypt(byte[] input)
     {
-        return EncryptStringToBytes_Aes(input, AesKey, AesIV);
+        return EncryptAes(input, AesKey, AesIV);
     }
     public byte[] AESDecrypt(byte[] s)
     {
-        return DecryptStringFromBytes_Aes(s, AesKey, AesIV);
+        return DecryptAes(s, AesKey, AesIV);
     }
     public static Encryptor GenerateNew()
     {
@@ -63,7 +63,7 @@ public class Encryptor
     {
         return RSA.Decrypt(s, false);
     }
-    byte[] EncryptStringToBytes_Aes(byte[] data, byte[] key, byte[] iv)
+    byte[] EncryptAes(byte[] data, byte[] key, byte[] iv)
     {
         aes.Key = key;
         aes.IV = iv;
@@ -71,7 +71,7 @@ public class Encryptor
         return aes.EncryptCbc(data, iv, PaddingMode.PKCS7);
     }
 
-    byte[] DecryptStringFromBytes_Aes(byte[] encryptedData, byte[] key, byte[] iv)
+    byte[] DecryptAes(byte[] encryptedData, byte[] key, byte[] iv)
     {
         aes.Key = key;
         aes.IV = iv;

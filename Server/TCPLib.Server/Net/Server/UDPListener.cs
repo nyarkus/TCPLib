@@ -1,75 +1,79 @@
-﻿using System.Net.Sockets;
+﻿using System;
+using System.Net.Sockets;
+using System.Threading;
+using System.Threading.Tasks;
 
-namespace TCPLib.Server.Net;
-
-public class UDPListener : IDisposable
+namespace TCPLib.Server.Net
 {
-    public UdpClient Listener;
-    public int Port;
-    private CancellationTokenSource StopToken;
-    public bool Started = false;
-
-    public UDPListener(int port)
+    public class UDPListener : IDisposable
     {
-        Port = port;
-        StopToken = new();
-    }
+        public UdpClient Listener;
+        public int Port;
+        private CancellationTokenSource StopToken;
+        public bool Started = false;
 
-    public void Dispose()
-    {
-        StopToken.Cancel();
-        Listener.Dispose();
-    }
-
-    private void Start()
-    {
-        Console.Debug("Initialisation of the UDP listening...");
-        try
+        public UDPListener(int port)
         {
-            Listener = new(Port);
+            Port = port;
+            StopToken = new CancellationTokenSource();
         }
-        catch (SocketException ex)
+
+        public void Dispose()
         {
-            if (ex.ErrorCode == 10048)
-            {
-                Console.Error("IP address or port not port cannot be used as it is already in use");
-                throw;
-            }
-            else if (ex.ErrorCode == 10049)
-            {
-                Console.Error("The specified IP address or port does not belong to this computer");
-                throw;
-            }
+            StopToken.Cancel();
+            Listener.Dispose();
         }
-    }
 
-    public async void Initialize()
-    {
-        Start();
-        await Listen();
-    }
-
-    public virtual async Task Listen()
-    {
-
-        byte[] respond = System.Text.Encoding.UTF8.GetBytes(Newtonsoft.Json.JsonConvert.SerializeObject(new ServerInfo()
+        private void Start()
         {
-            Description = Server.settings.description,
-            Name = Server.settings.title,
-            MaxPlayers = Server.settings.maxPlayers,
-            Players = Client.clients.Count
-        }));
-        while (true)
-        {
+            Console.Debug("Initialisation of the UDP listening...");
             try
             {
-                if (StopToken.IsCancellationRequested) return;
-
-                var result = await Listener.ReceiveAsync(StopToken.Token);
-
-                await Listener.SendAsync(respond, result.RemoteEndPoint);
+                Listener = new UdpClient(Port);
             }
-            catch { }
+            catch (SocketException ex)
+            {
+                if (ex.ErrorCode == 10048)
+                {
+                    Console.Error("IP address or port not port cannot be used as it is already in use");
+                    throw;
+                }
+                else if (ex.ErrorCode == 10049)
+                {
+                    Console.Error("The specified IP address or port does not belong to this computer");
+                    throw;
+                }
+            }
+        }
+
+        public async void Initialize()
+        {
+            Start();
+            await Listen();
+        }
+
+        public virtual async Task Listen()
+        {
+
+            byte[] respond = System.Text.Encoding.UTF8.GetBytes(Newtonsoft.Json.JsonConvert.SerializeObject(new ServerInfo()
+            {
+                Description = Server.settings.description,
+                Name = Server.settings.title,
+                MaxPlayers = Server.settings.maxPlayers,
+                Players = Client.clients.Count
+            }));
+            while (true)
+            {
+                try
+                {
+                    if (StopToken.IsCancellationRequested) return;
+
+                    var result = await Listener.ReceiveAsync();
+
+                    await Listener.SendAsync(respond, respond.Length, result.RemoteEndPoint);
+                }
+                catch { }
+            }
         }
     }
 }
