@@ -1,4 +1,8 @@
-﻿namespace TCPLib.Server.Commands
+﻿using System.Threading.Tasks;
+using System.Linq;
+using System.Collections.Generic;
+
+namespace TCPLib.Server.Commands
 {
     internal class Pardon : ICommand
     {

@@ -1,3 +1,6 @@
+using System.Threading.Tasks;
+using System;
+
 namespace TCPLib.Server.Net
 {
     public partial class NetClient

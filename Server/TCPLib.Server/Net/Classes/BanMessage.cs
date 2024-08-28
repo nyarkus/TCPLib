@@ -1,3 +1,5 @@
+using System;
+
 namespace TCPLib.Server.Net
 {
     public class BanMessage

@@ -1,4 +1,6 @@
-﻿namespace TCPLib.Server.Commands
+﻿using System;
+
+namespace TCPLib.Server.Commands
 {
     public class CommandAlreadyExists : Exception
     {

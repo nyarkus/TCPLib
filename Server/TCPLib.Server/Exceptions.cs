@@ -1,4 +1,6 @@
-﻿namespace TCPLib.Server
+﻿using System;
+
+namespace TCPLib.Server
 {
     public class ServerIsNotRunning : Exception
     {

@@ -1,4 +1,6 @@
-﻿namespace TCPLib.Server.Commands
+﻿using System.Threading.Tasks;
+
+namespace TCPLib.Server.Commands
 {
     internal class Help : ICommand
     {
