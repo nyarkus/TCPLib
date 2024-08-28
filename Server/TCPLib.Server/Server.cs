@@ -1,24 +1,16 @@
-﻿// Copyright (C) Kacianoki - All Rights Reserved 
-//  
-//  This source code is protected under international copyright law.  All rights 
-//  reserved and protected by the copyright holders. 
-//  This file is confidential and only available to authorized individuals with the 
-//  permission of the copyright holders.  If you encounter this file and do not have 
-//  permission, please contact the copyright holders and delete this file.
-
-namespace TCPLib.Server;
+﻿namespace TCPLib.Server;
 
 using TCPLib.Server.Net;
 using TCPLib.Server.SaveFiles;
 
 public class Server
 {
-    private ServerListener _Server;
-    private UDPListener _UDP;
+    private ServerListener? _Server;
+    private UDPListener? _UDP;
     public ushort Port;
 
     public static GameInfo? gameInfo;
-    public static Settings settings;
+    public static Settings settings = Settings.Load();
 
     public delegate Task ServerD();
     public event ServerD? Started;
@@ -37,8 +29,6 @@ public class Server
     public void Start()
     {
         var StartTime = DateTime.UtcNow;
-
-        settings = Settings.Load();
 
         _Server = new ServerListener(settings.port);
         _UDP = new UDPListener(settings.port);
@@ -75,8 +65,8 @@ public class Server
         {
             await Client.clients[0].Kick(new KickMessage(ResponseCode.ServerShutdown));
         }
-        _Server.Dispose();
-        _UDP.Dispose();
+        _Server!.Dispose();
+        _UDP!.Dispose();
         Console.Info("Bye!!!");
         Stopped?.Invoke();
     }

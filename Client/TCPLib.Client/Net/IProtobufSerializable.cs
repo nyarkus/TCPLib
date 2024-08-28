@@ -1,4 +1,4 @@
-﻿namespace TCPLib.Server.Net;
+﻿namespace TCPLib.Client.Net;
 public interface IProtobufSerializable<T>
 {
     public byte[] ToByteArray();

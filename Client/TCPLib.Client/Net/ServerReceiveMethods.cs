@@ -1,6 +1,30 @@
-namespace TCPLib.Server.Net;
-public partial class NetClient
+namespace TCPLib.Client.Net;
+public partial class Server
 {
+    public async Task<Package<T>?> ReceiveWithoutCryptographyWithProcessing<T>(CancellationToken token = default) where T : IProtobufSerializable<T>
+    {
+        while (true)
+        {
+            var result = await ReceiveSourceWithoutCryptographyAsync();
+            if (result!.Type == "KickMessage")
+            {
+                var kick = KickMessage.FromBytes(result.Data);
+                switch (kick!.code)
+                {
+                    case ResponseCode.Kicked:
+                        Kicked?.Invoke(kick);
+                        continue;
+                    case ResponseCode.Blocked:
+                        Banned?.Invoke(kick);
+                        continue;
+                    case ResponseCode.ServerShutdown:
+                        ServerShutdown?.Invoke(kick);
+                        continue;
+                }
+            }
+            return new Package<T>(result.Type, result.Data);
+        }
+    }
     public async Task<Package<T>?> ReceiveWithoutCryptographyAsync<T>(CancellationToken token = default) where T : IProtobufSerializable<T>
     {
         while (true)
@@ -18,6 +42,23 @@ public partial class NetClient
             }
         }
     }
+    public async Task<TCPLib.Client.Net.Classes.PackageSource?> ReceiveSourceWithoutCryptographyAsync(CancellationToken token = default)
+    {
+        while (true)
+        {
+            while (stream.DataAvailable)
+            {
+                if (token.IsCancellationRequested)
+                    return default;
+                var length = BitConverter.ToInt32(await Read(4, stream));
+                var bytes = await Read(length, stream);
+
+                var package = Protobuf.Package.Parser.ParseFrom(bytes);
+
+                return new(package.Type, package.Data.ToArray());
+            }
+        }
+    }
 
     public async Task<Package<T>?> ReceiveAsync<T>(CancellationToken token = default) where T : IProtobufSerializable<T>
     {
@@ -31,9 +72,9 @@ public partial class NetClient
 
                 var bytes = await Read(length, stream);
                 if (EncryptType == EncryptType.AES)
-                    bytes = Encryptor.AESDecrypt(bytes);
+                    bytes = encryptor.AESDecrypt(bytes);
                 else
-                    bytes = Encryptor.RSADecrypt(bytes);
+                    bytes = encryptor.RSADecrypt(bytes);
 
                 var package = Protobuf.Package.Parser.ParseFrom(bytes);
 
@@ -53,9 +94,9 @@ public partial class NetClient
 
                 var bytes = await Read(length, stream);
                 if (EncryptType == EncryptType.AES)
-                    bytes = Encryptor.AESDecrypt(bytes);
+                    bytes = encryptor.AESDecrypt(bytes);
                 else
-                    bytes = Encryptor.RSADecrypt(bytes);
+                    bytes = encryptor.RSADecrypt(bytes);
 
                 var package = Protobuf.Package.Parser.ParseFrom(bytes);
 
@@ -77,7 +118,7 @@ public partial class NetClient
             return Task.FromResult<Package<T>?>(null);
         }
     }
-    public Task<Classes.PackageSource?> ReceiveSourceAsync(TimeSpan timeout, CancellationToken token = default)
+    public Task<Classes.PackageSource?>? ReceiveSourceAsync(TimeSpan timeout, CancellationToken token = default)
     {
         var cancel = new CancellationTokenSource();
         token.Register(cancel.Cancel);
@@ -88,7 +129,45 @@ public partial class NetClient
         else
         {
             cancel.Cancel();
-            return Task.FromResult<Classes.PackageSource?>(null);
+            return null;
+        }
+    }
+    public async Task<Package<T>?> ReceiveWithProcessing<T>(CancellationToken token = default) where T : IProtobufSerializable<T>
+    {
+        while (true)
+        {
+            var result = await ReceiveSourceAsync();
+            if (result!.Type == "KickMessage")
+            {
+                var kick = KickMessage.FromBytes(result.Data);
+                switch (kick!.code)
+                {
+                    case ResponseCode.Kicked:
+                        Kicked?.Invoke(kick);
+                        continue;
+                    case ResponseCode.Blocked:
+                        Banned?.Invoke(kick);
+                        continue;
+                    case ResponseCode.ServerShutdown:
+                        ServerShutdown?.Invoke(kick);
+                        continue;
+                }
+            }
+            return new Package<T>(result.Type, result.Data);
+        }
+    }
+    public Task<Package<T>?> ReceiveWithProcessing<T>(TimeSpan timeout, CancellationToken token = default) where T : IProtobufSerializable<T>
+    {
+        var cancel = new CancellationTokenSource();
+        token.Register(cancel.Cancel);
+        var task = Task.Run(() => ReceiveWithProcessing<T>(cancel.Token));
+
+        if (task.Wait(timeout))
+            return task;
+        else
+        {
+            cancel.Cancel();
+            return Task.FromResult<Package<T>?>(null);
         }
     }
     public Task<Package<T>?> ReceiveWithoutCryptographyAsync<T>(TimeSpan timeout, CancellationToken token = default) where T : IProtobufSerializable<T>

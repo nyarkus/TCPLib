@@ -1,9 +1,8 @@
-
 // This file uses Protocol Buffers from Google, which is licensed under BSD-3-Clause.
 
 using Google.Protobuf;
 
-namespace TCPLib.Server.Net;
+namespace TCPLib.Client.Net;
 public class GameInfo : IProtobufSerializable<GameInfo>
 {
     public string Name { get; set; }

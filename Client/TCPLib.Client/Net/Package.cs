@@ -2,7 +2,7 @@
 
 using Google.Protobuf;
 
-namespace TCPLib.Server.Net;
+namespace TCPLib.Client.Net;
 
 public struct Package<T> where T : IProtobufSerializable<T>
 {
