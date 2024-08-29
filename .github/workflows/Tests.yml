@@ -35,7 +35,7 @@ jobs:
              8.0.x
              6.0.x
     - name: Setup MSBuild
-      uses: warrenbuckley/Setup-MSBuild@v2
+      uses: microsoft/setup-msbuild@v2
     - name: Setup NuGet
       uses: NuGet/setup-nuget@v2
 
