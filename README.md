@@ -1,4 +1,4 @@
-﻿<h1 align="center">TCPLib</h2>
+﻿<h1 align="center">TCPLib</h1>
 
 <p align="center">
   <a href="https://github.com/Kacianoki/TCPLib/actions/workflows/Tests.yml">
@@ -10,21 +10,21 @@
   </a>
 </p>
 
-# Что это такое?!
+# What is this?!
 
-**TCPLib** - Это низкоуровневая библиотека для обменна пакетами с удалённым компьютером(🤓). 
-TCPLib работает на TCP протоколе и поддерживает шифрование AES и RSA.
-Для обмена пакетами TCPLib использует [Protocol Buffers](https://github.com/protocolbuffers/protobuf).
+**TCPLib** - It's a low-level library for exchanging packets with a remote computer (🤓). 
+TCPLib works on the TCP protocol and supports AES and RSA encryption.
+For packet exchange, TCPLib uses [Protocol Buffers](https://github.com/protocolbuffers/protobuf).
 
-# А как этой штукой пользоваться? :0
+# How do I use this thing? :0
 
-Поскольку это низкоуровневая библиотека, пользоваться ей довольно не просто : (
+Since this is a low-level library, using it can be quite tricky : (
 
-## Реализация серверной части
+## Implementing the Server Side
 
-Для начала вам нужно реализовать 2 интерфейса: [TCPLib.Server.SaveFiles.IBanListSaver](https://github.com/Kacianoki/TCPLib/blob/master/Server/TCPLib.Server/SaveClasses/BanList.cs#L42) и [TCPLib.Server.SaveFiles.ISettingsSaver](https://github.com/Kacianoki/TCPLib/blob/master/Server/TCPLib.Server/SaveClasses/Settings.cs#L21)
+First, you need to implement two interfaces: [TCPLib.Server.SaveFiles.IBanListSaver](https://github.com/Kacianoki/TCPLib/blob/master/Server/TCPLib.Server/SaveClasses/BanList.cs#L42) and [TCPLib.Server.SaveFiles.ISettingsSaver](https://github.com/Kacianoki/TCPLib/blob/master/Server/TCPLib.Server/SaveClasses/Settings.cs#L21).
 
-Их реализация может выглядеть вот так:
+Your implementation might look like this:
 
 **ISettingsSaver**
 ```csharp
@@ -52,9 +52,7 @@ namespace ExampleServer
         }
     }
 }
-
 ```
-
 **IBanListSaver**
 ```csharp
 using System;
@@ -77,12 +75,10 @@ namespace ExampleServer
         }
     }
 }
-
 ```
+Once you've implemented these two interfaces, you can start the server! But you'll need to code a bit more : (
 
-После того, как вы реализовали эти два интерфейса, вы уже можете запустить сервер! Но для этого нужно будет ещё покодить : (
-
-Для создания сервера вы можете написать вооот это:
+To create the server, you can write this:
 
 ```csharp
 using System;
@@ -97,12 +93,11 @@ namespace ExampleServer
         {
             TCPLib.Server.Server server = new Server(new BanSaver(), new SettingsSaver());
 
-            server.Stopped += OnStopped; // Если написать в консоль стандартную
-            // команду "stop", то сервер не завершит процесс, поэтому мы 
-            // подписываемся на это событие.
+            server.Stopped += OnStopped; // If you type the standard "stop" command in the console,
+            // the server won't terminate the process, so we subscribe to this event.
 
             server.Start();
-            server.ConsoleRead(); // Мы же хотим вводить команды серверу :0
+            server.ConsoleRead(); // We want to send commands to the server :0
         }
 
         static Task OnStopped()
@@ -113,12 +108,10 @@ namespace ExampleServer
         }
     }
 }
-
 ```
+Wow! We managed to start the **SERVER** 🎉
 
-Вот это да! Мы смогли запустить **СЕРВЕР**🎉
-
-Но он никак не работает с клиентом, давай исправим!
+But it doesn't work with the client yet, so let's fix that!
 
 ```csharp
 using System;
@@ -147,7 +140,7 @@ namespace ExampleServer
         {
             while (true)
             {
-                var message = await client.ReceiveSourceAsync(); // Здесь мы получаем исходный массив байтов пакета (фактически это костыль)
+                var message = await client.ReceiveSourceAsync(); // Here we get the raw byte array of the packet (this is basically a hack)
                 TCPLib.Server.Console.Info(UTF8Encoding.UTF8.GetString(message.Data));
             }
         }
@@ -161,13 +154,12 @@ namespace ExampleServer
     }
 }
 ```
-Правильнее было бы использовать здесь обычный `ReceiveAsync()`, но для него нужно будет писать
-Protobuf схему, компилировать её, реализовывать интерфейс TCPLib.Net.IProtobufSerializable а оно
-нам не нужно поэтому сделали костылём 😎.
+It would be more appropriate to use `ReceiveAsync()` here, but for that, you would need to write a Protobuf schema, compile it, and implement the *TCPLib.Net.IProtobufSerializable* interface, which we don't need right now, so we made a hack instead 😎.
 
-## Реализация клиентской части
+## Implementing the Client Side
 
-Теперь нам нужно написать клиента для сервера! Начнём с самого простого:
+Now we need to write a client for the server! Let's start with the simplest part:
+
 ```csharp
 using TCPLib.Client;
 using System.Net;
@@ -181,13 +173,13 @@ namespace ExampleClient
         {
             Client client = new Client();
 
-            var server = await client.Connect(IPAddress.Parse("127.0.0.1"), 2024); // 127.0.0.1 - локальный IP
+            var server = await client.Connect(IPAddress.Parse("127.0.0.1"), 2024); // 127.0.0.1 - local IP
         }
     }
 }
 ```
 
-Чтобы начать отправлять какие-то сообщения серверу, нам нужно создать класс сообщения:
+To start sending messages to the server, we need to create a message class:
 
 ```csharp
 using System.Text;
@@ -209,11 +201,12 @@ namespace ExampleClient
             return Encoding.UTF8.GetBytes(Data);
         }
 
-        public Message() { } // Обязательно нужен конструктор не принимающий параметры
+        public Message() { } // A parameterless constructor is required
     }
 }
 ```
-Когда мы сделали класс сообщения, мы можен отправлять объекты этого класса серверу:
+
+Once we have the message class, we can send objects of this class to the server:
 
 ```csharp
 using TCPLib.Client;
@@ -241,5 +234,5 @@ namespace ExampleClient
     }
 }
 ```
-
-Мы написали сервер и клиент! Ура! 🥳
+We wrote the server and the **CLIENT**! Hooray! 🥳
+You can find code examples [right here](https://github.com/Kacianoki/TCPLib/tree/master/Examples).
