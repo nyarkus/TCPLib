@@ -15,8 +15,7 @@ namespace TCPLib.Server
         private UDPListener _UDP;
         public ushort Port;
 
-        public static GameInfo gameInfo;
-        public static Settings settings = Settings.Load();
+        public static Settings settings;
 
         public delegate Task ServerD();
         public event ServerD Started;
@@ -27,14 +26,16 @@ namespace TCPLib.Server
 #if DEBUG
         public static bool TestingMode = false;
 #endif
-
-        public Server(GameInfo gameInfo)
+        public Server(IBanListSaver banSaver, ISettingsSaver settingsSaver)
         {
-            Server.gameInfo = gameInfo;
+            Ban.saver = banSaver;
+            Settings.saver = settingsSaver;
         }
         public void Start()
         {
             var StartTime = DateTime.UtcNow;
+
+            settings = Settings.Load();
 
             _Server = new ServerListener(settings.port);
             _UDP = new UDPListener(settings.port);
@@ -48,6 +49,9 @@ namespace TCPLib.Server
 
             Starting?.Invoke();
 
+            Console.Info("Encryption key generation ...");
+            Encryptor.GetServerEncryptor();
+
             Thread tcplistenThread = new Thread(_Server.Initialize) { Priority = ThreadPriority.AboveNormal };
             var udpListenThread = new Thread(_UDP.Initialize) { Priority = ThreadPriority.BelowNormal };
             tcplistenThread.Start();
@@ -55,14 +59,13 @@ namespace TCPLib.Server
 
             while (!_Server.Started && !_UDP.Started) ;
 
-            Encryptor.GetServerEncryptor();
-
             Console.Info($"The server successfully started in {(DateTime.UtcNow - StartTime).TotalMilliseconds} ms");
 
-            _ = Task.Run(() => Started?.Invoke());
-
-
-            GC.Collect();
+#if !NET48
+            new Thread(new ParameterizedThreadStart((_) => Started?.Invoke())).Start();
+#else
+            new Thread(new ThreadStart(() => Started?.Invoke())).Start();
+#endif
         }
         public async void Stop()
         {

@@ -3,9 +3,6 @@ using System.IO;
 
 namespace TCPLib.Server.SaveFiles
 {
-    using YamlDotNet.Serialization;
-    using YamlDotNet.Serialization.NamingConventions;
-
     public class Settings
     {
         public string title = "Untitled";
@@ -14,19 +11,16 @@ namespace TCPLib.Server.SaveFiles
         public bool saveLogs = true;
         public int maxPlayers = 16;
         public ushort port = 2024;
+
+        public static ISettingsSaver saver;
         public void Save()
-        {
-            var serializer = new SerializerBuilder().WithNamingConvention(CamelCaseNamingConvention.Instance)
-                .Build();
-            File.WriteAllText("Settings.yml", serializer.Serialize(this));
-        }
+        => saver.Save(this);
         public static Settings Load()
-        {
-            if (!File.Exists("Settings.yml"))
-                new Settings().Save();
-            var deserializer = new DeserializerBuilder().Build();
-            GC.Collect();
-            return deserializer.Deserialize<Settings>(File.ReadAllText("Settings.yml"));
-        }
+        => saver.Load();
+    }
+    public interface ISettingsSaver
+    {
+        void Save(Settings settings);
+        Settings Load();
     }
 }

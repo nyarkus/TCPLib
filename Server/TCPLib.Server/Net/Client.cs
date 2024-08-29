@@ -54,33 +54,6 @@ namespace TCPLib.Server.Net
                 net.Encryptor = net.Encryptor.SetAESKey(NewKeys.Key.ToArray(), NewKeys.IV.ToArray());
                 net.EncryptType = EncryptType.AES;
 
-                Console.Debug("Wait a GameInfo...");
-                var version = await net.ReceiveAsync<GameInfo>(timeout);
-                Console.Debug("Handle a GameInfo...");
-                if (version is null)
-                {
-                    Console.Info($"Connection from {client.Client.RemoteEndPoint} rejected because: {ResponseCode.Timeout}.");
-                    await net.SendAsync(new KickMessage(ResponseCode.Timeout));
-                    client.Close();
-                    FailedConnection?.Invoke(ResponseCode.Timeout, client);
-                    return null;
-                }
-                if (TCPLib.Server.Server.gameInfo?.Name != version?.Value.Name)
-                {
-                    Console.Info($"Connection from {client.Client.RemoteEndPoint} rejected because: {ResponseCode.BadResponse}.");
-                    await net.SendAsync(new KickMessage(ResponseCode.BadResponse));
-                    client.Close();
-                    FailedConnection?.Invoke(ResponseCode.BadResponse, client);
-                    return null;
-                }
-                if (TCPLib.Server.Server.gameInfo?.Version != version?.Value.Version)
-                {
-                    Console.Info($"Connection from {client.Client.RemoteEndPoint} rejected because: {ResponseCode.DifferentVersions}.");
-                    await net.SendAsync(new KickMessage(ResponseCode.DifferentVersions));
-                    client.Close();
-                    FailedConnection?.Invoke(ResponseCode.DifferentVersions, client);
-                    return null;
-                }
                 clients.Add(net);
                 await net.SendAsync(new RespondCode(ResponseCode.Ok));
                 Console.Info($"Successful connection from {client.Client.RemoteEndPoint}");

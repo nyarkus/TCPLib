@@ -20,50 +20,9 @@ namespace TCPLib.Server.Net.Encrypt
         {
             if (ServerEncryptor != null)
                 return ServerEncryptor;
-            try
-            {
-                var enc = new Encryptor();
-                if (!File.Exists(FilePath))
-                {
-                    Console.Warning("Certificate not found! Generation of a new...");
-                    using (var fs = new FileStream(FilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite))
-                    {
-                        using (BinaryWriter writer = new BinaryWriter(fs))
-                        {
-                            var privateKey = enc.RSA.SerializePrivateKey();
-                            var publicKey = enc.RSA.SerializePublicKey();
 
-
-
-                            writer.Write(privateKey.Length);
-                            writer.Write(privateKey);
-                        }
-                    }
-
-                    Console.Warning($"New certificate has been generated. DO NOT SEND FILE \"{FilePath}\" to ANYONE!!! ");
-                    ServerEncryptor = enc;
-                    return enc;
-                }
-                using (var fs = new FileStream(FilePath, FileMode.Open, FileAccess.Read))
-                {
-                    using (BinaryReader reader = new BinaryReader(fs))
-                    {
-
-                        var privateKey = reader.ReadBytes(reader.ReadInt32());
-
-                        enc.RSA.ImportPrivateKey(privateKey);
-                    }
-                }
-                ServerEncryptor = enc;
-                GC.Collect();
-                return enc;
-            }
-            catch (NullReferenceException)
-            {
-                if (File.Exists(FilePath)) File.Delete(FilePath);
-                return GetServerEncryptor();
-            }
-
+            ServerEncryptor = new Encryptor();
+            return ServerEncryptor;
         }
         public Encryptor SetRSAKey(byte[] privatekey)
         {

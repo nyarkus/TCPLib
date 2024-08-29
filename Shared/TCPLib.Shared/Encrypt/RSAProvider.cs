@@ -27,7 +27,7 @@ namespace TCPLib.Encrypt
             return forDecrypt.ProcessBlock(input, 0, input.Length);
         }
 
-        public RSAProvider(int strength = 4096)
+        public RSAProvider(int strength = 2048)
         {
             var keyPairGenerator = new RsaKeyPairGenerator();
             var keyGenerationParameters = new KeyGenerationParameters(new SecureRandom(), strength);

@@ -1,8 +1,0 @@
-﻿syntax = "proto3";
-
-option csharp_namespace = "TCPLib.Protobuf";
-
-message GameInfo {
-	string Name = 1;
-	string Version = 2;
-}
