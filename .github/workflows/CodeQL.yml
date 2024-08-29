@@ -22,8 +22,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-        - language: csharp, fsharp
-          build-mode: manual  # Изменено на manual
+        - language: csharp
+          build-mode: manual 
 
     steps:
     - name: Checkout repository
