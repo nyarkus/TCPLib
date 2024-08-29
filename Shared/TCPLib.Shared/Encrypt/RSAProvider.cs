@@ -22,12 +22,12 @@ namespace TCPLib.Encrypt
         }
         public byte[] Decrypt(byte[] input)
         {
-            if (input.Length > forDecrypt.GetOutputBlockSize())
-                throw new ArgumentException($"This byte array cannot be decrypted because its length is greater than the maximum ({forEncrypt.GetOutputBlockSize()}).");
+            if (input.Length > forDecrypt.GetInputBlockSize())
+                throw new ArgumentException($"This byte array cannot be decrypted because its length is greater than the maximum ({forDecrypt.GetInputBlockSize()}).");
             return forDecrypt.ProcessBlock(input, 0, input.Length);
         }
 
-        public RSAProvider(int strength = 2048)
+        public RSAProvider(int strength = 4096)
         {
             var keyPairGenerator = new RsaKeyPairGenerator();
             var keyGenerationParameters = new KeyGenerationParameters(new SecureRandom(), strength);

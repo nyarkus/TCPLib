@@ -1,4 +1,4 @@
-﻿using TCPLib.Client.Net;
+﻿using TCPLib.Classes;
 using System;
 
 namespace TCPLib.Client.Exceptions

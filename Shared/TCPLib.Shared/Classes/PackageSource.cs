@@ -1,4 +1,4 @@
-﻿namespace TCPLib.Server.Net.Classes
+﻿namespace TCPLib.Classes
 {
     public class PackageSource
     {

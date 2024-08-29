@@ -1,6 +1,8 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
+using TCPLib.Classes;
+
 namespace TCPLib.Client.Net
 {
     public partial class Server

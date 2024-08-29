@@ -1,14 +1,12 @@
-// This file uses Protocol Buffers from Google, which is licensed under BSD-3-Clause.
-
-using Google.Protobuf;
 using System.Net.Sockets;
-using TCPLib.Server.net;
 using System;
 using System.Threading.Tasks;
 using System.Threading;
-using System.Collections.Generic;
 using System.Linq;
 using TCPLib.Server.Net.Encrypt;
+using TCPLib.Classes;
+using System.Security.Cryptography;
+using System.ComponentModel;
 
 namespace TCPLib.Server.Net
 {
@@ -115,18 +113,5 @@ namespace TCPLib.Server.Net
 
         }
     }
-    public struct Key : IProtobufSerializable<Key>
-    {
-        public byte[] Value;
-
-        public Key FromBytes(byte[] bytes)
-        {
-            var rk = Protobuf.RSAKey.Parser.ParseFrom(bytes);
-
-            return new Key() { Value = rk.Key.ToArray() };
-        }
-
-        public byte[] ToByteArray()
-        => new Protobuf.RSAKey() { Key = ByteString.CopyFrom(Value) }.ToByteArray();
-    }
+    
 }

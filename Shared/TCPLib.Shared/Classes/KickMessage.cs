@@ -1,8 +1,9 @@
-// This file uses Protocol Buffers from Google, which is licensed under BSD-3-Clause.
+﻿// This file uses Protocol Buffers from Google, which is licensed under BSD-3-Clause.
 
 using Google.Protobuf;
+using TCPLib.Net;
 
-namespace TCPLib.Server.Net
+namespace TCPLib.Classes
 {
     public class KickMessage : IProtobufSerializable<KickMessage>
     {

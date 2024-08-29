@@ -1,11 +1,8 @@
-﻿// This file uses Protocol Buffers from Google, which is licensed under BSD-3-Clause.
-
-using Google.Protobuf;
-using System.Net;
+﻿using System.Net;
 using System.Net.Sockets;
 using TCPLib.Client.Net;
 using System.Threading.Tasks;
-using System.Linq;
+using TCPLib.Classes;
 
 namespace TCPLib.Client
 {
@@ -31,14 +28,14 @@ namespace TCPLib.Client
             Server server = new Server(address, port, tcpClient, tcpClient.GetStream());
 
             var key = await server.ReceiveWithoutCryptographyWithProcessing<Key>();
-            var encryptor = Encryptor.GenerateNew();
 
-            server.encryptor = Encryptor.GetEncryptor().SetRSAKey(encryptor.GetRSAPrivateKey());
+            server.encryptor = new Encryptor();
+            server.encryptor.SetPublicRSAKey(key.Value.Value.Value);
 
-            var aeskey = encryptor.GetAESKey();
-            await server.SendAsync(aeskey);
+            var aesKey = server.encryptor.GetAESKey();
+            await server.SendAsync(aesKey);
 
-            server.encryptor.SetAESKey(aeskey.Key, aeskey.IV);
+            server.encryptor.SetAESKey(aesKey.Key, aesKey.IV);
             server.EncryptType = EncryptType.AES;
 
             await server.SendAsync(gameInfo);
@@ -48,19 +45,5 @@ namespace TCPLib.Client
             ConnectedServer = server;
             return server;
         }
-    }
-    public struct Key : IProtobufSerializable<Key>
-    {
-        public byte[] Value { get; set; }
-
-        public Key FromBytes(byte[] bytes)
-        {
-            var rk = Protobuf.RSAKey.Parser.ParseFrom(bytes);
-
-            return new Key() { Value = rk.Key.ToArray() };
-        }
-
-        public byte[] ToByteArray()
-        => new Protobuf.RSAKey() { Key = ByteString.CopyFrom(Value) }.ToByteArray();
     }
 }

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using System;
 using TCPLib.Server.Net.Encrypt;
+using TCPLib.Classes;
 
 namespace TCPLib.Server.Net
 {

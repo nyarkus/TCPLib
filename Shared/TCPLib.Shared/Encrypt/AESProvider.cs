@@ -38,7 +38,7 @@ namespace TCPLib.Encrypt
         }
 
 
-        public AESProvider(int keySize = 256)
+        public AESProvider(int keySize = 128)
         {
             Key = new byte[keySize / 8];
             SecureRandom random = new SecureRandom();

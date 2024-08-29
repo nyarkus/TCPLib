@@ -1,4 +1,4 @@
-namespace TCPLib.Server.Net
+﻿namespace TCPLib.Classes
 {
     public enum ResponseCode
     {

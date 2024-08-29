@@ -3,6 +3,8 @@ using System.Threading;
 using System;
 using System.IO;
 using System.Linq;
+using TCPLib.Classes;
+using TCPLib.Net;
 
 namespace TCPLib.Client.Net
 {
@@ -49,7 +51,7 @@ namespace TCPLib.Client.Net
                 }
             }
         }
-        public async Task<TCPLib.Client.Net.Classes.PackageSource> ReceiveSourceWithoutCryptographyAsync(CancellationToken token = default)
+        public async Task<PackageSource> ReceiveSourceWithoutCryptographyAsync(CancellationToken token = default)
         {
             while (true)
             {
@@ -62,7 +64,7 @@ namespace TCPLib.Client.Net
 
                     var package = Protobuf.Package.Parser.ParseFrom(bytes);
 
-                    return new TCPLib.Client.Net.Classes.PackageSource(package.Type, package.Data.ToArray());
+                    return new PackageSource(package.Type, package.Data.ToArray());
                 }
             }
         }

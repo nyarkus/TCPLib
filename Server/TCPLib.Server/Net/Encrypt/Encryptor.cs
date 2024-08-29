@@ -1,17 +1,13 @@
-﻿// This file uses Protocol Buffers from Google, which is licensed under BSD-3-Clause.
-
-using Google.Protobuf;
-using System.Linq;
+﻿
 using System.IO;
 using System;
 using TCPLib.Encrypt;
-using TCPLib.Net;
+using TCPLib.Classes;
 
 namespace TCPLib.Server.Net.Encrypt
 {
     public class Encryptor
     {
-#pragma warning disable CS0618
         const string FilePath = @"Certificate.key";
 
         RSAProvider RSA = new RSAProvider();
@@ -100,22 +96,5 @@ namespace TCPLib.Server.Net.Encrypt
 
         public AESKey GetAESKey()
             => new AESKey() { Key = AES.GetKey(), IV = AES.GetIV() };
-    }
-
-    public struct AESKey : IProtobufSerializable<AESKey>
-    {
-        public byte[] Key;
-        public byte[] IV;
-
-        public AESKey FromBytes(byte[] bytes)
-        {
-            var aes = Protobuf.AESKey.Parser.ParseFrom(bytes);
-
-            return new AESKey() { Key = aes.Key.ToArray(), IV = aes.IV.ToArray() };
-        }
-
-        public byte[] ToByteArray() =>
-            new Protobuf.AESKey() { Key = ByteString.CopyFrom(Key), IV = ByteString.CopyFrom(IV) }.ToByteArray();
-
     }
 }
