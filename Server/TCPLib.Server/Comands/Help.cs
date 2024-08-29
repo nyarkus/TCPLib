@@ -1,55 +1,58 @@
-﻿namespace TCPLib.Server.Commands;
+﻿using System.Threading.Tasks;
 
-internal class Help : ICommand
+namespace TCPLib.Server.Commands
 {
-    public string[] Synonyms { get; }
-
-    public string Name { get; }
-
-    public string Description { get; }
-
-    public Task<bool> Execute(string[] args)
+    internal class Help : ICommand
     {
-        string output = "";
-        if (args.Length == 1)
+        public string[] Synonyms { get; }
+
+        public string Name { get; }
+
+        public string Description { get; }
+
+        public Task<bool> Execute(string[] args)
         {
+            string output = "";
+            if (args.Length == 1)
+            {
+                foreach (var s in CommandManager.commands)
+                {
+                    bool x = false;
+                    foreach (var syn in s.Synonyms)
+                    {
+                        if (syn == args[0]) x = true;
+                        output += $"{syn}, ";
+                    }
+                    output = output.TrimEnd(' ');
+                    output = output.TrimEnd(',');
+                    output += " ";
+                    if (s.Name == args[0]) x = true;
+                    output += $"- {s.Description}\n";
+                    if (x)
+                    {
+                        Console.Info(output);
+                        return Task.FromResult(true);
+                    }
+                    output = "";
+                }
+            }
             foreach (var s in CommandManager.commands)
             {
-                bool x = false;
                 foreach (var syn in s.Synonyms)
-                {
-                    if (syn == args[0]) x = true;
                     output += $"{syn}, ";
-                }
                 output = output.TrimEnd(' ');
                 output = output.TrimEnd(',');
                 output += " ";
-                if (s.Name == args[0]) x = true;
                 output += $"- {s.Description}\n";
-                if (x)
-                {
-                    Console.Info(output);
-                    return Task.FromResult(true);
-                }
-                output = "";
             }
+            Console.Info(output);
+            return Task.FromResult(true);
         }
-        foreach (var s in CommandManager.commands)
+        public Help()
         {
-            foreach (var syn in s.Synonyms)
-                output += $"{syn}, ";
-            output = output.TrimEnd(' ');
-            output = output.TrimEnd(',');
-            output += " ";
-            output += $"- {s.Description}\n";
+            Synonyms = new string[] { "help", "?" };
+            Name = "help";
+            Description = "Displays a list of commands and their descriptions";
         }
-        Console.Info(output);
-        return Task.FromResult(true);
-    }
-    public Help()
-    {
-        Synonyms = ["help", "?"];
-        Name = "help";
-        Description = "Displays a list of commands and their descriptions";
     }
 }

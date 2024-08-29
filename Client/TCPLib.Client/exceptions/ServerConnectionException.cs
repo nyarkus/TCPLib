@@ -1,8 +1,10 @@
-﻿using TCPLib.Client.Net;
+﻿using TCPLib.Classes;
+using System;
 
-namespace TCPLib.Client.Exceptions;
-
-public class ServerConnectionException : Exception
+namespace TCPLib.Client.Exceptions
 {
-    public ServerConnectionException(ResponseCode code) : base($"During the connection, the server responded with an error code: {code}") { }
+    public class ServerConnectionException : Exception
+    {
+        public ServerConnectionException(ResponseCode code) : base($"During the connection, the server responded with an error code: {code}") { }
+    }
 }

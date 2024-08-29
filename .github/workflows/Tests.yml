@@ -27,9 +27,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Build
-      run: |
-        dotnet fsi build.fsx
     - name: Test
       run: |
         cd Tests

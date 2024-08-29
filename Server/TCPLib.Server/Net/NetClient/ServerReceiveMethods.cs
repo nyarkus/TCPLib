@@ -1,124 +1,134 @@
-namespace TCPLib.Server.Net;
-public partial class NetClient
+using System;
+using System.IO;
+using System.Threading.Tasks;
+using System.Threading;
+using System.Linq;
+using TCPLib.Net;
+
+
+namespace TCPLib.Server.Net
 {
-    public async Task<Package<T>?> ReceiveWithoutCryptographyAsync<T>(CancellationToken token = default) where T : IProtobufSerializable<T>
+    public partial class NetClient
     {
-        while (true)
+        public async Task<Package<T>?> ReceiveWithoutCryptographyAsync<T>(CancellationToken token = default) where T : IProtobufSerializable<T>, new()
         {
-            while (stream.DataAvailable)
+            while (true)
             {
-                if (token.IsCancellationRequested)
-                    return default;
-                var length = BitConverter.ToInt32(await Read(4, stream));
-                var bytes = await Read(length, stream);
+                while (stream.DataAvailable)
+                {
+                    if (token.IsCancellationRequested)
+                        return default;
+                    var length = BitConverter.ToInt32(await Read(4, stream), 0);
+                    var bytes = await Read(length, stream);
 
-                var package = Protobuf.Package.Parser.ParseFrom(bytes);
+                    var package = Protobuf.Package.Parser.ParseFrom(bytes);
 
-                return new Package<T>(package.Type, package.Data.ToArray());
+                    return new Package<T>(package.Type, package.Data.ToArray());
+                }
             }
         }
-    }
 
-    public async Task<Package<T>?> ReceiveAsync<T>(CancellationToken token = default) where T : IProtobufSerializable<T>
-    {
-        while (true)
+        public async Task<Package<T>?> ReceiveAsync<T>(CancellationToken token = default) where T : IProtobufSerializable<T>, new()
         {
-            while (stream.DataAvailable)
+            while (true)
             {
-                if (token.IsCancellationRequested)
-                    return null;
-                var length = BitConverter.ToInt32(await Read(4, stream));
+                while (stream.DataAvailable)
+                {
+                    if (token.IsCancellationRequested)
+                        return null;
+                    var length = BitConverter.ToInt32(await Read(4, stream), 0);
 
-                var bytes = await Read(length, stream);
-                if (EncryptType == EncryptType.AES)
-                    bytes = Encryptor.AESDecrypt(bytes);
-                else
-                    bytes = Encryptor.RSADecrypt(bytes);
+                    var bytes = await Read(length, stream);
+                    if (EncryptType == EncryptType.AES)
+                        bytes = Encryptor.AESDecrypt(bytes);
+                    else
+                        bytes = Encryptor.RSADecrypt(bytes);
 
-                var package = Protobuf.Package.Parser.ParseFrom(bytes);
+                    var package = Protobuf.Package.Parser.ParseFrom(bytes);
 
-                return new Package<T>(package.Type, package.Data.ToArray());
+                    return new Package<T>(package.Type, package.Data.ToArray());
+                }
             }
         }
-    }
-    public async Task<Classes.PackageSource?> ReceiveSourceAsync(CancellationToken token = default)
-    {
-        while (true)
+        public async Task<Classes.PackageSource> ReceiveSourceAsync(CancellationToken token = default)
         {
-            while (stream.DataAvailable)
+            while (true)
             {
-                if (token.IsCancellationRequested)
-                    return null;
-                var length = BitConverter.ToInt32(await Read(4, stream));
+                while (stream.DataAvailable)
+                {
+                    if (token.IsCancellationRequested)
+                        return null;
+                    var length = BitConverter.ToInt32(await Read(4, stream), 0);
 
-                var bytes = await Read(length, stream);
-                if (EncryptType == EncryptType.AES)
-                    bytes = Encryptor.AESDecrypt(bytes);
-                else
-                    bytes = Encryptor.RSADecrypt(bytes);
+                    var bytes = await Read(length, stream);
+                    if (EncryptType == EncryptType.AES)
+                        bytes = Encryptor.AESDecrypt(bytes);
+                    else
+                        bytes = Encryptor.RSADecrypt(bytes);
 
-                var package = Protobuf.Package.Parser.ParseFrom(bytes);
+                    var package = Protobuf.Package.Parser.ParseFrom(bytes);
 
-                return new(package.Type, package.Data.ToArray());
+                    return new Classes.PackageSource(package.Type, package.Data.ToArray());
+                }
             }
         }
-    }
-    public Task<Package<T>?> ReceiveAsync<T>(TimeSpan timeout, CancellationToken token = default) where T : IProtobufSerializable<T>
-    {
-        var cancel = new CancellationTokenSource();
-        token.Register(cancel.Cancel);
-        var task = Task.Run(() => ReceiveAsync<T>(cancel.Token));
-
-        if (task.Wait(timeout))
-            return task;
-        else
+        public Task<Package<T>?> ReceiveAsync<T>(TimeSpan timeout, CancellationToken token = default) where T : IProtobufSerializable<T>, new()
         {
-            cancel.Cancel();
-            return Task.FromResult<Package<T>?>(null);
+            var cancel = new CancellationTokenSource();
+            token.Register(cancel.Cancel);
+            var task = Task.Run(() => ReceiveAsync<T>(cancel.Token));
+
+            if (task.Wait(timeout))
+                return task;
+            else
+            {
+                cancel.Cancel();
+                return Task.FromResult<Package<T>?>(null);
+            }
         }
-    }
-    public Task<Classes.PackageSource?> ReceiveSourceAsync(TimeSpan timeout, CancellationToken token = default)
-    {
-        var cancel = new CancellationTokenSource();
-        token.Register(cancel.Cancel);
-        var task = Task.Run(() => ReceiveSourceAsync(cancel.Token));
-
-        if (task.Wait(timeout))
-            return task;
-        else
+        public Task<Classes.PackageSource> ReceiveSourceAsync(TimeSpan timeout, CancellationToken token = default)
         {
-            cancel.Cancel();
-            return Task.FromResult<Classes.PackageSource?>(null);
+            var cancel = new CancellationTokenSource();
+            token.Register(cancel.Cancel);
+            var task = Task.Run(() => ReceiveSourceAsync(cancel.Token));
+
+            if (task.Wait(timeout))
+                return task;
+            else
+            {
+                cancel.Cancel();
+                return Task.FromResult<Classes.PackageSource>(null);
+            }
         }
-    }
-    public Task<Package<T>?> ReceiveWithoutCryptographyAsync<T>(TimeSpan timeout, CancellationToken token = default) where T : IProtobufSerializable<T>
-    {
-        var cancel = new CancellationTokenSource();
-        token.Register(cancel.Cancel);
-        var task = Task.Run(() => ReceiveWithoutCryptographyAsync<T>(cancel.Token));
-
-        if (task.Wait(timeout))
-            return task;
-        else
+        public Task<Package<T>?> ReceiveWithoutCryptographyAsync<T>(TimeSpan timeout, CancellationToken token = default) where T : IProtobufSerializable<T>, new()
         {
-            cancel.Cancel();
-            return Task.FromResult<Package<T>?>(null);
-        }
-    }
+            var cancel = new CancellationTokenSource();
+            token.Register(cancel.Cancel);
+            var task = Task.Run(() => ReceiveWithoutCryptographyAsync<T>(cancel.Token));
 
-    static async Task<byte[]> Read(int count, Stream stream)
-    {
-        byte[] buffer = new byte[count];
-        int totalRead = 0;
-
-        while (totalRead < count)
-        {
-            int bytesRead = await stream.ReadAsync(buffer, totalRead, count - totalRead);
-            if (bytesRead == 0)
-                throw new EndOfStreamException("Reached end of stream before reading expected number of bytes.");
-            totalRead += bytesRead;
+            if (task.Wait(timeout))
+                return task;
+            else
+            {
+                cancel.Cancel();
+                return Task.FromResult<Package<T>?>(null);
+            }
         }
 
-        return buffer;
+        static async Task<byte[]> Read(int count, Stream stream)
+        {
+            byte[] buffer = new byte[count];
+            int totalRead = 0;
+
+            while (totalRead < count)
+            {
+                int bytesRead = await stream.ReadAsync(buffer, totalRead, count - totalRead);
+                if (bytesRead == 0)
+                    throw new EndOfStreamException("Reached end of stream before reading expected number of bytes.");
+                totalRead += bytesRead;
+            }
+
+            return buffer;
+        }
     }
 }

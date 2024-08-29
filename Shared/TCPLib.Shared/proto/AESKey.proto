@@ -1,0 +1,8 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "TCPLib.Protobuf";
+
+message AESKey {
+	bytes Key = 1;
+	bytes IV = 2;
+}

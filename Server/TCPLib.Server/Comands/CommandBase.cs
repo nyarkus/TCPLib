@@ -1,8 +1,12 @@
-﻿namespace TCPLib.Server.Commands;
-public interface ICommand
+﻿using System.Threading.Tasks;
+
+namespace TCPLib.Server.Commands
 {
-    public Task<bool> Execute(string[] args);
-    public string[] Synonyms { get; }
-    public string Name { get; }
-    public string Description { get; }
+    public interface ICommand
+    {
+        Task<bool> Execute(string[] args);
+        string[] Synonyms { get; }
+        string Name { get; }
+        string Description { get; }
+    }
 }

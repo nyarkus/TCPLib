@@ -1,5 +1,10 @@
-namespace TCPLib.Client.Exceptions;
-public class ClientAlredyConnected : Exception
+
+using System;
+
+namespace TCPLib.Client.Exceptions
 {
-    public ClientAlredyConnected(string ip) : base("The connection is already set to " + ip) { }
+    public class ClientAlredyConnected : Exception
+    {
+        public ClientAlredyConnected(string ip) : base("The connection is already set to " + ip) { }
+    }
 }

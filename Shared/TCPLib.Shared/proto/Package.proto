@@ -1,0 +1,8 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "TCPLib.Protobuf";
+
+message Package {
+	bytes data = 1;
+	string type = 2;
+}

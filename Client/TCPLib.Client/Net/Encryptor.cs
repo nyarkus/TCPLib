@@ -1,111 +1,49 @@
-﻿// This file uses Protocol Buffers from Google, which is licensed under BSD-3-Clause.
+﻿using TCPLib.Encrypt;
+using TCPLib.Classes;
 
-using Google.Protobuf;
-using System.Security.Cryptography;
 
-namespace TCPLib.Client.Net;
-
-public class Encryptor
+namespace TCPLib.Client.Net
 {
-    const int dwKeySize = 4086;
-
-    RSACryptoServiceProvider RSA = new RSACryptoServiceProvider();
-
-    Aes aes = Aes.Create();
-
-    byte[] AesKey;
-    byte[] AesIV;
-
-    public static Encryptor? ServerEncryptor;
-    private Encryptor() { }
-
-    public static Encryptor GetEncryptor()
+    public class Encryptor
     {
-        var enc = new Encryptor();
+        RSAProvider RSA = new RSAProvider();
+        AESProvider AES = new AESProvider();
 
-        enc.AesIV = enc.aes.IV;
-        enc.AesKey = enc.aes.Key;
-
-        return enc;
-    }
-    public Encryptor SetRSAKey(byte[] privatekey, byte[] publickey)
-    {
-
-        RSA.ImportRSAPrivateKey(privatekey, out int bytes);
-        RSA.ImportRSAPublicKey(publickey, out bytes);
-
-        return this;
-    }
-    public Encryptor SetAESKey(byte[] key, byte[] IV)
-    {
-        AesKey = key;
-        AesIV = IV;
-
-        return this;
-    }
-    public byte[] AESEncrypt(byte[] input)
-    {
-        return EncryptStringToBytes_Aes(input, AesKey, AesIV);
-    }
-    public byte[] AESDecrypt(byte[] s)
-    {
-        return DecryptStringFromBytes_Aes(s, AesKey, AesIV);
-    }
-    public static Encryptor GenerateNew()
-    {
-        return new Encryptor();
-    }
-    public byte[] RSAEncrypt(byte[] input)
-    {
-        return RSA.Encrypt(input, false);
-    }
-    public byte[] RSADecrypt(byte[] s)
-    {
-        return RSA.Decrypt(s, false);
-    }
-    byte[] EncryptStringToBytes_Aes(byte[] data, byte[] key, byte[] iv)
-    {
-        aes.Key = key;
-        aes.IV = iv;
-        aes.Padding = PaddingMode.PKCS7;
-        return aes.EncryptCbc(data, iv, PaddingMode.PKCS7);
-    }
-
-    byte[] DecryptStringFromBytes_Aes(byte[] encryptedData, byte[] key, byte[] iv)
-    {
-        aes.Key = key;
-        aes.IV = iv;
-        aes.Padding = PaddingMode.PKCS7;
-        return aes.DecryptCbc(encryptedData, iv, PaddingMode.PKCS7);
-    }
-
-    public byte[] GetRSAPublicKey() => RSA.ExportRSAPublicKey();
-
-    public byte[] GetRSAPrivateKey() => RSA.ExportRSAPrivateKey();
-
-    public AESKey GetAESKey()
-    {
-        if (AesKey is null || AesIV is null)
+        public Encryptor SetPrivateRSAKey(byte[] privatekey)
         {
-            AesKey = aes.Key;
-            AesIV = aes.IV;
+            RSA.ImportPrivateKey(privatekey);
+            return this;
         }
-        return new AESKey() { Key = AesKey, IV = AesIV };
+        public Encryptor SetPublicRSAKey(byte[] publickey)
+        {
+            RSA.ImportPublicKey(publickey);
+            return this;
+        }
+        public Encryptor SetAESKey(byte[] key, byte[] IV)
+        {
+            AES.SetKeypair(key, IV);
+            return this;
+        }
+        public Encryptor SetAESKey(AESKey key)
+        {
+            AES.SetKeypair(key.Key, key.IV);
+            return this;
+        }
+        public byte[] AESEncrypt(byte[] input)
+            => AES.Encrypt(input);
+        public byte[] AESDecrypt(byte[] input)
+            => AES.Decrypt(input);
+        public byte[] RSAEncrypt(byte[] input)
+            => RSA.Encrypt(input);
+        public byte[] RSADecrypt(byte[] input)
+            => RSA.Decrypt(input);
+
+        public byte[] GetRSAPublicKey()
+            => RSA.SerializePublicKey();
+        public byte[] GetRSAPrivateKey()
+            => RSA.SerializePrivateKey();
+
+        public AESKey GetAESKey()
+            => new AESKey() { Key = AES.GetKey(), IV = AES.GetIV() };
     }
-}
-public struct AESKey : IProtobufSerializable<AESKey>
-{
-    public byte[] Key;
-    public byte[] IV;
-
-    public static AESKey FromBytes(byte[] bytes)
-    {
-        var aes = Protobuf.AESKey.Parser.ParseFrom(bytes);
-
-        return new AESKey() { Key = aes.Key.ToArray(), IV = aes.IV.ToArray() };
-    }
-
-    public byte[] ToByteArray() =>
-        new Protobuf.AESKey() { Key = ByteString.CopyFrom(Key), IV = ByteString.CopyFrom(IV) }.ToByteArray();
-
 }
