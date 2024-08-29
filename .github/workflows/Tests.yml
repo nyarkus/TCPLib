@@ -2,7 +2,7 @@ name: Tests
 
 on:
   push:
-     branches: [ dev, master ]
+     branches: [ dev ]
      paths:
       - '**.cs'
       - '**.csproj'
@@ -17,7 +17,7 @@ jobs:
   build-and-test:
 
     name: tests
-    runs-on: fedora-40-server
+    runs-on: ubuntu-lastet
 
     steps:
     - uses: actions/checkout@v4
