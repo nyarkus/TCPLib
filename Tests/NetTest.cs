@@ -1,7 +1,9 @@
 namespace Tests;
 
+using Newtonsoft.Json;
 using System.Net.Sockets;
 using TCPLib.Server.Net;
+using TCPLib.Server.SaveFiles;
 #if DEBUG
 [TestCaseOrderer("Tests.Orders.AlphabeticalOrderer", "Tests")]
 public class NetTest
@@ -13,7 +15,7 @@ public class NetTest
             File.Delete("Certificate.key");
 
         TCPLib.Client.Client client = new();
-        TCPLib.Server.Server server = new();
+        TCPLib.Server.Server server = new(new BanSaver(), new SettingsSaver());
         TCPLib.Server.Server.TestingMode = true;
         server.Start();
 
@@ -30,7 +32,7 @@ public class NetTest
         if (File.Exists("Certificate.key"))
             File.Delete("Certificate.key");
 
-        TCPLib.Server.Server server = new();
+        TCPLib.Server.Server server = new(new BanSaver(), new SettingsSaver());
         TCPLib.Server.Server.TestingMode = true;
         server.Start();
 
@@ -52,5 +54,24 @@ public class NetTest
         client.Dispose();
         server.Stop();
     }
+}
+
+public class SettingsSaver : ISettingsSaver
+{
+    Settings settings = new Settings();
+    public Settings Load()
+        => settings;
+
+    public void Save(Settings settings)
+        => this.settings = settings;
+}
+public class BanSaver : IBanListSaver
+{
+    Ban[] bans = [];
+    public Ban[] Load()
+        => bans;
+
+    public void Save(Ban[] bans)
+        => this.bans = bans;
 }
 #endif
