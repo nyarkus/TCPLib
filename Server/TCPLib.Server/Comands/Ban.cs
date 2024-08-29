@@ -13,12 +13,12 @@ namespace TCPLib.Server.Commands
 
         public string Description { get; }
 
-        public Task<bool> Execute(string[] args)
+        public async Task<bool> Execute(string[] args)
         {
             if (args.Length == 0)
             {
                 Console.Error("Not enough arguments to know more write: ? ban");
-                return Task.FromResult(false);
+                return false;
             }
             string ip = "";
             NetClient client = null;
@@ -28,7 +28,7 @@ namespace TCPLib.Server.Commands
                 if (clientlist.Count() == 0)
                 {
                     Console.Error($"The user with id {args[0]} was not found.");
-                    return Task.FromResult(false);
+                    return false;
                 }
                 ip = clientlist.First().client.Client.RemoteEndPoint.ToString().Split(':')[0];
                 client = clientlist.First();
@@ -64,7 +64,7 @@ namespace TCPLib.Server.Commands
                 list.Add(ban);
                 SaveFiles.Ban.Save(list.ToArray());
                 if (client != null)
-                    client.Kick(new KickMessage(ResponseCode.Blocked, reason));
+                    await client.Kick(new KickMessage(ResponseCode.Blocked, reason));
                 Console.Info($"{ip} has been blocked with reason: {reason}");
             }
             else
@@ -73,10 +73,10 @@ namespace TCPLib.Server.Commands
                 list.Add(ban);
                 SaveFiles.Ban.Save(list.ToArray());
                 if (client != null)
-                    client.Kick(new KickMessage(ResponseCode.Blocked));
+                    await client.Kick(new KickMessage(ResponseCode.Blocked));
                 Console.Info($"{ip} has been blocked");
             }
-            return Task.FromResult(true);
+            return true;
         }
         public Ban()
         {
