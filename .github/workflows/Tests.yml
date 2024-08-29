@@ -23,15 +23,10 @@ jobs:
   build-and-test:
 
     name: tests
-    runs-on: windows-10-dev 
+    runs-on: fedora-40-server
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-    
-    - name: Build
-      run: |
-        dotnet fsi build.fsx
+    - uses: actions/checkout@v4
     - name: Test
       run: |
         cd Tests
