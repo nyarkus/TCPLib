@@ -9,7 +9,7 @@ namespace ExampleClient
     {
         static async Task Main(string[] args)
         {
-            Client client = new Client();
+            TCPLib.Client.Client client = new Client();
 
             var server = await client.Connect(IPAddress.Parse("127.0.0.1"), 2024);
 
