@@ -1,4 +1,4 @@
-﻿namespace TCPLib.Server.Net
+﻿namespace TCPLib.Net
 {
     public interface IProtobufSerializable<T>
     {

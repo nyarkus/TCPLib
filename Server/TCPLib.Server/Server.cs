@@ -5,6 +5,7 @@ using System.Threading;
 namespace TCPLib.Server
 {
     using TCPLib.Server.Net;
+    using TCPLib.Server.Net.Encrypt;
     using TCPLib.Server.SaveFiles;
 
     public class Server

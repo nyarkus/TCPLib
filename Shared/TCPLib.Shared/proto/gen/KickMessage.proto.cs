@@ -12,7 +12,7 @@ using scg = global::System.Collections.Generic;
 namespace TCPLib.Protobuf {
 
   /// <summary>Holder for reflection information generated from proto/KickMessage.proto</summary>
-  internal static partial class KickMessageReflection {
+  public static partial class KickMessageReflection {
 
     #region Descriptor
     /// <summary>File descriptor for proto/KickMessage.proto</summary>
@@ -42,7 +42,7 @@ namespace TCPLib.Protobuf {
 
   }
   #region Enums
-  internal enum Code {
+  public enum Code {
     [pbr::OriginalName("OK")] Ok = 0,
     [pbr::OriginalName("BADRESPONSE")] Badresponse = 1,
     [pbr::OriginalName("SERVERISFULL")] Serverisfull = 2,
@@ -59,7 +59,7 @@ namespace TCPLib.Protobuf {
   #region Messages
   [global::System.SerializableAttribute]
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
-  internal sealed partial class KickMessage : pb::IMessage<KickMessage>
+  public sealed partial class KickMessage : pb::IMessage<KickMessage>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -309,7 +309,7 @@ namespace TCPLib.Protobuf {
 
   [global::System.SerializableAttribute]
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
-  internal sealed partial class RespondCode : pb::IMessage<RespondCode>
+  public sealed partial class RespondCode : pb::IMessage<RespondCode>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif

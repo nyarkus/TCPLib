@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Collections.Generic;
 using System.Linq;
+using TCPLib.Server.Net.Encrypt;
 
 namespace TCPLib.Server.Net
 {

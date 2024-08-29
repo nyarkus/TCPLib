@@ -12,7 +12,7 @@ using scg = global::System.Collections.Generic;
 namespace TCPLib.Protobuf {
 
   /// <summary>Holder for reflection information generated from proto/Package.proto</summary>
-  internal static partial class PackageReflection {
+  public static partial class PackageReflection {
 
     #region Descriptor
     /// <summary>File descriptor for proto/Package.proto</summary>
@@ -38,7 +38,7 @@ namespace TCPLib.Protobuf {
   #region Messages
   [global::System.SerializableAttribute]
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
-  internal sealed partial class Package : pb::IMessage<Package>
+  public sealed partial class Package : pb::IMessage<Package>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
