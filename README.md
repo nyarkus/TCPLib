@@ -10,6 +10,10 @@
   </a>
 </p>
 
+| TCPLib.Server | TCPLib.Client | TCPLib.Shared |
+| ------------- | ------------- | ------------- |
+| [![NuGet](https://img.shields.io/nuget/v/TCPLib.Server.svg)](https://www.nuget.org/packages/TCPLib.Server) [![NuGet](https://img.shields.io/nuget/dt/TCPLib.Server.svg?label=nuget%20downloads)](https://www.nuget.org/packages/TCPLib.Server) | [![NuGet](https://img.shields.io/nuget/v/TCPLib.Client.svg)](https://www.nuget.org/packages/TCPLib.Client) [![NuGet](https://img.shields.io/nuget/dt/TCPLib.Client.svg?label=nuget%20downloads)](https://www.nuget.org/packages/TCPLib.Client) |  [![NuGet](https://img.shields.io/nuget/v/TCPLib.Shared.svg)](https://www.nuget.org/packages/TCPLib.Shared) [![NuGet](https://img.shields.io/nuget/dt/TCPLib.Shared.svg?label=nuget%20downloads)](https://www.nuget.org/packages/TCPLib.Shared)
+
 # What is this?!
 
 **TCPLib** - It's a low-level library for exchanging packets with a remote computer (🤓). 
