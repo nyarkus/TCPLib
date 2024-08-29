@@ -2,7 +2,24 @@
 
   <PropertyGroup>
     <TargetFrameworks>net8.0;net6.0;net48;netstandard2.0;netstandard2.1</TargetFrameworks>
+    <Title>TCPLib.Client</Title>
+    <Description>low-level library for exchanging packets with a remote computer</Description>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
