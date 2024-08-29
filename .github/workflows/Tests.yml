@@ -23,7 +23,7 @@ jobs:
   build-and-test:
 
     name: tests
-    runs-on: fedora-40-server
+    runs-on: windows-10-dev 
 
     steps:
     - name: Checkout code
