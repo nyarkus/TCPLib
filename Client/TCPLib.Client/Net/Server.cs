@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 using System.Threading.Tasks;
 using TCPLib.Classes;
 
@@ -22,12 +23,16 @@ namespace TCPLib.Client.Net
 
         public Encryptor encryptor;
 
+        protected CancellationTokenSource OnKick;
+
         public Server(IPAddress ip, int port, TcpClient client, NetworkStream stream)
         {
             IP = ip;
             Port = port;
             this.client = client;
             this.stream = stream;
+
+            OnKick = new CancellationTokenSource();
         }
 
     }

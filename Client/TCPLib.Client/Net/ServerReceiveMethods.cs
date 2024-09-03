@@ -40,14 +40,28 @@ namespace TCPLib.Client.Net
             {
                 while (stream.DataAvailable)
                 {
-                    if (token.IsCancellationRequested)
-                        return default;
-                    var length = BitConverter.ToInt32(await Read(4, stream), 0);
-                    var bytes = await Read(length, stream);
+                    try
+                    {
+                        if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
+                            return default;
 
-                    var package = Protobuf.Package.Parser.ParseFrom(bytes);
+                        var length = BitConverter.ToInt32(await Read(4, stream), 0);
+                        var bytes = await Read(length, stream);
 
-                    return new Package<T>(package.Type, package.Data.ToArray());
+                        var package = Protobuf.Package.Parser.ParseFrom(bytes);
+
+                        if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
+                            return default;
+
+                        return new Package<T>(package.Type, package.Data.ToArray());
+                    }
+                    catch
+                    {
+                        if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
+                            return default;
+                        else
+                            throw;
+                    }
                 }
             }
         }
@@ -57,14 +71,28 @@ namespace TCPLib.Client.Net
             {
                 while (stream.DataAvailable)
                 {
-                    if (token.IsCancellationRequested)
-                        return default;
-                    var length = BitConverter.ToInt32(await Read(4, stream), 0);
-                    var bytes = await Read(length, stream);
+                    try
+                    {
+                        if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
+                            return default;
 
-                    var package = Protobuf.Package.Parser.ParseFrom(bytes);
+                        var length = BitConverter.ToInt32(await Read(4, stream), 0);
+                        var bytes = await Read(length, stream);
 
-                    return new PackageSource(package.Type, package.Data.ToArray());
+                        var package = Protobuf.Package.Parser.ParseFrom(bytes);
+
+                        if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
+                            return default;
+
+                        return new PackageSource(package.Type, package.Data.ToArray());
+                    }
+                    catch
+                    {
+                        if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
+                            return default;
+                        else
+                            throw;
+                    }
                 }
             }
         }
@@ -75,19 +103,33 @@ namespace TCPLib.Client.Net
             {
                 while (stream.DataAvailable)
                 {
-                    if (token.IsCancellationRequested)
-                        return null;
-                    var length = BitConverter.ToInt32(await Read(4, stream), 0);
+                    try
+                    {
+                        if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
+                            return default;
 
-                    var bytes = await Read(length, stream);
-                    if (EncryptType == EncryptType.AES)
-                        bytes = encryptor.AESDecrypt(bytes);
-                    else
-                        bytes = encryptor.RSADecrypt(bytes);
+                        var length = BitConverter.ToInt32(await Read(4, stream), 0);
 
-                    var package = Protobuf.Package.Parser.ParseFrom(bytes);
+                        var bytes = await Read(length, stream);
+                        if (EncryptType == EncryptType.AES)
+                            bytes = encryptor.AESDecrypt(bytes);
+                        else
+                            bytes = encryptor.RSADecrypt(bytes);
 
-                    return new Package<T>(package.Type, package.Data.ToArray());
+                        var package = Protobuf.Package.Parser.ParseFrom(bytes);
+
+                        if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
+                            return default;
+
+                        return new Package<T>(package.Type, package.Data.ToArray());
+                    }
+                    catch
+                    {
+                        if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
+                            return default;
+                        else
+                            throw;
+                    }
                 }
             }
         }
@@ -97,19 +139,33 @@ namespace TCPLib.Client.Net
             {
                 while (stream.DataAvailable)
                 {
-                    if (token.IsCancellationRequested)
-                        return null;
-                    var length = BitConverter.ToInt32(await Read(4, stream), 0);
+                    try
+                    {
+                        if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
+                            return default;
 
-                    var bytes = await Read(length, stream);
-                    if (EncryptType == EncryptType.AES)
-                        bytes = encryptor.AESDecrypt(bytes);
-                    else
-                        bytes = encryptor.RSADecrypt(bytes);
+                        var length = BitConverter.ToInt32(await Read(4, stream), 0);
 
-                    var package = Protobuf.Package.Parser.ParseFrom(bytes);
+                        var bytes = await Read(length, stream);
+                        if (EncryptType == EncryptType.AES)
+                            bytes = encryptor.AESDecrypt(bytes);
+                        else
+                            bytes = encryptor.RSADecrypt(bytes);
 
-                    return new Classes.PackageSource(package.Type, package.Data.ToArray());
+                        var package = Protobuf.Package.Parser.ParseFrom(bytes);
+
+                        if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
+                            return default;
+
+                        return new Classes.PackageSource(package.Type, package.Data.ToArray());
+                    }
+                    catch
+                    {
+                        if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
+                            return default;
+                        else
+                            throw;
+                    }
                 }
             }
         }
