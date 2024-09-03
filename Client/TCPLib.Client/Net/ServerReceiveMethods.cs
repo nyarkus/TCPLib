@@ -38,9 +38,9 @@ namespace TCPLib.Client.Net
         {
             while (true)
             {
-                while (stream.DataAvailable)
+                try
                 {
-                    try
+                    while (stream.DataAvailable)
                     {
                         if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
                             return default;
@@ -55,13 +55,13 @@ namespace TCPLib.Client.Net
 
                         return new Package<T>(package.Type, package.Data.ToArray());
                     }
-                    catch
-                    {
-                        if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
-                            return default;
-                        else
-                            throw;
-                    }
+                }
+                catch
+                {
+                    if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
+                        return default;
+                    else
+                        throw;
                 }
             }
         }
@@ -69,9 +69,9 @@ namespace TCPLib.Client.Net
         {
             while (true)
             {
-                while (stream.DataAvailable)
+                try
                 {
-                    try
+                    while (stream.DataAvailable)
                     {
                         if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
                             return default;
@@ -85,14 +85,14 @@ namespace TCPLib.Client.Net
                             return default;
 
                         return new PackageSource(package.Type, package.Data.ToArray());
-                    }
-                    catch
-                    {
-                        if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
-                            return default;
-                        else
-                            throw;
-                    }
+                    }   
+                }
+                catch
+                {
+                    if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
+                        return default;
+                    else
+                        throw;
                 }
             }
         }
@@ -101,9 +101,9 @@ namespace TCPLib.Client.Net
         {
             while (true)
             {
-                while (stream.DataAvailable)
+                try
                 {
-                    try
+                    while (stream.DataAvailable)
                     {
                         if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
                             return default;
@@ -123,13 +123,13 @@ namespace TCPLib.Client.Net
 
                         return new Package<T>(package.Type, package.Data.ToArray());
                     }
-                    catch
-                    {
-                        if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
-                            return default;
-                        else
-                            throw;
-                    }
+                }
+                catch
+                {
+                    if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
+                        return default;
+                    else
+                        throw;
                 }
             }
         }
@@ -137,9 +137,9 @@ namespace TCPLib.Client.Net
         {
             while (true)
             {
-                while (stream.DataAvailable)
+                try
                 {
-                    try
+                    while (stream.DataAvailable)
                     {
                         if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
                             return default;
@@ -159,13 +159,14 @@ namespace TCPLib.Client.Net
 
                         return new Classes.PackageSource(package.Type, package.Data.ToArray());
                     }
-                    catch
-                    {
-                        if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
-                            return default;
-                        else
-                            throw;
-                    }
+                    
+                }
+                catch
+                {
+                    if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
+                        return default;
+                    else
+                        throw;
                 }
             }
         }

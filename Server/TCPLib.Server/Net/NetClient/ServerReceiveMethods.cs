@@ -14,19 +14,28 @@ namespace TCPLib.Server.Net
         {
             while (true)
             {
-                while (stream.DataAvailable)
+                try
+                {
+                    while (stream.DataAvailable)
+                    {
+                        if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
+                            return default;
+                        var length = BitConverter.ToInt32(await Read(4, stream), 0);
+                        var bytes = await Read(length, stream);
+
+                        var package = Protobuf.Package.Parser.ParseFrom(bytes);
+
+                        if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
+                            return default;
+
+                        return new Package<T>(package.Type, package.Data.ToArray());
+                    }
+                }
+                catch
                 {
                     if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
                         return default;
-                    var length = BitConverter.ToInt32(await Read(4, stream), 0);
-                    var bytes = await Read(length, stream);
-
-                    var package = Protobuf.Package.Parser.ParseFrom(bytes);
-
-                    if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
-                        return default;
-
-                    return new Package<T>(package.Type, package.Data.ToArray());
+                    else throw;
                 }
             }
         }
@@ -35,9 +44,9 @@ namespace TCPLib.Server.Net
         {
             while (true)
             {
-                while (stream.DataAvailable)
+                try
                 {
-                    try
+                    while (stream.DataAvailable)
                     {
                         if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
                             return default;
@@ -56,13 +65,13 @@ namespace TCPLib.Server.Net
                             return default;
 
                         return new Package<T>(package.Type, package.Data.ToArray());
-                    }
-                    catch
-                    {
-                        if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
-                            return default;
-                        else throw;
-                    }
+                    }   
+                }
+                catch
+                {
+                    if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
+                        return default;
+                    else throw;
                 }
             }
         }
@@ -70,10 +79,11 @@ namespace TCPLib.Server.Net
         {
             while (true)
             {
-                while (stream.DataAvailable)
+                try
                 {
-                    try
+                    while (stream.DataAvailable)
                     {
+                    
                         if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
                             return default;
 
@@ -92,12 +102,13 @@ namespace TCPLib.Server.Net
 
                         return new Classes.PackageSource(package.Type, package.Data.ToArray());
                     }
-                    catch
-                    {
-                        if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
-                            return default;
-                        else throw;
-                    }
+                    
+                }
+                catch
+                {
+                    if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
+                        return default;
+                    else throw;
                 }
             }
         }
