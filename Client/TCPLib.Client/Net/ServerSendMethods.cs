@@ -12,8 +12,18 @@ namespace TCPLib.Client.Net
             var bytes = data.Pack();
             var b = BitConverter.GetBytes(bytes.Length);
 
-            await stream.WriteAsync(b, 0, b.Length);
-            await stream.WriteAsync(bytes, 0, bytes.Length);
+            try
+            {
+                await stream.WriteAsync(b, 0, b.Length);
+                await stream.WriteAsync(bytes, 0, bytes.Length);
+            }
+            catch
+            {
+                if (OnKick.IsCancellationRequested)
+                    return;
+                else
+                    throw;
+            }
         }
         public async Task SendWithoutCryptographyAsync<T>(T data) where T : IProtobufSerializable<T>, new()
         {
@@ -21,8 +31,18 @@ namespace TCPLib.Client.Net
             var bytes = package.Pack();
             var b = BitConverter.GetBytes(bytes.Length);
 
-            await stream.WriteAsync(b, 0, b.Length);
-            await stream.WriteAsync(bytes, 0, bytes.Length);
+            try
+            {
+                await stream.WriteAsync(b, 0, b.Length);
+                await stream.WriteAsync(bytes, 0, bytes.Length);
+            }
+            catch
+            {
+                if (OnKick.IsCancellationRequested)
+                    return;
+                else
+                    throw;
+            }
         }
         public async Task SendAsync<T>(Package<T> data) where T : IProtobufSerializable<T>, new()
         {
@@ -32,16 +52,36 @@ namespace TCPLib.Client.Net
                 var bytes = encryptor.AESEncrypt(data.Pack());
                 var b = BitConverter.GetBytes(bytes.Length);
 
-                await stream.WriteAsync(b, 0, b.Length);
-                await stream.WriteAsync(bytes, 0, bytes.Length);
+                try
+                {
+                    await stream.WriteAsync(b, 0, b.Length);
+                    await stream.WriteAsync(bytes, 0, bytes.Length);
+                }
+                catch
+                {
+                    if (OnKick.IsCancellationRequested)
+                        return;
+                    else
+                        throw;
+                }
             }
             else
             {
                 var bytes = encryptor.RSAEncrypt(data.Pack());
                 var b = BitConverter.GetBytes(bytes.Length);
 
-                await stream.WriteAsync(b, 0, b.Length);
-                await stream.WriteAsync(bytes, 0, bytes.Length);
+                try
+                {
+                    await stream.WriteAsync(b, 0, b.Length);
+                    await stream.WriteAsync(bytes, 0, bytes.Length);
+                }
+                catch
+                {
+                    if (OnKick.IsCancellationRequested)
+                        return;
+                    else
+                        throw;
+                }
             }
         }
         public async Task SendAsync<T>(T data) where T : IProtobufSerializable<T>, new()    
@@ -52,16 +92,36 @@ namespace TCPLib.Client.Net
                 var bytes = encryptor.AESEncrypt(package.Pack());
                 var b = BitConverter.GetBytes(bytes.Length);
 
-                await stream.WriteAsync(b, 0, b.Length);
-                await stream.WriteAsync(bytes, 0, bytes.Length);
+                try
+                {
+                    await stream.WriteAsync(b, 0, b.Length);
+                    await stream.WriteAsync(bytes, 0, bytes.Length);
+                }
+                catch
+                {
+                    if (OnKick.IsCancellationRequested)
+                        return;
+                    else
+                        throw;
+                }
             }
             else
             {
                 var bytes = encryptor.RSAEncrypt(package.Pack());
                 var b = BitConverter.GetBytes(bytes.Length);
 
-                await stream.WriteAsync(b, 0, b.Length);
-                await stream.WriteAsync(bytes, 0, bytes.Length);
+                try
+                {
+                    await stream.WriteAsync(b, 0, b.Length);
+                    await stream.WriteAsync(bytes, 0, bytes.Length);
+                }
+                catch
+                {
+                    if (OnKick.IsCancellationRequested)
+                        return;
+                    else
+                        throw;
+                }
             }
         }
     }
