@@ -5,6 +5,7 @@ using System.Linq;
 using System;
 using TCPLib.Server.Net.Encrypt;
 using TCPLib.Classes;
+using System.Threading;
 
 namespace TCPLib.Server.Net
 {
@@ -17,12 +18,16 @@ namespace TCPLib.Server.Net
         public uint id { get; private set; }
         public static List<NetClient> clients = new List<NetClient>();
         public Encryptor Encryptor;
+
+        protected CancellationTokenSource OnKick;
         public NetClient(TcpClient client, NetworkStream stream)
         {
             this.client = client;
             if (clients.Count == 0) id = 0;
             else id = clients.Last().id + 1;
             this.stream = stream;
+
+            OnKick = new CancellationTokenSource();
         }
         public async Task Kick(KickMessage message)
         {
@@ -31,6 +36,8 @@ namespace TCPLib.Server.Net
                 await SendAsync(message);
             }
             catch { }
+            OnKick.Cancel();
+
             client.Close();
             clients.Remove(this);
             GC.Collect();
