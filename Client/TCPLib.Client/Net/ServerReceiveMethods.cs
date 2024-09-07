@@ -21,13 +21,16 @@ namespace TCPLib.Client.Net
                     switch (kick.code)
                     {
                         case ResponseCode.Kicked:
-                            Kicked?.Invoke(kick);
+                            if(Kicked != null)
+                                await Kicked.Invoke(kick);
                             continue;
                         case ResponseCode.Blocked:
-                            Banned?.Invoke(kick);
+                            if(Banned != null)
+                                await Banned.Invoke(kick);
                             continue;
                         case ResponseCode.ServerShutdown:
-                            ServerShutdown?.Invoke(kick);
+                            if(ServerShutdown != null)
+                                await ServerShutdown.Invoke(kick);
                             continue;
                     }
                 }
@@ -209,13 +212,16 @@ namespace TCPLib.Client.Net
                     switch (kick.code)
                     {
                         case ResponseCode.Kicked:
-                            Kicked?.Invoke(kick);
+                            if(Kicked != null)
+                                await Kicked.Invoke(kick);
                             continue;
                         case ResponseCode.Blocked:
-                            Banned?.Invoke(kick);
+                            if(Banned != null)
+                                await Banned.Invoke(kick);
                             continue;
                         case ResponseCode.ServerShutdown:
-                            ServerShutdown?.Invoke(kick);
+                            if(ServerShutdown != null)
+                                await ServerShutdown.Invoke(kick);
                             continue;
                     }
                 }

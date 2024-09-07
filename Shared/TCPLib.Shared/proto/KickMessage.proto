@@ -12,6 +12,7 @@ enum Code {
     SERVERSHUTDOWN = 6;
     BLOCKED = 7;
     KICKED = 8;
+    DISCONNECTEDBYUSER = 9;
 }
 message KickMessage {
 	optional string reason = 1;

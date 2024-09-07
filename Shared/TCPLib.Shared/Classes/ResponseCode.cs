@@ -10,6 +10,7 @@
         ServerError,
         ServerShutdown,
         Blocked,
-        Kicked
+        Kicked,
+        DisconnectedByUser
     }
 }

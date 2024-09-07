@@ -1,27 +1,22 @@
 namespace Tests;
 
-using Newtonsoft.Json;
 using System.Net.Sockets;
 using TCPLib.Server.Net;
 using TCPLib.Server.SaveFiles;
 #if DEBUG
-[TestCaseOrderer("Tests.Orders.AlphabeticalOrderer", "Tests")]
 public class NetTest
 {
     [Fact]
     public async Task StartAndConnectionTest()
     {
-        if (File.Exists("Certificate.key"))
-            File.Delete("Certificate.key");
-
         TCPLib.Client.Client client = new();
-        TCPLib.Server.Server server = new(new BanSaver(), new SettingsSaver());
+        TCPLib.Server.Server server = new(new BanSaver(), new SettingsSaver() { settings = new Settings() { port = 2024 } });
         TCPLib.Server.Server.TestingMode = true;
         server.Start();
 
         await client.Connect(System.Net.IPAddress.Parse("127.0.0.1"), 2024);
         if (Client.clients.Count == 0)
-            throw new Exception("The client was unable to connect");
+            Assert.Fail("The client was unable to connect");
 
         server.Stop();
     }
@@ -29,10 +24,7 @@ public class NetTest
     [Fact]
     public void GetInfoTest()
     {
-        if (File.Exists("Certificate.key"))
-            File.Delete("Certificate.key");
-
-        TCPLib.Server.Server server = new(new BanSaver(), new SettingsSaver());
+        TCPLib.Server.Server server = new(new BanSaver(), new SettingsSaver() { settings = new Settings() { port = 2025 } });
         TCPLib.Server.Server.TestingMode = true;
         server.Start();
 
@@ -40,7 +32,7 @@ public class NetTest
         TCPLib.Client.Net.ServerInfo info = null!;
         for (int i = 0; i < 10; i++)
         {
-            info = TCPLib.Client.Net.ServerInfo.GetFrom(new(System.Net.IPAddress.Parse("127.0.0.1"), 2024), client);
+            info = TCPLib.Client.Net.ServerInfo.GetFrom(new(System.Net.IPAddress.Parse("127.0.0.1"), 2025), client);
             if (info != null) break;
         }
         if (info == null)
@@ -54,11 +46,52 @@ public class NetTest
         client.Dispose();
         server.Stop();
     }
+    [Fact]
+    public async Task TransferMessage()
+    {
+        TCPLib.Client.Client client = new();
+        TCPLib.Server.Server server = new(new BanSaver(), new SettingsSaver() { settings = new Settings() { port = 2026 } });
+        TCPLib.Server.Server.TestingMode = true;
+        server.Start();
+
+        await client.Connect(System.Net.IPAddress.Parse("127.0.0.1"), 2026);
+        if (Client.clients.Count == 0)
+            Assert.Fail("The client was unable to connect");
+
+        Message message = new Message() { Data = "eb" };
+
+        await client.ConnectedServer.SendAsync(message);
+        var result = await Client.clients[0].ReceiveWithProcessingAsync<Message>();
+
+        Assert.Equal(result.Value.Unpack().Data, message.Data);
+
+        await Client.clients[0].SendAsync(message);
+        result = await client.ConnectedServer.ReceiveWithProcessing<Message>();
+
+        Assert.Equal(result.Value.Unpack().Data, message.Data);
+    }
+    [Fact]
+    public async Task Disconnect()
+    {
+        TCPLib.Client.Client client = new();
+        TCPLib.Server.Server server = new(new BanSaver(), new SettingsSaver() { settings = new Settings() { port = 2027 } });
+        TCPLib.Server.Server.TestingMode = true;
+        server.Start();
+
+        await client.Connect(System.Net.IPAddress.Parse("127.0.0.1"), 2027);
+        if (Client.clients.Count == 0)
+            Assert.Fail("The client was unable to connect");
+
+        await client.ConnectedServer.Disconnect();
+        await Client.clients[0].ReceiveWithProcessingAsync<Message>(TimeSpan.FromSeconds(5));
+
+        Assert.True(Client.clients.Count == 0);
+    }
 }
 
 public class SettingsSaver : ISettingsSaver
 {
-    Settings settings = new Settings();
+    public Settings settings = new Settings();
     public Settings Load()
         => settings;
 

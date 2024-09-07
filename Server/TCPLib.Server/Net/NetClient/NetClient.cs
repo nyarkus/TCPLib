@@ -36,6 +36,10 @@ namespace TCPLib.Server.Net
                 await SendAsync(message);
             }
             catch { }
+            OnDisconnected();
+        }
+        private void OnDisconnected()
+        {
             OnKick.Cancel();
 
             client.Close();
