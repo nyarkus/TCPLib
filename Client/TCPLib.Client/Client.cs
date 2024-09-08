@@ -20,7 +20,7 @@ namespace TCPLib.Client
             tcpClient.Connect(address, port);
             Server server = new Server(address, port, tcpClient, tcpClient.GetStream());
 
-            var key = await server.ReceiveWithoutCryptographyWithProcessing<Key>();
+            var key = await server.ReceiveWithoutCryptographyWithProcessingAsync<Key>();
 
             server.encryptor = new Encryptor();
             server.encryptor.SetPublicRSAKey(key.Value.Value.Value);
