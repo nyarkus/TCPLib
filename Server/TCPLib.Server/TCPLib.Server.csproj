@@ -28,7 +28,9 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="NLog" Version="5.3.3" />
   </ItemGroup>
-  
-  <Import Project="..\..\Shared\TCPLib.Shared\TCPLib.Shared.projitems" Label="Shared" />
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Shared\TCPLib.Shared\TCPLib.Shared.csproj" />
+  </ItemGroup>
 
 </Project>

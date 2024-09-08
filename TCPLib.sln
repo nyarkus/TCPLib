@@ -21,7 +21,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Examples\Server\S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "Examples\Client\Client.csproj", "{647E777B-3971-47A6-BE62-11A4683824BB}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "TCPLib.Shared", "Shared\TCPLib.Shared\TCPLib.Shared.shproj", "{1577D2E0-959B-4106-A7D8-D77B41C09F0C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TCPLib.Shared", "Shared\TCPLib.Shared\TCPLib.Shared.csproj", "{2E903667-E3C5-4355-B3D9-B7AE5E9099C8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -137,6 +137,26 @@ Global
 		{647E777B-3971-47A6-BE62-11A4683824BB}.Release|x64.Build.0 = Release|Any CPU
 		{647E777B-3971-47A6-BE62-11A4683824BB}.Release|x86.ActiveCfg = Release|Any CPU
 		{647E777B-3971-47A6-BE62-11A4683824BB}.Release|x86.Build.0 = Release|Any CPU
+		{2E903667-E3C5-4355-B3D9-B7AE5E9099C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E903667-E3C5-4355-B3D9-B7AE5E9099C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E903667-E3C5-4355-B3D9-B7AE5E9099C8}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{2E903667-E3C5-4355-B3D9-B7AE5E9099C8}.Debug|ARM.Build.0 = Debug|Any CPU
+		{2E903667-E3C5-4355-B3D9-B7AE5E9099C8}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{2E903667-E3C5-4355-B3D9-B7AE5E9099C8}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{2E903667-E3C5-4355-B3D9-B7AE5E9099C8}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2E903667-E3C5-4355-B3D9-B7AE5E9099C8}.Debug|x64.Build.0 = Debug|Any CPU
+		{2E903667-E3C5-4355-B3D9-B7AE5E9099C8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2E903667-E3C5-4355-B3D9-B7AE5E9099C8}.Debug|x86.Build.0 = Debug|Any CPU
+		{2E903667-E3C5-4355-B3D9-B7AE5E9099C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E903667-E3C5-4355-B3D9-B7AE5E9099C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E903667-E3C5-4355-B3D9-B7AE5E9099C8}.Release|ARM.ActiveCfg = Release|Any CPU
+		{2E903667-E3C5-4355-B3D9-B7AE5E9099C8}.Release|ARM.Build.0 = Release|Any CPU
+		{2E903667-E3C5-4355-B3D9-B7AE5E9099C8}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{2E903667-E3C5-4355-B3D9-B7AE5E9099C8}.Release|ARM64.Build.0 = Release|Any CPU
+		{2E903667-E3C5-4355-B3D9-B7AE5E9099C8}.Release|x64.ActiveCfg = Release|Any CPU
+		{2E903667-E3C5-4355-B3D9-B7AE5E9099C8}.Release|x64.Build.0 = Release|Any CPU
+		{2E903667-E3C5-4355-B3D9-B7AE5E9099C8}.Release|x86.ActiveCfg = Release|Any CPU
+		{2E903667-E3C5-4355-B3D9-B7AE5E9099C8}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -146,14 +166,9 @@ Global
 		{57826FE9-46BC-4552-B101-A00562F810B3} = {C0A6757B-693F-42FA-A992-26CCA32D4F9D}
 		{51E73153-05CA-4941-BD9F-AC82F9B8531A} = {C2FEE062-3A4A-49B9-8C09-CAEDED8D52EC}
 		{647E777B-3971-47A6-BE62-11A4683824BB} = {C2FEE062-3A4A-49B9-8C09-CAEDED8D52EC}
-		{1577D2E0-959B-4106-A7D8-D77B41C09F0C} = {D1135790-D25C-424F-A514-5BAD86DB26D2}
+		{2E903667-E3C5-4355-B3D9-B7AE5E9099C8} = {D1135790-D25C-424F-A514-5BAD86DB26D2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {91FC2AC4-FBA1-4753-9437-90475C303348}
-	EndGlobalSection
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		Shared\TCPLib.Shared\TCPLib.Shared.projitems*{1577d2e0-959b-4106-a7d8-d77b41c09f0c}*SharedItemsImports = 13
-		Shared\TCPLib.Shared\TCPLib.Shared.projitems*{57826fe9-46bc-4552-b101-a00562f810b3}*SharedItemsImports = 5
-		Shared\TCPLib.Shared\TCPLib.Shared.projitems*{cd9bb353-6f36-42e1-bfc5-1356cf248bf4}*SharedItemsImports = 5
 	EndGlobalSection
 EndGlobal
