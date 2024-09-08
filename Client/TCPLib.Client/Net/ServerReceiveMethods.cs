@@ -107,75 +107,6 @@ namespace TCPLib.Client.Net
                 return null;
             }
         }
-        public async Task<Classes.PackageSource> ReceiveSourceWithoutCryptographyWithProcessingAsync(CancellationToken token = default)
-        {
-            while (true)
-            {
-                try
-                {
-                    while (true)
-                    {
-                        while (stream.DataAvailable)
-                        {
-                            if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
-                                return default;
-
-                            var length = BitConverter.ToInt32(await Read(4, stream), 0);
-
-                            var bytes = await Read(length, stream);
-
-                            var package = Protobuf.Package.Parser.ParseFrom(bytes);
-
-                            if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
-                                return default;
-
-                            var result = new Classes.PackageSource(package.Type, package.Data.ToArray());
-                            if (result.Type == "KickMessage")
-                            {
-                                var kick = new KickMessage().FromBytes(result.Data);
-                                switch (kick.code)
-                                {
-                                    case ResponseCode.Kicked:
-                                        if (Kicked != null)
-                                            await Kicked.Invoke(kick);
-                                        continue;
-                                    case ResponseCode.Blocked:
-                                        if (Banned != null)
-                                            await Banned.Invoke(kick);
-                                        continue;
-                                    case ResponseCode.ServerShutdown:
-                                        if (ServerShutdown != null)
-                                            await ServerShutdown.Invoke(kick);
-                                        continue;
-                                }
-                            }
-                            return result;
-                        }
-                    }
-                }
-                catch
-                {
-                    if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
-                        return default;
-                    else
-                        throw;
-                }
-            }
-        }
-        public Task<Classes.PackageSource> ReceiveSourceWithoutCryptographyWithProcessingAsync(TimeSpan timeout, CancellationToken token = default)
-        {
-            var cancel = new CancellationTokenSource();
-            token.Register(cancel.Cancel);
-            var task = Task.Run(() => ReceiveSourceWithoutCryptographyWithProcessingAsync(cancel.Token));
-
-            if (task.Wait(timeout))
-                return task;
-            else
-            {
-                cancel.Cancel();
-                return null;
-            }
-        }
         #endregion
         #region ReceiveWithProcessing
         public async Task<Package<T>?> ReceiveWithoutCryptographyWithProcessingAsync<T>(CancellationToken token = default) where T : IProtobufSerializable<T>, new()
@@ -258,6 +189,130 @@ namespace TCPLib.Client.Net
             {
                 cancel.Cancel();
                 return Task.FromResult<Package<T>?>(null);
+            }
+        }
+        #endregion
+        #region ReceiveSourceWithProcessing
+        public async Task<Classes.PackageSource> ReceiveSourceWithoutCryptographyWithProcessingAsync(CancellationToken token = default)
+        {
+            while (true)
+            {
+                try
+                {
+                    while (true)
+                    {
+                        while (stream.DataAvailable)
+                        {
+                            if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
+                                return default;
+
+                            var result = await ReceiveSourceWithoutCryptographyAsync(token);
+
+                            if (result.Type == "KickMessage")
+                            {
+                                var kick = new KickMessage().FromBytes(result.Data);
+                                switch (kick.code)
+                                {
+                                    case ResponseCode.Kicked:
+                                        if (Kicked != null)
+                                            await Kicked.Invoke(kick);
+                                        continue;
+                                    case ResponseCode.Blocked:
+                                        if (Banned != null)
+                                            await Banned.Invoke(kick);
+                                        continue;
+                                    case ResponseCode.ServerShutdown:
+                                        if (ServerShutdown != null)
+                                            await ServerShutdown.Invoke(kick);
+                                        continue;
+                                }
+                            }
+                            return result;
+                        }
+                    }
+                }
+                catch
+                {
+                    if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
+                        return default;
+                    else
+                        throw;
+                }
+            }
+        }
+        public Task<Classes.PackageSource> ReceiveSourceWithoutCryptographyWithProcessingAsync(TimeSpan timeout, CancellationToken token = default)
+        {
+            var cancel = new CancellationTokenSource();
+            token.Register(cancel.Cancel);
+            var task = Task.Run(() => ReceiveSourceWithoutCryptographyWithProcessingAsync(cancel.Token));
+
+            if (task.Wait(timeout))
+                return task;
+            else
+            {
+                cancel.Cancel();
+                return null;
+            }
+        }
+        public async Task<Classes.PackageSource> ReceiveSourceWithProcessingAsync(CancellationToken token = default)
+        {
+            while (true)
+            {
+                try
+                {
+                    while (true)
+                    {
+                        while (stream.DataAvailable)
+                        {
+                            if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
+                                return default;
+
+                            var result = await ReceiveSourceAsync(token);
+
+                            if (result.Type == "KickMessage")
+                            {
+                                var kick = new KickMessage().FromBytes(result.Data);
+                                switch (kick.code)
+                                {
+                                    case ResponseCode.Kicked:
+                                        if (Kicked != null)
+                                            await Kicked.Invoke(kick);
+                                        continue;
+                                    case ResponseCode.Blocked:
+                                        if (Banned != null)
+                                            await Banned.Invoke(kick);
+                                        continue;
+                                    case ResponseCode.ServerShutdown:
+                                        if (ServerShutdown != null)
+                                            await ServerShutdown.Invoke(kick);
+                                        continue;
+                                }
+                            }
+                            return result;
+                        }
+                    }
+                }
+                catch
+                {
+                    if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
+                        return default;
+                    else
+                        throw;
+                }
+            }
+        }
+        public Task<Classes.PackageSource> ReceiveSourceWithProcessingAsync(TimeSpan timeout, CancellationToken token = default)
+        {
+            var cancel = new CancellationTokenSource();
+            token.Register(cancel.Cancel);
+            var task = Task.Run(() => ReceiveSourceWithProcessingAsync(cancel.Token));
+
+            if (task.Wait(timeout))
+                return task;
+            else
+            {
+                cancel.Cancel();
+                return null;
             }
         }
         #endregion

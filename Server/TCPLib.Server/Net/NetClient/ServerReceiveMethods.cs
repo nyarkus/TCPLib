@@ -285,6 +285,96 @@ namespace TCPLib.Server.Net
             }
         }
         #endregion
+        #region ReceiveSourceWithProcessing
+        public async Task<Classes.PackageSource> ReceiveSourceWithProcessingAsync<T>(CancellationToken token = default)
+        {
+            try
+            {
+                while (true)
+                {
+                    if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
+                        return default;
+
+                    var result = await ReceiveSourceAsync();
+                    if (result.Type == "KickMessage")
+                    {
+                        var kick = new Classes.KickMessage().FromBytes(result.Data);
+                        if (kick.code == Classes.ResponseCode.DisconnectedByUser)
+                            OnDisconnected();
+                    }
+
+                    if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
+                        return default;
+
+                    return result;
+                }
+            }
+            catch
+            {
+                if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
+                    return default;
+                else throw;
+            }
+        }
+        public Task<Classes.PackageSource> ReceiveSourceWithProcessingAsync<T>(TimeSpan timeout, CancellationToken token = default)
+        {
+            var cancel = new CancellationTokenSource();
+            token.Register(cancel.Cancel);
+            var task = Task.Run(() => ReceiveSourceWithProcessingAsync<T>(cancel.Token));
+
+            if (task.Wait(timeout))
+                return task;
+            else
+            {
+                cancel.Cancel();
+                return Task.FromResult<Classes.PackageSource>(null);
+            }
+        }
+        public async Task<Classes.PackageSource> ReceiveSourceWithoutCryptographyWithProcessingAsync<T>(CancellationToken token = default)
+        {
+            try
+            {
+                while (true)
+                {
+                    if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
+                        return default;
+
+                    var result = await ReceiveSourceWithoutCryptographyAsync();
+                    if (result.Type == "KickMessage")
+                    {
+                        var kick = new Classes.KickMessage().FromBytes(result.Data);
+                        if (kick.code == Classes.ResponseCode.DisconnectedByUser)
+                            OnDisconnected();
+                    }
+
+                    if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
+                        return default;
+
+                    return result;
+                }
+            }
+            catch
+            {
+                if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
+                    return default;
+                else throw;
+            }
+        }
+        public Task<Classes.PackageSource> ReceiveSourceWithoutCryptographyWithProcessingAsync<T>(TimeSpan timeout, CancellationToken token = default)
+        {
+            var cancel = new CancellationTokenSource();
+            token.Register(cancel.Cancel);
+            var task = Task.Run(() => ReceiveSourceWithoutCryptographyWithProcessingAsync<T>(cancel.Token));
+
+            if (task.Wait(timeout))
+                return task;
+            else
+            {
+                cancel.Cancel();
+                return Task.FromResult<Classes.PackageSource>(null);
+            }
+        }
+        #endregion
         public async Task<Package<T>?> ReceiveAsync<T>(CancellationToken token = default) where T : IProtobufSerializable<T>, new()
         {
             while (true)
