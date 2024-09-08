@@ -28,9 +28,9 @@ let downloadProtoc() =
     printfn "Download protoc..."
     if OperatingSystem.IsWindows() then
         if Environment.Is64BitOperatingSystem then
-            downloadFile "https://github.com/protocolbuffers/protobuf/releases/download/v27.3/protoc-27.3-win64.zip" temp |> Async.RunSynchronously
+            downloadFile "https://github.com/protocolbuffers/protobuf/releases/download/v28.0/protoc-28.0-win64.zip" temp |> Async.RunSynchronously
         else 
-            downloadFile "https://github.com/protocolbuffers/protobuf/releases/download/v27.3/protoc-27.3-win32.zip" temp |> Async.RunSynchronously
+            downloadFile "https://github.com/protocolbuffers/protobuf/releases/download/v28.0/protoc-28.0-win32.zip" temp |> Async.RunSynchronously
         let archive = ZipFile.Open(temp, ZipArchiveMode.Read)
         let protoc = 
             archive.Entries
@@ -42,9 +42,9 @@ let downloadProtoc() =
         archive.Dispose()
     elif OperatingSystem.IsLinux() then
         if Environment.Is64BitOperatingSystem then
-            downloadFile "https://github.com/protocolbuffers/protobuf/releases/download/v27.3/protoc-27.3-linux-x86_64.zip" temp |> Async.RunSynchronously
+            downloadFile "https://github.com/protocolbuffers/protobuf/releases/download/v28.0/protoc-28.0-linux-x86_64.zip" temp |> Async.RunSynchronously
         else 
-            downloadFile "https://github.com/protocolbuffers/protobuf/releases/download/v27.3/protoc-27.3-linux-x86_32.zip" temp |> Async.RunSynchronously
+            downloadFile "https://github.com/protocolbuffers/protobuf/releases/download/v28.0/protoc-28.0-linux-x86_32.zip" temp |> Async.RunSynchronously
         let archive = ZipFile.Open(temp, ZipArchiveMode.Read)
         let protoc = 
             archive.Entries

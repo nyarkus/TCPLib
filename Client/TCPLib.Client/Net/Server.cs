@@ -35,6 +35,21 @@ namespace TCPLib.Client.Net
             OnKick = new CancellationTokenSource();
         }
 
+        public async Task Disconnect()
+        {
+            var kicked = new KickMessage(ResponseCode.DisconnectedByUser);
+
+            await SendAsync(kicked);
+            OnKick.Cancel();
+
+            stream.Close();
+            stream.Dispose();
+            client.Dispose();
+
+            if(Kicked != null)
+                await Kicked.Invoke(kicked);
+        }
+
     }
     public enum EncryptType
     {

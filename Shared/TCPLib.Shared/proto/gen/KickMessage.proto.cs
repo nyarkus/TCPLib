@@ -26,11 +26,12 @@ namespace TCPLib.Protobuf {
           string.Concat(
             "Chdwcm90by9LaWNrTWVzc2FnZS5wcm90byJCCgtLaWNrTWVzc2FnZRITCgZy",
             "ZWFzb24YASABKAlIAIgBARITCgRjb2RlGAIgASgOMgUuQ29kZUIJCgdfcmVh",
-            "c29uIiIKC1Jlc3BvbmRDb2RlEhMKBGNvZGUYASABKA4yBS5Db2RlKpMBCgRD",
+            "c29uIiIKC1Jlc3BvbmRDb2RlEhMKBGNvZGUYASABKA4yBS5Db2RlKqsBCgRD",
             "b2RlEgYKAk9LEAASDwoLQkFEUkVTUE9OU0UQARIQCgxTRVJWRVJJU0ZVTEwQ",
             "AhIVChFESUZGRVJFTlRWRVJTSU9OUxADEgsKB1RJTUVPVVQQBBIPCgtTRVJW",
             "RVJFUlJPVBAFEhIKDlNFUlZFUlNIVVRET1dOEAYSCwoHQkxPQ0tFRBAHEgoK",
-            "BktJQ0tFRBAIQhKqAg9UQ1BMaWIuUHJvdG9idWZiBnByb3RvMw=="));
+            "BktJQ0tFRBAIEhYKEkRJU0NPTk5FQ1RFREJZVVNFUhAJQhKqAg9UQ1BMaWIu",
+            "UHJvdG9idWZiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::TCPLib.Protobuf.Code), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -52,6 +53,7 @@ namespace TCPLib.Protobuf {
     [pbr::OriginalName("SERVERSHUTDOWN")] Servershutdown = 6,
     [pbr::OriginalName("BLOCKED")] Blocked = 7,
     [pbr::OriginalName("KICKED")] Kicked = 8,
+    [pbr::OriginalName("DISCONNECTEDBYUSER")] Disconnectedbyuser = 9,
   }
 
   #endregion

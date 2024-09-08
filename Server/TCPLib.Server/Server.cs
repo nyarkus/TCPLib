@@ -67,16 +67,10 @@ namespace TCPLib.Server
             new Thread(new ThreadStart(() => Started?.Invoke())).Start();
 #endif
         }
-        public async void Stop()
+        public void Stop()
         {
-            Console.Info("Alerting everyone about the shutdown ...");
-            while (Client.clients.Count > 0)
-            {
-                await Client.clients[0].Kick(new KickMessage(ResponseCode.ServerShutdown));
-            }
             _Server.Dispose();
             _UDP.Dispose();
-            Console.Info("Bye!!!");
             Stopped?.Invoke();
         }
         public void ConsoleRead()
