@@ -3,6 +3,6 @@
   <PropertyGroup>
     <Authors>nyarkus_</Authors>
     <RepositoryUrl>https://github.com/nyarkus/TCPLib</RepositoryUrl>
-    <Version>2.1.0</Version>
+    <Version>2.1.1</Version>
   </PropertyGroup>
 </Project>

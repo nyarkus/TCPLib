@@ -59,46 +59,6 @@ namespace TCPLib.Server.Net
                 return Task.FromResult<Classes.PackageSource>(null);
             }
         }
-        public async Task<Classes.PackageSource> ReceiveSourceWithoutCryptographyWithProcessingAsync(CancellationToken token = default)
-        {
-            while (true)
-            {
-                try
-                {
-                    while (true)
-                    {
-                        var result = await ReceiveSourceWithoutCryptographyAsync();
-                        if (result.Type == "KickMessage")
-                        {
-                            var kick = new Classes.KickMessage().FromBytes(result.Data);
-                            if (kick.code == Classes.ResponseCode.DisconnectedByUser)
-                                OnDisconnected();
-                        }
-                        return new Classes.PackageSource(result.Type, result.Data);
-                    }
-                }
-                catch
-                {
-                    if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
-                        return default;
-                    else throw;
-                }
-            }
-        }
-        public Task<Classes.PackageSource> ReceiveSourceWithoutCryptographyWithProcessingAsync(TimeSpan timeout, CancellationToken token = default)
-        {
-            var cancel = new CancellationTokenSource();
-            token.Register(cancel.Cancel);
-            var task = Task.Run(() => ReceiveSourceWithoutCryptographyWithProcessingAsync(cancel.Token));
-
-            if (task.Wait(timeout))
-                return task;
-            else
-            {
-                cancel.Cancel();
-                return Task.FromResult<Classes.PackageSource>(null);
-            }
-        }
         public async Task<Classes.PackageSource> ReceiveSourceAsync(CancellationToken token = default)
         {
             while (true)
@@ -286,7 +246,7 @@ namespace TCPLib.Server.Net
         }
         #endregion
         #region ReceiveSourceWithProcessing
-        public async Task<Classes.PackageSource> ReceiveSourceWithProcessingAsync<T>(CancellationToken token = default)
+        public async Task<Classes.PackageSource> ReceiveSourceWithProcessingAsync(CancellationToken token = default)
         {
             try
             {
@@ -316,11 +276,11 @@ namespace TCPLib.Server.Net
                 else throw;
             }
         }
-        public Task<Classes.PackageSource> ReceiveSourceWithProcessingAsync<T>(TimeSpan timeout, CancellationToken token = default)
+        public Task<Classes.PackageSource> ReceiveSourceWithProcessingAsync(TimeSpan timeout, CancellationToken token = default)
         {
             var cancel = new CancellationTokenSource();
             token.Register(cancel.Cancel);
-            var task = Task.Run(() => ReceiveSourceWithProcessingAsync<T>(cancel.Token));
+            var task = Task.Run(() => ReceiveSourceWithProcessingAsync(cancel.Token));
 
             if (task.Wait(timeout))
                 return task;
@@ -330,7 +290,7 @@ namespace TCPLib.Server.Net
                 return Task.FromResult<Classes.PackageSource>(null);
             }
         }
-        public async Task<Classes.PackageSource> ReceiveSourceWithoutCryptographyWithProcessingAsync<T>(CancellationToken token = default)
+        public async Task<Classes.PackageSource> ReceiveSourceWithoutCryptographyWithProcessingAsync(CancellationToken token = default)
         {
             try
             {
@@ -360,11 +320,11 @@ namespace TCPLib.Server.Net
                 else throw;
             }
         }
-        public Task<Classes.PackageSource> ReceiveSourceWithoutCryptographyWithProcessingAsync<T>(TimeSpan timeout, CancellationToken token = default)
+        public Task<Classes.PackageSource> ReceiveSourceWithoutCryptographyWithProcessingAsync(TimeSpan timeout, CancellationToken token = default)
         {
             var cancel = new CancellationTokenSource();
             token.Register(cancel.Cancel);
-            var task = Task.Run(() => ReceiveSourceWithoutCryptographyWithProcessingAsync<T>(cancel.Token));
+            var task = Task.Run(() => ReceiveSourceWithoutCryptographyWithProcessingAsync(cancel.Token));
 
             if (task.Wait(timeout))
                 return task;
