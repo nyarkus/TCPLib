@@ -8,6 +8,9 @@
   <a href="https://github.com/Kacianoki/TCPLib/pulse" alt="Activity">
         <img src="https://img.shields.io/github/commit-activity/m/Kacianoki/TCPLib" />
   </a>
+  <a href="https://app.codacy.com/gh/nyarkus/TCPLib/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade" alt="Activity">
+        <img src="https://app.codacy.com/project/badge/Grade/759eceda0f5b4d2db25faa0b08868577" />
+  </a>
 </p>
 
 | TCPLib.Server | TCPLib.Client | TCPLib.Shared |
