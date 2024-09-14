@@ -2,16 +2,17 @@
 using System.Net.Sockets;
 using System;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 
 namespace TCPLib.Client.Net
 {
     public class ServerInfo
     {
-        public int MaxPlayers;
-        public int Players;
-        public string Name;
-        public string Description;
-        public TimeSpan Ping;
+        public int MaxPlayers { get; private set; }
+        public int Players { get; private set; }
+        public string Name { get; private set; }
+        public string Description { get; private set; }
+        public TimeSpan Ping { get; private set; }
 
 
         /// <summary>
@@ -37,9 +38,18 @@ namespace TCPLib.Client.Net
 
             client.Send(new byte[] { 0 }, 1, address);
             var result = client.Receive(ref address);
-            DateTime end = DateTime.UtcNow;
-            var res = Newtonsoft.Json.JsonConvert.DeserializeObject<ServerInfo>(System.Text.Encoding.UTF8.GetString(result));
-            res.Ping = end - start;
+            var ping = DateTime.UtcNow - start;
+
+            var jobject = JObject.Parse(System.Text.Encoding.UTF8.GetString(result));
+
+            var res = new ServerInfo()
+            {
+                MaxPlayers = (int)jobject["MaxPlayers"],
+                Players = (int)jobject["Players"],
+                Name = (string)jobject["Name"],
+                Description = (string)jobject["Description"],
+                Ping = ping,
+            };
             return Task.FromResult(res);
         }
         /// <summary>

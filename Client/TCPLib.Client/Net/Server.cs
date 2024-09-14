@@ -1,3 +1,5 @@
+using Org.BouncyCastle.Security.Certificates;
+using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
@@ -6,7 +8,7 @@ using TCPLib.Classes;
 
 namespace TCPLib.Client.Net
 {
-    public partial class Server
+    public partial class Server : IDisposable
     {
         public EncryptType EncryptType { get; set; } = EncryptType.RSA;
 
@@ -18,10 +20,10 @@ namespace TCPLib.Client.Net
         public IPAddress IP { get; set; }
         public int Port { get; set; }
 
-        public TcpClient client { get; private set; }
-        public NetworkStream stream { get; private set; }
+        public TcpClient client { get; set; }
+        public NetworkStream stream { get; set; }
 
-        public Encryptor encryptor;
+        public Encryptor encryptor { get; set; }
 
         protected CancellationTokenSource OnKick;
 
@@ -47,9 +49,18 @@ namespace TCPLib.Client.Net
             client.Dispose();
 
             if(Kicked != null)
+            {
                 await Kicked.Invoke(kicked);
+            }
         }
 
+        public void Dispose()
+        {
+            if(stream != null)
+            {
+                Disconnect().Wait();
+            }
+        }
     }
     public enum EncryptType
     {

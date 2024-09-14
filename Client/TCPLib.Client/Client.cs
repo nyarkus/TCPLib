@@ -33,7 +33,9 @@ namespace TCPLib.Client
 
             var code = await server.ReceiveAsync<RespondCode>();
             if (code.Value.Value.code != ResponseCode.Ok)
+            {
                 throw new Exceptions.ServerConnectionException(code.Value.Value.code);
+            }
             ConnectedServer = server;
             return server;
         }

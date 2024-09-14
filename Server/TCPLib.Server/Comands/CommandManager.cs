@@ -15,6 +15,7 @@ namespace TCPLib.Server.Commands
                     foreach (var syn in cmd.Synonyms)
                         foreach (var s in command.Synonyms)
                             if (syn == s) throw new CommandAlreadyExists(s);
+
                     if (cmd.Name == command.Name)
                         throw new CommandAlreadyExists(command.Name);
                 }
@@ -31,12 +32,14 @@ namespace TCPLib.Server.Commands
         {
             if (line == null)
                 return;
+
             while (line.StartsWith(" ")) line = line.TrimStart();
-            if (line is null || line.Length == 0)
-            {
-                Console.Error($"Command \"{line}\" was not found.");
-                return;
-            }
+                if (line is null || line.Length == 0)
+                {
+                    Console.Error($"Command \"{line}\" was not found.");
+                    return;
+                }
+
             var splited = line.Split(' ');
             foreach (var cmd in commands)
             {
@@ -47,7 +50,7 @@ namespace TCPLib.Server.Commands
                     {
                         var arg = new List<string>();
                         for (int i = 1; i < splited.Length; i++) arg.Add(splited[i]);
-                        args = arg.ToArray();
+                            args = arg.ToArray();
                     }
                     cmd.Execute(args);
                     return;

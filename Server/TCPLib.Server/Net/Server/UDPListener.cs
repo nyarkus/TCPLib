@@ -7,10 +7,10 @@ namespace TCPLib.Server.Net
 {
     public class UDPListener : IDisposable
     {
-        public UdpClient Listener;
-        public int Port;
-        private CancellationTokenSource StopToken;
-        public bool Started = false;
+        private UdpClient Listener;
+        private int Port;
+        private readonly CancellationTokenSource StopToken;
+        public bool Started { get; private set; } = false;
 
         public UDPListener(int port)
         {

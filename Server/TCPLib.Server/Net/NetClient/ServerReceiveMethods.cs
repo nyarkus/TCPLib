@@ -56,7 +56,7 @@ namespace TCPLib.Server.Net
             else
             {
                 cancel.Cancel();
-                return Task.FromResult<Classes.PackageSource>(null);
+                return Task.FromResult<Classes.PackageSource>(default);
             }
         }
         public async Task<Classes.PackageSource> ReceiveSourceWithoutCryptographyWithProcessingAsync(CancellationToken token = default)
@@ -96,7 +96,7 @@ namespace TCPLib.Server.Net
             else
             {
                 cancel.Cancel();
-                return Task.FromResult<Classes.PackageSource>(null);
+                return Task.FromResult<Classes.PackageSource>(default);
             }
         }
         public async Task<Classes.PackageSource> ReceiveSourceAsync(CancellationToken token = default)
@@ -147,7 +147,7 @@ namespace TCPLib.Server.Net
             else
             {
                 cancel.Cancel();
-                return Task.FromResult<Classes.PackageSource>(null);
+                return Task.FromResult<Classes.PackageSource>(default);
             }
         }
         #endregion
@@ -327,7 +327,7 @@ namespace TCPLib.Server.Net
             else
             {
                 cancel.Cancel();
-                return Task.FromResult<Classes.PackageSource>(null);
+                return Task.FromResult<Classes.PackageSource>(default);
             }
         }
         public async Task<Classes.PackageSource> ReceiveSourceWithoutCryptographyWithProcessingAsync<T>(CancellationToken token = default)
@@ -371,7 +371,7 @@ namespace TCPLib.Server.Net
             else
             {
                 cancel.Cancel();
-                return Task.FromResult<Classes.PackageSource>(null);
+                return Task.FromResult<Classes.PackageSource>(default);
             }
         }
         #endregion

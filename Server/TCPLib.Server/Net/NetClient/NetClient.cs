@@ -9,15 +9,22 @@ using System.Threading;
 
 namespace TCPLib.Server.Net
 {
-    public abstract partial class NetClient
+    public abstract partial class NetClient : IDisposable
     {
         public EncryptType EncryptType { get; set; } = EncryptType.RSA;
 
-        public TcpClient client;
-        public NetworkStream stream;
+        public TcpClient client { get; set; }
+        public NetworkStream stream { get; set; }
         public uint id { get; private set; }
-        public static List<NetClient> clients = new List<NetClient>();
-        public Encryptor Encryptor;
+        public static IReadOnlyCollection<NetClient> clients
+        {
+            get
+            {
+                return _clients;
+            }
+        }
+        protected static List<NetClient> _clients = new List<NetClient>();
+        public Encryptor Encryptor { get; set; }
 
         protected CancellationTokenSource OnKick;
         public NetClient(TcpClient client, NetworkStream stream)
@@ -43,8 +50,20 @@ namespace TCPLib.Server.Net
             OnKick.Cancel();
 
             client.Close();
-            clients.Remove(this);
+            _clients.Remove(this);
             GC.Collect();
+        }
+
+        public void Dispose()
+        {
+            if(stream != null)
+            {
+                Kick(new KickMessage(ResponseCode.DisconnectedByUser)).Wait();
+            }
+            else
+            {
+                OnDisconnected();
+            }
         }
     }
     public enum EncryptType

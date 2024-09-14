@@ -18,29 +18,41 @@ namespace TCPLib.Client.Net
                 try
                 {
                     if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
+                    {
                         return default;
+                    }
 
                     var length = BitConverter.ToInt32(await Read(4, stream), 0);
 
                     var bytes = await Read(length, stream);
                     if (EncryptType == EncryptType.AES)
+                    {
                         bytes = encryptor.AESDecrypt(bytes);
+                    }
                     else
+                    {
                         bytes = encryptor.RSADecrypt(bytes);
+                    }
 
                     var package = Protobuf.Package.Parser.ParseFrom(bytes);
 
                     if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
+                    {
                         return default;
+                    }
 
                     return new Classes.PackageSource(package.Type, package.Data.ToArray());
                 }
                 catch
                 {
                     if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
+                    {
                         return default;
+                    }
                     else
+                    {
                         throw;
+                    }
                 }
             }
         }
@@ -51,7 +63,9 @@ namespace TCPLib.Client.Net
             var task = Task.Run(() => ReceiveSourceAsync(cancel.Token));
 
             if (task.Wait(timeout))
+            {
                 return task;
+            }
             else
             {
                 cancel.Cancel();
@@ -65,7 +79,9 @@ namespace TCPLib.Client.Net
                 try
                 {
                     if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
+                    {
                         return default;
+                    }
 
                     var length = BitConverter.ToInt32(await Read(4, stream), 0);
                     var bytes = await Read(length, stream);
@@ -73,16 +89,22 @@ namespace TCPLib.Client.Net
                     var package = Protobuf.Package.Parser.ParseFrom(bytes);
 
                     if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
+                    {
                         return default;
+                    }
 
                     return new PackageSource(package.Type, package.Data.ToArray());
                 }
                 catch
                 {
                     if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
+                    {
                         return default;
+                    }
                     else
+                    {
                         throw;
+                    }
                 }
             }
         }
@@ -93,7 +115,9 @@ namespace TCPLib.Client.Net
             var task = Task.Run(() => ReceiveSourceWithoutCryptographyAsync(cancel.Token));
 
             if (task.Wait(timeout))
+            {
                 return task;
+            }
             else
             {
                 cancel.Cancel();
@@ -114,15 +138,21 @@ namespace TCPLib.Client.Net
                     {
                         case ResponseCode.Kicked:
                             if (Kicked != null)
+                            {
                                 await Kicked.Invoke(kick);
+                            }
                             continue;
                         case ResponseCode.Blocked:
                             if (Banned != null)
+                            {
                                 await Banned.Invoke(kick);
+                            }
                             continue;
                         case ResponseCode.ServerShutdown:
                             if (ServerShutdown != null)
+                            {
                                 await ServerShutdown.Invoke(kick);
+                            }
                             continue;
                     }
                 }
@@ -136,7 +166,9 @@ namespace TCPLib.Client.Net
             var task = Task.Run(() => ReceiveWithoutCryptographyWithProcessingAsync<T>(cancel.Token));
 
             if (task.Wait(timeout))
+            {
                 return task;
+            }
             else
             {
                 cancel.Cancel();
@@ -155,15 +187,21 @@ namespace TCPLib.Client.Net
                     {
                         case ResponseCode.Kicked:
                             if (Kicked != null)
+                            {
                                 await Kicked.Invoke(kick);
+                            }
                             continue;
                         case ResponseCode.Blocked:
                             if (Banned != null)
+                            {
                                 await Banned.Invoke(kick);
+                            }
                             continue;
                         case ResponseCode.ServerShutdown:
                             if (ServerShutdown != null)
+                            {
                                 await ServerShutdown.Invoke(kick);
+                            }
                             continue;
                     }
                 }
@@ -177,7 +215,9 @@ namespace TCPLib.Client.Net
             var task = Task.Run(() => ReceiveWithProcessingAsync<T>(cancel.Token));
 
             if (task.Wait(timeout))
+            {
                 return task;
+            }
             else
             {
                 cancel.Cancel();
@@ -195,7 +235,9 @@ namespace TCPLib.Client.Net
                     while (true)
                     {
                         if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
+                        {
                             return default;
+                        }
 
                         var result = await ReceiveSourceWithoutCryptographyAsync(token);
 
@@ -206,15 +248,21 @@ namespace TCPLib.Client.Net
                             {
                                 case ResponseCode.Kicked:
                                     if (Kicked != null)
+                                    {
                                         await Kicked.Invoke(kick);
+                                    }
                                     continue;
                                 case ResponseCode.Blocked:
                                     if (Banned != null)
+                                    {
                                         await Banned.Invoke(kick);
+                                    }
                                     continue;
                                 case ResponseCode.ServerShutdown:
                                     if (ServerShutdown != null)
+                                    {
                                         await ServerShutdown.Invoke(kick);
+                                    }
                                     continue;
                             }
                         }
@@ -238,7 +286,9 @@ namespace TCPLib.Client.Net
             var task = Task.Run(() => ReceiveSourceWithoutCryptographyWithProcessingAsync(cancel.Token));
 
             if (task.Wait(timeout))
+            {
                 return task;
+            }
             else
             {
                 cancel.Cancel();
@@ -254,7 +304,9 @@ namespace TCPLib.Client.Net
                     while (true)
                     {
                         if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
+                        {
                             return default;
+                        }
 
                         var result = await ReceiveSourceAsync(token);
 
@@ -265,15 +317,21 @@ namespace TCPLib.Client.Net
                             {
                                 case ResponseCode.Kicked:
                                     if (Kicked != null)
+                                    {
                                         await Kicked.Invoke(kick);
+                                    }
                                     continue;
                                 case ResponseCode.Blocked:
                                     if (Banned != null)
+                                    {
                                         await Banned.Invoke(kick);
+                                    }
                                     continue;
                                 case ResponseCode.ServerShutdown:
                                     if (ServerShutdown != null)
+                                    {
                                         await ServerShutdown.Invoke(kick);
+                                    }
                                     continue;
                             }
                         }
@@ -296,7 +354,9 @@ namespace TCPLib.Client.Net
             var task = Task.Run(() => ReceiveSourceWithProcessingAsync(cancel.Token));
 
             if (task.Wait(timeout))
+            {
                 return task;
+            }
             else
             {
                 cancel.Cancel();
@@ -311,7 +371,9 @@ namespace TCPLib.Client.Net
                 try
                 {
                     if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
+                    {
                         return default;
+                    }
 
                     var length = BitConverter.ToInt32(await Read(4, stream), 0);
                     var bytes = await Read(length, stream);
@@ -319,16 +381,22 @@ namespace TCPLib.Client.Net
                     var package = Protobuf.Package.Parser.ParseFrom(bytes);
 
                     if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
+                    {
                         return default;
+                    }
 
                     return new Package<T>(package.Type, package.Data.ToArray());
                 }
                 catch
                 {
                     if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
+                    {
                         return default;
+                    }
                     else
+                    {
                         throw;
+                    }
                 }
             }
         }
@@ -339,7 +407,9 @@ namespace TCPLib.Client.Net
             var task = Task.Run(() => ReceiveWithoutCryptographyAsync<T>(cancel.Token));
 
             if (task.Wait(timeout))
+            {
                 return task;
+            }
             else
             {
                 cancel.Cancel();
@@ -354,20 +424,28 @@ namespace TCPLib.Client.Net
                 try
                 {
                     if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
+                    {
                         return default;
+                    }
 
                     var length = BitConverter.ToInt32(await Read(4, stream), 0);
 
                     var bytes = await Read(length, stream);
                     if (EncryptType == EncryptType.AES)
+                    {
                         bytes = encryptor.AESDecrypt(bytes);
+                    }
                     else
+                    {
                         bytes = encryptor.RSADecrypt(bytes);
+                    }
 
                     var package = Protobuf.Package.Parser.ParseFrom(bytes);
 
                     if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
+                    {
                         return default;
+                    }
 
                     return new Package<T>(package.Type, package.Data.ToArray());
                     
@@ -375,9 +453,13 @@ namespace TCPLib.Client.Net
                 catch
                 {
                     if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
+                    {
                         return default;
+                    }
                     else
+                    {
                         throw;
+                    }
                 }
             }
         }
@@ -388,7 +470,9 @@ namespace TCPLib.Client.Net
             var task = Task.Run(() => ReceiveAsync<T>(cancel.Token));
 
             if (task.Wait(timeout))
+            {
                 return task;
+            }
             else
             {
                 cancel.Cancel();
