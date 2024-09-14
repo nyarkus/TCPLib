@@ -381,26 +381,23 @@ namespace TCPLib.Server.Net
             {
                 try
                 {
-                    while (stream.DataAvailable)
-                    {
-                        if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
-                            return default;
+                    if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
+                        return default;
 
-                        var length = BitConverter.ToInt32(await Read(4, stream), 0);
+                    var length = BitConverter.ToInt32(await Read(4, stream), 0);
 
-                        var bytes = await Read(length, stream);
-                        if (EncryptType == EncryptType.AES)
-                            bytes = Encryptor.AESDecrypt(bytes);
-                        else
-                            bytes = Encryptor.RSADecrypt(bytes);
+                    var bytes = await Read(length, stream);
+                    if (EncryptType == EncryptType.AES)
+                        bytes = Encryptor.AESDecrypt(bytes);
+                    else
+                        bytes = Encryptor.RSADecrypt(bytes);
 
-                        var package = Protobuf.Package.Parser.ParseFrom(bytes);
+                    var package = Protobuf.Package.Parser.ParseFrom(bytes);
 
-                        if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
-                            return default;
+                    if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
+                        return default;
 
-                        return new Package<T>(package.Type, package.Data.ToArray());
-                    }   
+                    return new Package<T>(package.Type, package.Data.ToArray());
                 }
                 catch
                 {
