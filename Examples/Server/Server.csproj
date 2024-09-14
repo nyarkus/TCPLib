@@ -64,6 +64,10 @@
       <Project>{cd9bb353-6f36-42e1-bfc5-1356cf248bf4}</Project>
       <Name>TCPLib.Server</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Shared\TCPLib.Shared\TCPLib.Shared.csproj">
+      <Project>{2e903667-e3c5-4355-b3d9-b7ae5e9099c8}</Project>
+      <Name>TCPLib.Shared</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
