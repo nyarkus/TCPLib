@@ -61,11 +61,11 @@ public class NetTest
         Message message = new Message() { Data = "eb" };
 
         await client.ConnectedServer.SendAsync(message);
-        var result = await Client.clients[0].ReceiveWithProcessingAsync<Message>();
+        var result = await Client.clients.First().ReceiveWithProcessingAsync<Message>();
 
         Assert.Equal(result.Value.Unpack().Data, message.Data);
 
-        await Client.clients[0].SendAsync(message);
+        await Client.clients.First().SendAsync(message);
         result = await client.ConnectedServer.ReceiveWithProcessingAsync<Message>();
 
         Assert.Equal(result.Value.Unpack().Data, message.Data);
@@ -82,9 +82,9 @@ public class NetTest
         if (Client.clients.Count == 0)
             Assert.Fail("The client was unable to connect");
 
-        await Client.clients[0].Kick(new(TCPLib.Classes.ResponseCode.Kicked));
+        await Client.clients.First().Kick(new(TCPLib.Classes.ResponseCode.Kicked));
         await client.ConnectedServer.Disconnect();
-        await Client.clients[0].ReceiveWithProcessingAsync<Message>(TimeSpan.FromSeconds(5));
+        await Client.clients.First().ReceiveWithProcessingAsync<Message>(TimeSpan.FromSeconds(5));
 
         Assert.True(Client.clients.Count == 0);
     }
