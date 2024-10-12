@@ -22,10 +22,10 @@ namespace TCPLib.Client
             }
             Server server = new Server(address, port, tcpClient, tcpClient.GetStream());
 
-            var key = await server.ReceiveWithoutCryptographyWithProcessingAsync<Key>();
+            var key = await server.ReceiveAsync<Key>(false);
 
             server.encryptor = new Encryptor();
-            server.encryptor.SetPublicRSAKey(key.Value.Value.Value);
+            server.encryptor.SetPublicRSAKey(key.Value.Value);
 
             var aesKey = server.encryptor.GetAESKey();
             await server.SendAsync(aesKey);
@@ -34,9 +34,9 @@ namespace TCPLib.Client
             server.EncryptType = EncryptType.AES;
 
             var code = await server.ReceiveAsync<RespondCode>();
-            if (code.Value.Value.code != ResponseCode.Ok)
+            if (code.Value.code != ResponseCode.Ok)
             {
-                throw new Exceptions.ServerConnectionException(code.Value.Value.code);
+                throw new Exceptions.ServerConnectionException(code.Value.code);
             }
             ConnectedServer = server;
             return server;
