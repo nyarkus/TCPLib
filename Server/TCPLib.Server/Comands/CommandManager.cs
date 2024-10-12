@@ -17,7 +17,9 @@ namespace TCPLib.Server.Commands
                             if (syn == s) throw new CommandAlreadyExists(s);
 
                     if (cmd.Name == command.Name)
+                    {
                         throw new CommandAlreadyExists(command.Name);
+                    }
                 }
                 commands.Add(command);
                 Console.Debug($"The new \"{command.Name}\" command has been registered");

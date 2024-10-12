@@ -26,9 +26,13 @@ namespace TCPLib.Client.Net
         {
             var task = Task.Run(() => _GetFrom(ref address));
             if (task.Wait(TimeSpan.FromSeconds(30)))
+            {
                 return task.Result;
+            }
             else
+            {
                 throw new TimeoutException();
+            }
 
         }
         private static Task<ServerInfo> _GetFrom(ref IPEndPoint address)

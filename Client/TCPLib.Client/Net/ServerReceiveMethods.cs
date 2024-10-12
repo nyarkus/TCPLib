@@ -64,6 +64,7 @@ namespace TCPLib.Client.Net
 
             if (task.Wait(timeout))
             {
+                cancel.Dispose();
                 return task;
             }
             else

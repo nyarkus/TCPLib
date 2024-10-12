@@ -36,12 +36,18 @@ namespace TCPLib.Server.Commands
             else
             {
                 if (args[0].IndexOf(':') == -1)
+                {
                     ip = args[0];
+                }
                 else
+                {
                     ip = args[0].Split(':')[0];
+                }
                 foreach (var s in Client.clients)
                     if (s.client.Client.RemoteEndPoint.ToString().Split(':')[0] == ip)
+                    {
                         client = s;
+                    }
             }
             var list = SaveFiles.Ban.Load().ToList();
             foreach (var s in list)
@@ -58,13 +64,13 @@ namespace TCPLib.Server.Commands
                 {
                     reason += args[i] + " ";
                 }
-                reason = reason.TrimEnd(' ');
-                reason = reason.TrimStart(' ');
-                var ban = SaveFiles.Ban.CreateBan(ip, reason);
+                var ban = SaveFiles.Ban.CreateBan(ip, reason.Trim(' '));
                 list.Add(ban);
                 SaveFiles.Ban.Save(list.ToArray());
                 if (client != null)
+                {
                     await client.Kick(new KickMessage(ResponseCode.Blocked, reason));
+                }
                 Console.Info($"{ip} has been blocked with reason: {reason}");
             }
             else
@@ -73,7 +79,9 @@ namespace TCPLib.Server.Commands
                 list.Add(ban);
                 SaveFiles.Ban.Save(list.ToArray());
                 if (client != null)
+                {
                     await client.Kick(new KickMessage(ResponseCode.Blocked));
+                }
                 Console.Info($"{ip} has been blocked");
             }
             return true;

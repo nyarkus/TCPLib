@@ -8,8 +8,8 @@ namespace TCPLib.Client
 {
     public sealed partial class Client
     {
-        public TcpClient tcpClient;
-        public Server ConnectedServer;
+        public TcpClient tcpClient { get; private set; }
+        public Server ConnectedServer { get; private set; }
         public Client()
         {
             tcpClient = new TcpClient();
@@ -17,7 +17,9 @@ namespace TCPLib.Client
         public async Task<Server> Connect(IPAddress address, int port)
         {
             if (tcpClient.Connected) throw new Exceptions.ClientAlredyConnected($"{ConnectedServer?.IP}:{ConnectedServer?.Port}");
-            tcpClient.Connect(address, port);
+            {
+                tcpClient.Connect(address, port);
+            }
             Server server = new Server(address, port, tcpClient, tcpClient.GetStream());
 
             var key = await server.ReceiveWithoutCryptographyWithProcessingAsync<Key>();
