@@ -1,6 +1,6 @@
 ﻿namespace TCPLib.Net
 {
-    public interface IProtobufSerializable<T>
+    public interface IDataSerializable<T>
     {
         byte[] ToByteArray();
         T FromBytes(byte[] bytes);

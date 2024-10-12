@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace TCPLib.Classes
 {
-    public struct Key : IProtobufSerializable<Key>
+    public struct Key : IDataSerializable<Key>
     {
         public byte[] Value;
 

@@ -161,7 +161,7 @@ namespace ExampleServer
     }
 }
 ```
-It would be more appropriate to use `ReceiveAsync()` here, but for that, you would need to write a Protobuf schema, compile it, and implement the *TCPLib.Net.IProtobufSerializable* interface, which we don't need right now, so we made a hack instead 😎.
+It would be more appropriate to use `ReceiveAsync()` here, but for that, you would need to write a Protobuf schema, compile it, and implement the *TCPLib.Net.IDataSerializable* interface, which we don't need right now, so we made a hack instead 😎.
 
 ## Implementing the Client Side
 
@@ -194,7 +194,7 @@ using TCPLib.Net;
 
 namespace ExampleClient 
 {
-    internal class Message : IProtobufSerializable<Message>
+    internal class Message : IDataSerializable<Message>
     {
         public string Data;
 

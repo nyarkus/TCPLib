@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace TCPLib.Classes
 {
-    public struct AESKey : IProtobufSerializable<AESKey>
+    public struct AESKey : IDataSerializable<AESKey>
     {
         public byte[] Key;
         public byte[] IV;

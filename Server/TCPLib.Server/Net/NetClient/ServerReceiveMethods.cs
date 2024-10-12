@@ -105,7 +105,7 @@ namespace TCPLib.Server.Net
                 return null;
             }
         }
-        public async Task<DataPackage<T>> ReceiveAsync<T>(bool UseDecryption = true, CancellationToken cancellation = default) where T : IProtobufSerializable<T>, new()
+        public async Task<DataPackage<T>> ReceiveAsync<T>(bool UseDecryption = true, CancellationToken cancellation = default) where T : IDataSerializable<T>, new()
         {
             while (true)
             {
@@ -157,7 +157,7 @@ namespace TCPLib.Server.Net
                 }
             }
         }
-        public async Task<DataPackage<T>?> ReceiveAsync<T>(TimeSpan timeout, bool UseDecryption = true, CancellationToken cancellation = default) where T : IProtobufSerializable<T>, new()
+        public async Task<DataPackage<T>?> ReceiveAsync<T>(TimeSpan timeout, bool UseDecryption = true, CancellationToken cancellation = default) where T : IDataSerializable<T>, new()
         {
             var task = Task.Run(() => ReceiveAsync<T>(UseDecryption, cancellation));
 

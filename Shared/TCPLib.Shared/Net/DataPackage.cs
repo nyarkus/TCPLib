@@ -4,7 +4,7 @@ using Google.Protobuf;
 
 namespace TCPLib.Net
 {
-    public struct DataPackage<T> where T : IProtobufSerializable<T>, new()
+    public struct DataPackage<T> where T : IDataSerializable<T>, new()
     {
         public string Type { get; set; }
         public byte[] Data { get; set; }
@@ -13,7 +13,7 @@ namespace TCPLib.Net
             Type = type;
             Data = value;
         }
-        public DataPackage(string type, IProtobufSerializable<T> value)
+        public DataPackage(string type, IDataSerializable<T> value)
         {
             Type = type;
             Data = value.ToByteArray();

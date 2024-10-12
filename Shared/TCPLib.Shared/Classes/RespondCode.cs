@@ -5,7 +5,7 @@ using Google.Protobuf;
 
 namespace TCPLib.Classes
 {
-    public struct RespondCode : IProtobufSerializable<RespondCode>
+    public struct RespondCode : IDataSerializable<RespondCode>
     {
         public ResponseCode code;
 

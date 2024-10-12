@@ -3,7 +3,7 @@ using TCPLib.Net;
 
 namespace ExampleClient
 {
-    internal struct Message : IProtobufSerializable<Message>
+    internal struct Message : IDataSerializable<Message>
     {
         public string Data;
 

@@ -5,7 +5,7 @@ using TCPLib.Net;
 
 namespace TCPLib.Classes
 {
-    public struct KickMessage : IProtobufSerializable<KickMessage>
+    public struct KickMessage : IDataSerializable<KickMessage>
     {
         public string reason;
         public ResponseCode code;
