@@ -4,22 +4,22 @@ using Google.Protobuf;
 
 namespace TCPLib.Net
 {
-    public struct Package<T> where T : IProtobufSerializable<T>, new()
+    public struct DataPackage<T> where T : IProtobufSerializable<T>, new()
     {
         public string Type { get; set; }
         public byte[] Data { get; set; }
-        public Package(string type, byte[] value)
+        public DataPackage(string type, byte[] value)
         {
             Type = type;
             Data = value;
         }
-        public Package(string type, IProtobufSerializable<T> value)
+        public DataPackage(string type, IProtobufSerializable<T> value)
         {
             Type = type;
             Data = value.ToByteArray();
         }
         public byte[] Pack()
-        => new TCPLib.Protobuf.Package() { Data = ByteString.CopyFrom(Data), Type = Type }.ToByteArray();
+        => new TCPLib.Protobuf.DataPackage() { Data = ByteString.CopyFrom(Data), Type = Type }.ToByteArray();
 
         public T Unpack()
         {

@@ -2,29 +2,34 @@
 
   <PropertyGroup>
     <TargetFrameworks>net8.0;net6.0;net48;netstandard2.0;netstandard2.1</TargetFrameworks>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <GenerateDataPackageOnBuild>True</GenerateDataPackageOnBuild>
     <Title>TCPLib.Server</Title>
     <Description>low-level library for exchanging packets with a remote computer</Description>
     <Copyright>Kacianoki</Copyright>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <DataPackageReadmeFile>README.md</DataPackageReadmeFile>
+    <DataPackageLicenseFile>LICENSE.txt</DataPackageLicenseFile>
     <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
   </PropertyGroup>
 
   <ItemGroup>
     <None Include="..\..\LICENSE.txt">
       <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
+      <DataPackagePath>\</DataPackagePath>
     </None>
     <None Include="..\..\README.md">
       <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
+      <DataPackagePath>\</DataPackagePath>
     </None>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="BouncyCastle.Cryptography" Version="2.4.0" />
-    <PackageReference Include="Google.Protobuf" Version="3.28.2" />
+    <DataPackageReference Include="BouncyCastle.Cryptography" Version="2.4.0" />
+    <DataPackageReference Include="Google.Protobuf" Version="3.28.2" />
+    <DataPackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <DataPackageReference Include="NLog" Version="5.3.4" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="NLog" Version="5.3.4" />
   </ItemGroup>

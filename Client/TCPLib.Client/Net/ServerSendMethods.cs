@@ -7,7 +7,7 @@ namespace TCPLib.Client.Net
     public partial class Server
     {
 
-        public async Task SendWithoutCryptographyAsync<T>(Package<T> data) where T : IProtobufSerializable<T>, new()
+        public async Task SendWithoutCryptographyAsync<T>(DataPackage<T> data) where T : IProtobufSerializable<T>, new()
         {
             var bytes = data.Pack();
             var b = BitConverter.GetBytes(bytes.Length);
@@ -27,7 +27,7 @@ namespace TCPLib.Client.Net
         }
         public async Task SendWithoutCryptographyAsync<T>(T data) where T : IProtobufSerializable<T>, new()
         {
-            var package = new Package<T>(typeof(T).Name, data);
+            var package = new DataPackage<T>(typeof(T).Name, data);
             var bytes = package.Pack();
             var b = BitConverter.GetBytes(bytes.Length);
 
@@ -44,7 +44,7 @@ namespace TCPLib.Client.Net
                     throw;
             }
         }
-        public async Task SendAsync<T>(Package<T> data) where T : IProtobufSerializable<T>, new()
+        public async Task SendAsync<T>(DataPackage<T> data) where T : IProtobufSerializable<T>, new()
         {
 
             if (EncryptType == EncryptType.AES)
@@ -86,7 +86,7 @@ namespace TCPLib.Client.Net
         }
         public async Task SendAsync<T>(T data) where T : IProtobufSerializable<T>, new()    
         {
-            var package = new Package<T>(typeof(T).Name, data);
+            var package = new DataPackage<T>(typeof(T).Name, data);
             if (EncryptType == EncryptType.AES)
             {
                 var bytes = encryptor.AESEncrypt(package.Pack());

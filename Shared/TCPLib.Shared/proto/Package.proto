@@ -2,7 +2,7 @@
 
 option csharp_namespace = "TCPLib.Protobuf";
 
-message Package {
+message DataPackage {
 	bytes data = 1;
 	string type = 2;
 }

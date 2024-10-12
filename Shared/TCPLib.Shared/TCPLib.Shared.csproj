@@ -5,20 +5,25 @@
 		<Protobuf>enable</Protobuf>
 		<Title>TCPLib.Shared</Title>
 		<Description>Dependent package for TCPLib</Description>
-		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<DataPackageReadmeFile>README.md</DataPackageReadmeFile>
+		<DataPackageLicenseFile>LICENSE.txt</DataPackageLicenseFile>
+		<GenerateDataPackageOnBuild>True</GenerateDataPackageOnBuild>
 	</PropertyGroup>
 
 	<ItemGroup>
 	  <None Include="..\..\LICENSE.txt">
 	    <Pack>True</Pack>
-	    <PackagePath>\</PackagePath>
+	    <DataPackagePath>\</DataPackagePath>
 	  </None>
 	  <None Include="..\..\README.md">
 	    <Pack>True</Pack>
-	    <PackagePath>\</PackagePath>
+	    <DataPackagePath>\</DataPackagePath>
 	  </None>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <DataPackageReference Include="BouncyCastle.Cryptography" Version="2.4.0" />
+	  <DataPackageReference Include="Google.Protobuf" Version="3.28.2" />
 	</ItemGroup>
 
 	<ItemGroup>
