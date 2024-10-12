@@ -3,6 +3,7 @@ using System.Net.Sockets;
 using System;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
+using System.Net.NetworkInformation;
 
 namespace TCPLib.Client.Net
 {
@@ -86,9 +87,17 @@ namespace TCPLib.Client.Net
                 client.Send(new byte[] { 0 }, 1, address);
                 var result = client.Receive(ref address);
                 DateTime end = DateTime.UtcNow;
+                var ping = end - start;
+                var jobject = JObject.Parse(System.Text.Encoding.UTF8.GetString(result));
 
-                var res = Newtonsoft.Json.JsonConvert.DeserializeObject<ServerInfo>(System.Text.Encoding.UTF8.GetString(result));
-                res.Ping = end - start;
+                var res = new ServerInfo()
+                {
+                    MaxPlayers = (int)jobject["MaxPlayers"],
+                    Players = (int)jobject["Players"],
+                    Name = (string)jobject["Name"],
+                    Description = (string)jobject["Description"],
+                    Ping = ping,
+                };
                 return Task.FromResult(res);
             }
             catch
