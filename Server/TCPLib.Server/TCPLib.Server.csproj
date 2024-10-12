@@ -24,7 +24,7 @@
 
   <ItemGroup>
     <PackageReference Include="BouncyCastle.Cryptography" Version="2.4.0" />
-    <PackageReference Include="Google.Protobuf" Version="3.28.1" />
+    <PackageReference Include="Google.Protobuf" Version="3.28.2" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="NLog" Version="5.3.4" />
   </ItemGroup>
