@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Text;
+using System.Threading.Tasks;
 
 namespace TCPLib.Server.Commands
 {
@@ -12,7 +13,7 @@ namespace TCPLib.Server.Commands
 
         public Task<bool> Execute(string[] args)
         {
-            string output = "";
+            StringBuilder sb = new StringBuilder();
             if (args.Length == 1)
             {
                 foreach (var s in CommandManager.commands)
@@ -21,38 +22,38 @@ namespace TCPLib.Server.Commands
                     foreach (var syn in s.Synonyms)
                     {
                         if (syn == args[0]) x = true;
-                        output += $"{syn}, ";
+                        {
+                            sb.Append($"{syn}, ");
+                        }
                     }
-                    output = output.TrimEnd(' ');
-                    output = output.TrimEnd(',');
-                    output += " ";
+                    sb.Remove(sb.Length - 2, 2);
                     if (s.Name == args[0]) x = true;
-                    output += $"- {s.Description}\n";
+                    {
+                        sb.AppendLine($" - {s.Description}");
+                    }
                     if (x)
                     {
-                        Console.Info(output);
+                        Console.Info(sb.ToString());
                         return Task.FromResult(true);
                     }
-                    output = "";
+                    sb.Clear();
                 }
             }
             foreach (var s in CommandManager.commands)
             {
                 foreach (var syn in s.Synonyms)
-                    output += $"{syn}, ";
-                output = output.TrimEnd(' ');
-                output = output.TrimEnd(',');
-                output += " ";
-                output += $"- {s.Description}\n";
+                    sb.Append($"{syn}, ");
+                sb.Remove(sb.Length - 2, 2);
+                sb.AppendLine($" - {s.Description}");
             }
-            Console.Info(output);
+            Console.Info(sb.ToString());
             return Task.FromResult(true);
         }
         public Help()
         {
             Synonyms = new string[] { "help", "?" };
             Name = "help";
-            Description = "Displays a list of commands and their descriptions";
+            Description = "Displays a list of commands and their descriptions. Usage: help {commandName} ";
         }
     }
 }

@@ -56,7 +56,7 @@
       <Name>TCPLib.Client</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Shared\TCPLib.Shared\TCPLib.Shared.csproj">
-      <Project>{5af991a4-49f0-4764-af89-88dd10b7e5fb}</Project>
+      <Project>{2e903667-e3c5-4355-b3d9-b7ae5e9099c8}</Project>
       <Name>TCPLib.Shared</Name>
     </ProjectReference>
   </ItemGroup>

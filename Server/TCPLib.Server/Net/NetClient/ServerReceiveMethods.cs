@@ -56,7 +56,47 @@ namespace TCPLib.Server.Net
             else
             {
                 cancel.Cancel();
-                return Task.FromResult<Classes.PackageSource>(null);
+                return Task.FromResult<Classes.PackageSource>(default);
+            }
+        }
+        public async Task<Classes.PackageSource> ReceiveSourceWithoutCryptographyWithProcessingAsync(CancellationToken token = default)
+        {
+            while (true)
+            {
+                try
+                {
+                    while (true)
+                    {
+                        var result = await ReceiveSourceWithoutCryptographyAsync();
+                        if (result.Type == "KickMessage")
+                        {
+                            var kick = new Classes.KickMessage().FromBytes(result.Data);
+                            if (kick.code == Classes.ResponseCode.DisconnectedByUser)
+                                OnDisconnected();
+                        }
+                        return new Classes.PackageSource(result.Type, result.Data);
+                    }
+                }
+                catch
+                {
+                    if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
+                        return default;
+                    else throw;
+                }
+            }
+        }
+        public Task<Classes.PackageSource> ReceiveSourceWithoutCryptographyWithProcessingAsync(TimeSpan timeout, CancellationToken token = default)
+        {
+            var cancel = new CancellationTokenSource();
+            token.Register(cancel.Cancel);
+            var task = Task.Run(() => ReceiveSourceWithoutCryptographyWithProcessingAsync(cancel.Token));
+
+            if (task.Wait(timeout))
+                return task;
+            else
+            {
+                cancel.Cancel();
+                return Task.FromResult<Classes.PackageSource>(default);
             }
         }
         public async Task<Classes.PackageSource> ReceiveSourceAsync(CancellationToken token = default)
@@ -107,7 +147,7 @@ namespace TCPLib.Server.Net
             else
             {
                 cancel.Cancel();
-                return Task.FromResult<Classes.PackageSource>(null);
+                return Task.FromResult<Classes.PackageSource>(default);
             }
         }
         #endregion
@@ -246,7 +286,7 @@ namespace TCPLib.Server.Net
         }
         #endregion
         #region ReceiveSourceWithProcessing
-        public async Task<Classes.PackageSource> ReceiveSourceWithProcessingAsync(CancellationToken token = default)
+        public async Task<Classes.PackageSource> ReceiveSourceWithProcessingAsync<T>(CancellationToken token = default)
         {
             try
             {
@@ -276,21 +316,21 @@ namespace TCPLib.Server.Net
                 else throw;
             }
         }
-        public Task<Classes.PackageSource> ReceiveSourceWithProcessingAsync(TimeSpan timeout, CancellationToken token = default)
+        public Task<Classes.PackageSource> ReceiveSourceWithProcessingAsync<T>(TimeSpan timeout, CancellationToken token = default)
         {
             var cancel = new CancellationTokenSource();
             token.Register(cancel.Cancel);
-            var task = Task.Run(() => ReceiveSourceWithProcessingAsync(cancel.Token));
+            var task = Task.Run(() => ReceiveSourceWithProcessingAsync<T>(cancel.Token));
 
             if (task.Wait(timeout))
                 return task;
             else
             {
                 cancel.Cancel();
-                return Task.FromResult<Classes.PackageSource>(null);
+                return Task.FromResult<Classes.PackageSource>(default);
             }
         }
-        public async Task<Classes.PackageSource> ReceiveSourceWithoutCryptographyWithProcessingAsync(CancellationToken token = default)
+        public async Task<Classes.PackageSource> ReceiveSourceWithoutCryptographyWithProcessingAsync<T>(CancellationToken token = default)
         {
             try
             {
@@ -320,18 +360,18 @@ namespace TCPLib.Server.Net
                 else throw;
             }
         }
-        public Task<Classes.PackageSource> ReceiveSourceWithoutCryptographyWithProcessingAsync(TimeSpan timeout, CancellationToken token = default)
+        public Task<Classes.PackageSource> ReceiveSourceWithoutCryptographyWithProcessingAsync<T>(TimeSpan timeout, CancellationToken token = default)
         {
             var cancel = new CancellationTokenSource();
             token.Register(cancel.Cancel);
-            var task = Task.Run(() => ReceiveSourceWithoutCryptographyWithProcessingAsync(cancel.Token));
+            var task = Task.Run(() => ReceiveSourceWithoutCryptographyWithProcessingAsync<T>(cancel.Token));
 
             if (task.Wait(timeout))
                 return task;
             else
             {
                 cancel.Cancel();
-                return Task.FromResult<Classes.PackageSource>(null);
+                return Task.FromResult<Classes.PackageSource>(default);
             }
         }
         #endregion
@@ -341,26 +381,23 @@ namespace TCPLib.Server.Net
             {
                 try
                 {
-                    while (stream.DataAvailable)
-                    {
-                        if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
-                            return default;
+                    if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
+                        return default;
 
-                        var length = BitConverter.ToInt32(await Read(4, stream), 0);
+                    var length = BitConverter.ToInt32(await Read(4, stream), 0);
 
-                        var bytes = await Read(length, stream);
-                        if (EncryptType == EncryptType.AES)
-                            bytes = Encryptor.AESDecrypt(bytes);
-                        else
-                            bytes = Encryptor.RSADecrypt(bytes);
+                    var bytes = await Read(length, stream);
+                    if (EncryptType == EncryptType.AES)
+                        bytes = Encryptor.AESDecrypt(bytes);
+                    else
+                        bytes = Encryptor.RSADecrypt(bytes);
 
-                        var package = Protobuf.Package.Parser.ParseFrom(bytes);
+                    var package = Protobuf.Package.Parser.ParseFrom(bytes);
 
-                        if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
-                            return default;
+                    if (token.IsCancellationRequested || OnKick.IsCancellationRequested)
+                        return default;
 
-                        return new Package<T>(package.Type, package.Data.ToArray());
-                    }   
+                    return new Package<T>(package.Type, package.Data.ToArray());
                 }
                 catch
                 {

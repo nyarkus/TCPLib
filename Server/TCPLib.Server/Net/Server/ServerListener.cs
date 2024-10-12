@@ -8,10 +8,10 @@ namespace TCPLib.Server.Net
 
     public class ServerListener : IDisposable
     {
-        public TcpListener Listener;
+        private TcpListener Listener;
         public int Port;
-        private CancellationTokenSource StopToken;
-        public bool Started = false;
+        private readonly CancellationTokenSource StopToken;
+        public bool Started { get; private set; } = false;
 
         public ServerListener(int port)
         {

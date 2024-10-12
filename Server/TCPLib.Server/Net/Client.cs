@@ -54,7 +54,7 @@ namespace TCPLib.Server.Net
                 net.Encryptor = net.Encryptor.SetAESKey(NewKeys.Key.ToArray(), NewKeys.IV.ToArray());
                 net.EncryptType = EncryptType.AES;
 
-                clients.Add(net);
+                _clients.Add(net);
                 await net.SendAsync(new RespondCode(ResponseCode.Ok));
                 Console.Info($"Successful connection from {client.Client.RemoteEndPoint}");
                 SuccessfulConnection?.Invoke(ResponseCode.Ok, net);

@@ -10,8 +10,8 @@ namespace TCPLib.Server.Net.Encrypt
     {
         const string FilePath = @"Certificate.key";
 
-        RSAProvider RSA = new RSAProvider();
-        AESProvider AES = new AESProvider();
+        readonly RSAProvider RSA = new RSAProvider();
+        readonly AESProvider AES = new AESProvider();
 
 
         static Encryptor ServerEncryptor;

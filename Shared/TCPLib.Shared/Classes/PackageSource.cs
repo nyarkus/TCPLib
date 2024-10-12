@@ -1,6 +1,6 @@
 ﻿namespace TCPLib.Classes
 {
-    public class PackageSource
+    public struct PackageSource
     {
         public string Type;
         public byte[] Data;

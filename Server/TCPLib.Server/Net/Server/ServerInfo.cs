@@ -2,9 +2,9 @@
 {
     public class ServerInfo
     {
-        public int MaxPlayers;
-        public int Players;
-        public string Name = "";
-        public string Description = "";
+        public int MaxPlayers { get; set; }
+        public int Players { get; set; }
+        public string Name { get; set; } = "";
+        public string Description { get; set; } = "";
     }
 }
