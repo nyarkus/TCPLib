@@ -61,14 +61,14 @@ public class NetTest
         Message message = new Message() { Data = "eb" };
 
         await client.ConnectedServer.SendAsync(message);
-        var result = await Client.clients.First().ReceiveWithProcessingAsync<Message>();
+        var result = await Client.clients.First().ReceiveAsync<Message>();
 
-        Assert.Equal(result.Value.Unpack().Data, message.Data);
+        Assert.Equal(result.Unpack().Data, message.Data);
 
         await Client.clients.First().SendAsync(message);
-        result = await client.ConnectedServer.ReceiveWithProcessingAsync<Message>();
+        result = await client.ConnectedServer.ReceiveAsync<Message>();
 
-        Assert.Equal(result.Value.Unpack().Data, message.Data);
+        Assert.Equal(result.Unpack().Data, message.Data);
     }
     [Fact]
     public async Task Disconnect()
@@ -84,7 +84,7 @@ public class NetTest
 
         await Client.clients.First().Kick(new(TCPLib.Classes.ResponseCode.Kicked));
         await client.ConnectedServer.Disconnect();
-        await Client.clients.First().ReceiveWithProcessingAsync<Message>(TimeSpan.FromSeconds(5));
+        await Client.clients.First().ReceiveAsync<Message>(TimeSpan.FromSeconds(5));
 
         Assert.True(Client.clients.Count == 0);
     }
