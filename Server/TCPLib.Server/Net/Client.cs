@@ -45,7 +45,7 @@ namespace TCPLib.Server.Net
                 }
                 var serverenc = Encryptor.GetServerEncryptor();
 
-                await net.SendWithoutCryptographyAsync<Key>(new Key() { Value = serverenc.GetRSAPublicKey() });
+                await net.SendAsync<Key>(new Key() { Value = serverenc.GetRSAPublicKey() }, false);
                 net.Encryptor = serverenc;
 
                 Console.Debug("Wait a new keys...");
