@@ -54,11 +54,11 @@ namespace TCPLib.Server.Net
             GC.Collect();
         }
 
-        public void Dispose()
+        public async void Dispose()
         {
             if(stream != null)
             {
-                Kick(new KickMessage(ResponseCode.DisconnectedByUser)).Wait();
+                await Kick(new KickMessage(ResponseCode.DisconnectedByUser));
             }
             else
             {

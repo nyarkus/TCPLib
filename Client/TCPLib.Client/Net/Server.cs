@@ -54,11 +54,11 @@ namespace TCPLib.Client.Net
             }
         }
 
-        public void Dispose()
+        public async void Dispose()
         {
             if(stream != null)
             {
-                Disconnect().Wait();
+                await Disconnect();
             }
         }
     }
