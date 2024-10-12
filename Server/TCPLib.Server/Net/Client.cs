@@ -49,7 +49,7 @@ namespace TCPLib.Server.Net
                 net.Encryptor = serverenc;
 
                 Console.Debug("Wait a new keys...");
-                var NewKeys = net.ReceiveAsync<AESKey>().Result.Value.Unpack();
+                var NewKeys = net.ReceiveAsync<AESKey>().Result.Unpack();
 
                 net.Encryptor = net.Encryptor.SetAESKey(NewKeys.Key.ToArray(), NewKeys.IV.ToArray());
                 net.EncryptType = EncryptType.AES;
