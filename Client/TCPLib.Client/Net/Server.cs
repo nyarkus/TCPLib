@@ -40,8 +40,11 @@ namespace TCPLib.Client.Net
         public async Task Disconnect()
         {
             var kicked = new KickMessage(ResponseCode.DisconnectedByUser);
-
-            await SendAsync(kicked);
+            try
+            {
+                await SendAsync(kicked);
+            }
+            catch { }
             OnKick.Cancel();
 
             stream.Close();

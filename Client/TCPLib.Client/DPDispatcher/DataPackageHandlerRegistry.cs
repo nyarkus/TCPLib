@@ -8,9 +8,9 @@ using TCPLib.Net;
 
 namespace TCPLib.Client.DPDispatcher
 {
+    public delegate Task DataPackageReceive(DataPackageSource package);
     public class DataPackageHandlerRegistry
     {
-        public delegate Task DataPackageReceive(DataPackageSource package);
         public event DataPackageReceive OnReceived;
 
         public DataPackageFilter filter;

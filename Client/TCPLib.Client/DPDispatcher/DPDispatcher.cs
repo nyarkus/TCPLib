@@ -21,8 +21,10 @@ namespace TCPLib.Client.DPDispatcher
             while(!_cancellationTokenSource.IsCancellationRequested)
             {
                 var package = await _client.ReceiveSourceAsync(UseDecryption, _cancellationTokenSource.Token);
+
                 if (_cancellationTokenSource.IsCancellationRequested)
                     return;
+
                 bool handled = false;
                 foreach(var handler in _handlers)
                 {
@@ -33,6 +35,7 @@ namespace TCPLib.Client.DPDispatcher
                         break;
                     }
                 }
+
                 if(ThrowIfNotHandled && !handled)
                 {
                     throw new InvalidOperationException("The data package was not handled by any registered handler.");
