@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TCPLib.Classes;
 
 namespace TCPLib.Client.DPDispatcher
 {
+    
     public class DispatcherBuilder
     {
-
+        
     }
+
 }

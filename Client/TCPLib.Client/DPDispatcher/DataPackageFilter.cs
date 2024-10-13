@@ -70,6 +70,8 @@ namespace TCPLib.Client.DPDispatcher
 
             throw new InvalidOperationException("Unknown condition type.");
         }
+
+        private DataPackageFilter() { }
     }
     internal enum ConditionType
     {
