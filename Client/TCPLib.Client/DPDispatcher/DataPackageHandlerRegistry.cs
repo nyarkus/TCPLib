@@ -7,14 +7,16 @@ using TCPLib.Net;
 
 namespace TCPLib.Client.DPDispatcher
 {
-    public class DataPackageDelegate<T> where T : IDataSerializable<T>, new()
+    public class DataPackageHandlerRegistry<T> where T : IDataSerializable<T>, new()
     {
         public delegate Task DataPackageReceive(DataPackage<T> package);
         public event DataPackageReceive OnReceived;
+
         public DataPackageFilter filter;
-        public static DataPackageDelegate<T> Create(DataPackageFilter filter, params DataPackageReceive[] methods)
+
+        public static DataPackageHandlerRegistry<T> Create(DataPackageFilter filter, params DataPackageReceive[] methods)
         {
-            var dpd = new DataPackageDelegate<T>();
+            var dpd = new DataPackageHandlerRegistry<T>();
             foreach (var method in methods)
                 dpd.OnReceived += method;
 
@@ -22,6 +24,6 @@ namespace TCPLib.Client.DPDispatcher
             return dpd;
         }
 
-        private DataPackageDelegate() { }
+        private DataPackageHandlerRegistry() { }
     }
 }
