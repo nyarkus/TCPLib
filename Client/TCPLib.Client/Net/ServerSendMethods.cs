@@ -38,7 +38,7 @@ namespace TCPLib.Client.Net
 
         public async Task SendAsync<T>(T data, bool UseEncryption = true) where T : IDataSerializable<T>, new()
         {
-            var package = new DataPackage<T>(nameof(T), data);
+            var package = new DataPackage<T>(typeof(T).Name, data);
             await SendAsync(package, UseEncryption);
         }
     }
