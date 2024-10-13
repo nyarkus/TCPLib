@@ -70,8 +70,49 @@ namespace TCPLib.Client.DPDispatcher
 
             throw new InvalidOperationException("Unknown condition type.");
         }
+        #region Operators and overrided methods
+        public override bool Equals(object obj)
+        {
+            return obj is DataPackageFilter filter &&
+                   _pattern == filter._pattern &&
+                   _conditionType == filter._conditionType;
+        }
+
+        public override int GetHashCode()
+        {
+            int hash = 17;
+            hash = hash * 23 + (_pattern?.GetHashCode() ?? 0);
+            hash = hash * 23 + _conditionType.GetHashCode();
+            return hash;
+        }
+
+        public override string ToString()
+        {
+            switch (_conditionType)
+            {
+                case ConditionType.Equals:
+                    return $"if type equals {_pattern}";
+                case ConditionType.NotEquals:
+                    return $"if type not equals {_pattern}";
+                case ConditionType.Contains:
+                    return $"if type contains {_pattern}";
+                case ConditionType.NotContains:
+                    return $"if type not contains {_pattern}";
+                case ConditionType.MatchesRegex:
+                    return $"if type matches regex pattern: {_pattern}";
+                case ConditionType.NotMatchesRegex:
+                    return $"if type not matches regex pattern: {_pattern}";
+            }
+
+            throw new InvalidOperationException("Unknown condition type.");
+        }
 
         private DataPackageFilter() { }
+        public static bool operator ==(DataPackageFilter value1, DataPackageFilter value2)
+            => value1._pattern == value2._pattern && value1._conditionType == value2._conditionType;
+        public static bool operator !=(DataPackageFilter value1, DataPackageFilter value2)
+            => (value1 == value2) == false;
+        #endregion
     }
     internal enum ConditionType
     {
