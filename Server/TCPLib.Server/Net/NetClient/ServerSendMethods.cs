@@ -2,11 +2,14 @@ using System.Threading.Tasks;
 using System;
 using TCPLib.Net;
 using Newtonsoft.Json.Linq;
+using System.Threading;
 
 namespace TCPLib.Server.Net
 {
     public partial class NetClient
     {
+
+        private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
         public async Task SendAsync<T>(DataPackage<T> data, bool UseEncryption = true) where T : IDataSerializable<T>, new()
         {
@@ -18,19 +21,23 @@ namespace TCPLib.Server.Net
                 else
                     bytes = Encryptor.RSAEncrypt(bytes);
             }
+            var bl = BitConverter.GetBytes(bytes.Length);
+
+            if (OnKick.IsCancellationRequested)
+                return;
+
+            await _semaphore.WaitAsync();
             try
             {
-                await stream.WriteAsync(bytes, 0, bytes.Length);
+                await stream.WriteAsync(bl, 0, bl.Length);
                 await stream.WriteAsync(bytes, 0, bytes.Length);
             }
-            catch
+            finally
             {
-                if (OnKick.IsCancellationRequested)
-                    return;
-                else
-                    throw;
+                _semaphore.Release();
             }
         }
+
         public async Task SendAsync<T>(T data, bool UseEncryption = true) where T : IDataSerializable<T>, new()
         {
             var package = new DataPackage<T>(nameof(T), data);
