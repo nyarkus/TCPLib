@@ -69,6 +69,8 @@ public class NetTest
         result = await client.ConnectedServer.ReceiveAsync<Message>();
 
         Assert.Equal(result.Unpack().Data, message.Data);
+        
+        server.Stop();
     }
     [Fact]
     public async Task Disconnect()
@@ -82,11 +84,12 @@ public class NetTest
         if (Client.clients.Count == 0)
             Assert.Fail("The client was unable to connect");
 
-        await Client.clients.First().Kick(new(TCPLib.Classes.ResponseCode.Kicked));
         await client.ConnectedServer.Disconnect();
-        await Client.clients.First().ReceiveAsync<Message>(TimeSpan.FromSeconds(5));
+        await TCPLib.Server.Net.Client.clients.First().ReceiveSourceAsync();
 
         Assert.True(Client.clients.Count == 0);
+
+        server.Stop();
     }
 }
 
