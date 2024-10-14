@@ -12,6 +12,9 @@ namespace TCPLib.Server.Commands
             {
                 foreach (var cmd in commands)
                 {
+                    if (cmd == null)
+                        continue;
+
                     foreach (var syn in cmd.Synonyms)
                         foreach (var s in command.Synonyms)
                             if (syn == s) throw new CommandAlreadyExists(s);

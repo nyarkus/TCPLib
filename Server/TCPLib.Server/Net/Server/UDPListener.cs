@@ -36,13 +36,12 @@ namespace TCPLib.Server.Net
                 if (ex.ErrorCode == 10048)
                 {
                     Console.Error("IP address or port not port cannot be used as it is already in use");
-                    throw;
                 }
                 else if (ex.ErrorCode == 10049)
                 {
                     Console.Error("The specified IP address or port does not belong to this computer");
-                    throw;
                 }
+                throw;
             }
         }
 

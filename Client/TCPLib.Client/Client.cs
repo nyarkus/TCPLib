@@ -17,9 +17,8 @@ namespace TCPLib.Client
         public async Task<Server> Connect(IPAddress address, int port)
         {
             if (tcpClient.Connected) throw new Exceptions.ClientAlredyConnected($"{ConnectedServer?.IP}:{ConnectedServer?.Port}");
-            {
-                tcpClient.Connect(address, port);
-            }
+            tcpClient.Connect(address, port);
+            
             Server server = new Server(address, port, tcpClient, tcpClient.GetStream());
 
             var key = await server.ReceiveAsync<Key>(false);

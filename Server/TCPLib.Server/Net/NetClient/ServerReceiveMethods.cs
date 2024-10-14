@@ -12,17 +12,31 @@ namespace TCPLib.Server.Net
 {
     public partial class NetClient
     {
-        private static async Task<byte[]> Read(int count, Stream stream)
+        private async Task<byte[]> Read(int count, Stream stream)
         {
             byte[] buffer = new byte[count];
             int totalRead = 0;
 
             while (totalRead < count)
             {
-                int bytesRead = await stream.ReadAsync(buffer, totalRead, count - totalRead);
-                if (bytesRead == 0)
-                    throw new EndOfStreamException("Reached end of stream before reading expected number of bytes.");
-                totalRead += bytesRead;
+                try
+                {
+                    int bytesRead = await stream.ReadAsync(buffer, totalRead, count - totalRead);
+                    if (bytesRead == 0)
+                        throw new EndOfStreamException("Reached end of stream before reading expected number of bytes.");
+                    totalRead += bytesRead;
+                }
+                catch (IOException ex) when (ex.InnerException is System.Net.Sockets.SocketException socketEx)
+                {
+                    if (socketEx.SocketErrorCode == System.Net.Sockets.SocketError.ConnectionReset)
+                    {
+                        OnKick.Cancel();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
             }
 
             return buffer;
