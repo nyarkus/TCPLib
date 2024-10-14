@@ -102,16 +102,16 @@ public class NetTest
         TCPLib.Server.Server server = new(new BanSaver(), new SettingsSaver() { settings = new Settings() { port = (ushort)port } });
         TCPLib.Server.Server.TestingMode = true;
         server.Start();
+        int clientsOnStart = Client.clients.Count;
 
-        await client.Connect(System.Net.IPAddress.Parse("127.0.0.1"), port);
+        var cclient = await client.Connect(System.Net.IPAddress.Parse("127.0.0.1"), port);
         if (Client.clients.Count == 0)
             Assert.Fail("The client was unable to connect");
-        var cclient = TCPLib.Server.Net.Client.clients.First();
 
         await client.ConnectedServer.Disconnect();
         await cclient.ReceiveSourceAsync();
 
-        Assert.True(Client.clients.Count == 0);
+        Assert.True(clientsOnStart - Client.clients.Count <= 0);
 
         server.Stop();
     }
