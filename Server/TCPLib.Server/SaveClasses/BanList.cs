@@ -15,10 +15,6 @@ namespace TCPLib.Server.SaveFiles
         {
             return new Ban() { IP = client.client.Client.RemoteEndPoint.ToString().Split(':')[0], Reason = Reason, Until = Until };
         }
-        public static Ban CreateBan(NetClient client, string Reason = "", DateTime? Until = null)
-        {
-            return new Ban() { IP = client.client.Client.RemoteEndPoint.ToString().Split(':')[0], Reason = Reason, Until = Until };
-        }
         public static Ban CreateBan(string ip, string Reason = "", DateTime? Until = null)
         {
             return new Ban() { IP = ip, Reason = Reason, Until = Until };

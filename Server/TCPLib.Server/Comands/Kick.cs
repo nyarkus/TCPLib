@@ -21,7 +21,7 @@ namespace TCPLib.Server.Commands
                 return false;
             }
             string ip = "";
-            NetClient client;
+            Client client;
             if (args[0].IndexOf('.') == -1)
             {
                 var clientlist = Client.clients.Where(x => x.id.ToString() == args[0]);

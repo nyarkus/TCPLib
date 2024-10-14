@@ -1,22 +1,21 @@
-using System.Net.Sockets;
-using System;
-using System.Threading.Tasks;
-using System.Threading;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using TCPLib.Server.Net.Encrypt;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using TCPLib.Classes;
-using System.Security.Cryptography;
-using System.ComponentModel;
 
 namespace TCPLib.Server.Net
 {
-    public class Client : NetClient
+    public partial class Client
     {
         public delegate Task Connetion(ResponseCode code, TcpClient client);
         public delegate Task Connetion2(ResponseCode code, Client client);
         public static Connetion2 SuccessfulConnection;
         public static Connetion FailedConnection;
-        public static async Task<NetClient> HandleConnections(TcpClient client, TimeSpan timeout)
+        public static async Task<Client> HandleConnections(TcpClient client, TimeSpan timeout)
         {
             try
             {
@@ -43,7 +42,7 @@ namespace TCPLib.Server.Net
                         return null;
                     }
                 }
-                var serverenc = Encryptor.GetServerEncryptor();
+                var serverenc = Encrypt.Encryptor.GetServerEncryptor();
 
                 await net.SendAsync(new Key() { Value = serverenc.GetRSAPublicKey() }, false);
                 net.Encryptor = serverenc;
@@ -71,20 +70,5 @@ namespace TCPLib.Server.Net
                 return null;
             }
         }
-        public void Ban(string Reason = "", TimeSpan? time = null)
-        {
-            var list = SaveFiles.Ban.Load().ToList();
-            if (time is null)
-                list.Add(SaveFiles.Ban.CreateBan(this, Reason));
-            else
-                list.Add(SaveFiles.Ban.CreateBan(this, Reason, DateTime.UtcNow + time));
-            SaveFiles.Ban.Save(list.ToArray());
-            GC.Collect();
-        }
-        public Client(TcpClient client, NetworkStream stream) : base(client, stream)
-        {
-
-        }
     }
-    
 }

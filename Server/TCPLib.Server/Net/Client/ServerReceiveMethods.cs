@@ -10,7 +10,7 @@ using TCPLib.Classes;
 
 namespace TCPLib.Server.Net
 {
-    public partial class NetClient
+    public partial class Client
     {
         private async Task<byte[]> Read(int count, Stream stream)
         {
@@ -30,7 +30,8 @@ namespace TCPLib.Server.Net
                 {
                     if (socketEx.SocketErrorCode == System.Net.Sockets.SocketError.ConnectionReset)
                     {
-                        OnKick.Cancel();
+                        OnDisconnected();
+                        return null;
                     }
                     else
                     {
