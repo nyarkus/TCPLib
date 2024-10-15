@@ -10,7 +10,7 @@ namespace ExampleServer
     {
         static void Main(string[] args)
         {
-            TCPLib.Server.Server server = new Server(new BanSaver(), new SettingsSaver());
+            TCPLib.Server.Server server = new Server(new BanSaver(), new SettingsSaver(), ServerComponents.None);
 
             server.Stopped += OnStopped;
 
