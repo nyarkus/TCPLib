@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TCPLib.Classes;
+using TCPLib.Net.DPDispatcher;
 
 namespace TCPLib.Client.DPDispatcher
 {

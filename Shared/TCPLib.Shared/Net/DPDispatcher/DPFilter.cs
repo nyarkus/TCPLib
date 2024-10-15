@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace TCPLib.Client.DPDispatcher
+namespace TCPLib.Net.DPDispatcher
 {
     public class DPFilter
     {
