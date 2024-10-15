@@ -7,15 +7,30 @@ using TCPLib.Server.SaveFiles;
 #if DEBUG
 public class NetTest
 {
+    TCPLib.Server.Server server;
+    object locker = new();
+    bool _started = false;
+    void StartServer()
+    {
+        lock(locker)
+        {
+            if(_started)
+                return;
+
+            TCPLib.Server.Server server = new(new BanSaver(), new SettingsSaver() { settings = new Settings() { port = 2024 } });
+            TCPLib.Server.Server.TestingMode = true;
+            server.Start();
+            
+            _started = true;
+        }
+        
+    }
     [Fact]
     public async Task StartAndConnectionTest()
     {
         var port = 2025;
         TCPLib.Client.Client client = new();
-        TCPLib.Server.Server server = new(new BanSaver(), new SettingsSaver() { settings = new Settings() { port = (ushort)port } });
-        TCPLib.Server.Server.TestingMode = true;
-        server.Start();
-
+        
         await client.Connect(System.Net.IPAddress.Parse("127.0.0.1"), port);
         if (Client.clients.Count == 0)
             Assert.Fail("The client was unable to connect");
@@ -66,7 +81,7 @@ public class NetTest
 
         await sserver.SendAsync(message);
         var sclient = Client.clients.First();
-        // Добавляем тайм-аут
+        // Г„Г®ГЎГ ГўГ«ГїГҐГ¬ ГІГ Г©Г¬-Г ГіГІ
         var receiveTask = sclient.ReceiveAsync<Message>();
         if (await Task.WhenAny(receiveTask, Task.Delay(5000)) == receiveTask)
         {
