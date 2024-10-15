@@ -44,11 +44,19 @@ namespace TCPLib.Server.Net
                 }
                 var serverenc = Encrypt.Encryptor.GetServerEncryptor();
 
-                await net.SendAsync(new Key() { Value = serverenc.GetRSAPublicKey() }, false);
+                await net.SendAsync(new Key() { Value = serverenc.GetRSAPublicKey(), MaxAESSize = Encrypt.Encryptor.aesKey }, false);
                 net.Encryptor = serverenc;
 
                 Console.Debug("Wait a new keys...");
                 var NewKeys = net.ReceiveAsync<AESKey>().Result.Unpack();
+                if(NewKeys.Key.Length > Encrypt.Encryptor.aesKey)
+                {
+                    Console.Info($"Connection from {client.Client.RemoteEndPoint} rejected because: {ResponseCode.BadResponse}.");
+                    await net.SendAsync(new KickMessage(ResponseCode.BadResponse));
+                    client.Close();
+                    FailedConnection?.Invoke(ResponseCode.Blocked, client);
+                    return null;
+                }
 
                 net.Encryptor = net.Encryptor.SetAESKey(NewKeys.Key.ToArray(), NewKeys.IV.ToArray());
                 net.EncryptType = EncryptType.AES;

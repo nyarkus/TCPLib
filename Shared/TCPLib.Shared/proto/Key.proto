@@ -2,6 +2,7 @@ syntax = "proto3";
 
 option csharp_namespace = "TCPLib.Protobuf";
 
-message RSAKey {
+message Key {
 	bytes key = 1;
+	int32 mas = 2;
 }

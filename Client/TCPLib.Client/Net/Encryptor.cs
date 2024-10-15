@@ -43,6 +43,9 @@ namespace TCPLib.Client.Net
         public byte[] GetRSAPrivateKey()
             => RSA.SerializePrivateKey();
 
+        public void RegenerateAESKey(int size = 128)
+        => AES = new AESProvider(size);
+
         public AESKey GetAESKey()
             => new AESKey() { Key = AES.GetKey(), IV = AES.GetIV() };
     }

@@ -3,6 +3,7 @@ using System.Net.Sockets;
 using TCPLib.Client.Net;
 using System.Threading.Tasks;
 using TCPLib.Classes;
+using Org.BouncyCastle.Asn1.Cms;
 
 namespace TCPLib.Client
 {
@@ -25,8 +26,15 @@ namespace TCPLib.Client
 
             server.encryptor = new Encryptor();
             server.encryptor.SetPublicRSAKey(key.Value.Value);
-
+            
+            var maxAESSize = key.Value.MaxAESSize;
             var aesKey = server.encryptor.GetAESKey();
+            if (aesKey.Key.Length > maxAESSize)
+            {
+                server.encryptor.RegenerateAESKey(maxAESSize);
+                aesKey = server.encryptor.GetAESKey();
+            }
+
             await server.SendAsync(aesKey);
 
             server.encryptor.SetAESKey(aesKey.Key, aesKey.IV);

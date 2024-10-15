@@ -10,15 +10,16 @@ namespace TCPLib.Classes
     public struct Key : IDataSerializable<Key>
     {
         public byte[] Value;
+        public int MaxAESSize;
 
         public Key FromBytes(byte[] bytes)
         {
-            var rk = Protobuf.RSAKey.Parser.ParseFrom(bytes);
+            var rk = Protobuf.Key.Parser.ParseFrom(bytes);
 
-            return new Key() { Value = rk.Key.ToArray() };
+            return new Key() { Value = rk.Key_.ToArray(), MaxAESSize = rk.Mas };
         }
 
         public byte[] ToByteArray()
-        => new Protobuf.RSAKey() { Key = ByteString.CopyFrom(Value) }.ToByteArray();
+        => new Protobuf.Key() { Key_ = ByteString.CopyFrom(Value), Mas = MaxAESSize }.ToByteArray();
     }
 }
