@@ -3,6 +3,7 @@ using TCPLib.Net;
 
 namespace Tests
 {
+#nullable disable
     public class Message : IDataSerializable<Message>
     {
         public string Data;
@@ -16,7 +17,5 @@ namespace Tests
         {
             return Encoding.UTF8.GetBytes(Data);
         }
-
-        public Message() { }
     }
 }
