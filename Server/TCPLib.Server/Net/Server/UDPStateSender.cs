@@ -5,14 +5,14 @@ using System.Threading.Tasks;
 
 namespace TCPLib.Server.Net
 {
-    public class UDPListener : IDisposable
+    public class UDPStateSender  : IDisposable
     {
         private UdpClient Listener;
         private int Port;
         private readonly CancellationTokenSource StopToken;
         public bool Started { get; private set; } = false;
 
-        public UDPListener(int port)
+        public UDPStateSender (int port)
         {
             Port = port;
             StopToken = new CancellationTokenSource();

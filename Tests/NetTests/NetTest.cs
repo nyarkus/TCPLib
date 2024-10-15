@@ -2,6 +2,7 @@ namespace Tests;
 
 using System.Net.Sockets;
 using System.Threading;
+using TCPLib.Client.Net;
 using TCPLib.Server.Net;
 using TCPLib.Server.SaveFiles;
 #if DEBUG
@@ -19,7 +20,7 @@ public class NetTest
             if (started)
                 return;
 
-            server = new(new BanSaver(), new SettingsSaver() { settings = new Settings() { port = port } });
+            server = new(new(new BanSaver(), new SettingsSaver() { settings = new Settings() { port = port } }, TCPLib.Server.ServerComponents.UDPStateSender) { AESKeySize = 256, RSAKeyStrength = 4096 });
             TCPLib.Server.Server.TestingMode = true;
             server.Start();
 

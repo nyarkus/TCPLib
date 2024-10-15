@@ -13,6 +13,7 @@ namespace TCPLib.Server
         public static LogLevel LogLevel { get; set; } = LogLevel.Debug;
         public static string LogPath { get; private set; } = @"Logs";
         public static bool SaveLogs { get; set; } = true;
+        public static bool SetupNLog = true;
 
         internal static void Initialize(int deleteLogsAfterDays)
         {
@@ -31,7 +32,8 @@ namespace TCPLib.Server
 
             LogPath = Path.Combine(LogPath, $"{time:MM.dd HH.mm.ss}.log");
 
-            SetupLogger();
+            if(SetupNLog)
+            { SetupLogger(); }
 
             _logger.Info("Console initialized");
             _inited = true;

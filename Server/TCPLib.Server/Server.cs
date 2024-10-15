@@ -12,24 +12,42 @@ namespace TCPLib.Server
     public class Server
     {
         private ServerListener _Server;
-        private UDPListener _UDP;
+        private UDPStateSender _UDP;
         public ushort Port;
 
         public static Settings settings;
+        private ServerComponents _components;
 
         public delegate Task ServerD();
         public event ServerD Started;
         public event ServerD Starting;
         public event ServerD Stopped;
 
-
 #if DEBUG
         public static bool TestingMode = false;
 #endif
-        public Server(IBanListSaver banSaver, ISettingsSaver settingsSaver)
+        public Server(IBanListSaver banSaver, ISettingsSaver settingsSaver, ServerComponents components)
         {
             Ban.saver = banSaver;
             Settings.saver = settingsSaver;
+            if(components == ServerComponents.All)
+            {
+                components = ServerComponents.BaseCommands | ServerComponents.UDPStateSender;
+            }
+            _components = components;
+        }
+        public Server(ServerConfiguration configuration)
+        {
+            Ban.saver = configuration.banSaver;
+            Settings.saver = configuration.settingsSaver;
+            if (configuration.components == ServerComponents.All)
+            {
+                configuration.components = ServerComponents.BaseCommands | ServerComponents.UDPStateSender;
+            }
+            _components = configuration.components;
+
+            Encryptor.rsaKey = configuration.RSAKeyStrength;
+            Encryptor.aesKey = configuration.AESKeySize;
         }
         public void Start()
         {
@@ -38,26 +56,38 @@ namespace TCPLib.Server
             settings = Settings.Load();
 
             _Server = new ServerListener(settings.port);
-            _UDP = new UDPListener(settings.port);
+            if((_components & ServerComponents.UDPStateSender) == ServerComponents.UDPStateSender)
+            {
+                _UDP = new UDPStateSender(settings.port);
+            }
             Port = settings.port;
 
             Console.Initialize(settings.deleteLogsAfterDays);
             Console.SaveLogs = settings.saveLogs;
 
-            Commands.CommandManager.RegAllCommands(this);
+            if((_components & ServerComponents.BaseCommands) == ServerComponents.BaseCommands)
+            {
+                Commands.CommandManager.RegAllCommands(this);
+            }
             Ban.ClearInvalidBans();
 
-            Starting?.Invoke();
+            Starting?.Invoke().Wait();
 
             Console.Info("Encryption key generation ...");
             Encryptor.GetServerEncryptor();
 
             Thread tcplistenThread = new Thread(_Server.Initialize) { Priority = ThreadPriority.AboveNormal };
-            var udpListenThread = new Thread(_UDP.Initialize) { Priority = ThreadPriority.BelowNormal };
+            if ((_components & ServerComponents.UDPStateSender) == ServerComponents.UDPStateSender)
+            {
+                var udpListenThread = new Thread(_UDP.Initialize) { Priority = ThreadPriority.BelowNormal };
+                udpListenThread.Start();
+            }
             tcplistenThread.Start();
-            udpListenThread.Start();
 
-            while (!_Server.Started && !_UDP.Started) ;
+            if (_UDP != null)
+                { while (!_Server.Started && !_UDP.Started) ; }
+            else
+                { while (!_Server.Started) ; }
 
             Console.Info($"The server successfully started in {(DateTime.UtcNow - StartTime).TotalMilliseconds} ms");
 
@@ -70,7 +100,8 @@ namespace TCPLib.Server
         public void Stop()
         {
             _Server.Dispose();
-            _UDP.Dispose();
+            if( _UDP != null )
+            { _UDP.Dispose(); }
             Stopped?.Invoke();
         }
         public void ConsoleRead()

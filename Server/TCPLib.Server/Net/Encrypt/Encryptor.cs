@@ -8,10 +8,16 @@ namespace TCPLib.Server.Net.Encrypt
 {
     public class Encryptor
     {
-        const string FilePath = @"Certificate.key";
+        internal static int rsaKey = 2048;
+        internal static int aesKey = 128;
 
-        readonly RSAProvider RSA = new RSAProvider();
-        readonly AESProvider AES = new AESProvider();
+        readonly RSAProvider RSA;
+        readonly AESProvider AES;
+        public Encryptor()
+        {
+            RSA = new RSAProvider(rsaKey);
+            AES = new AESProvider(aesKey);
+        }
 
 
         static Encryptor ServerEncryptor;
