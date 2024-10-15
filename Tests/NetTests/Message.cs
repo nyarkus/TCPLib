@@ -3,7 +3,7 @@ using TCPLib.Net;
 
 namespace Tests
 {
-    internal class Message : IDataSerializable<Message>
+    public class Message : IDataSerializable<Message>
     {
         public string Data;
 

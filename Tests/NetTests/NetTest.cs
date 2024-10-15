@@ -7,30 +7,31 @@ using TCPLib.Server.SaveFiles;
 #if DEBUG
 public class NetTest
 {
+    const ushort port = 2025;
+
     TCPLib.Server.Server server;
-    object locker = new();
-    bool _started = false;
+    object locker = new object();
+    bool started = false;
     void StartServer()
     {
-        lock(locker)
+        lock (locker)
         {
-            if(_started)
+            if (started)
                 return;
 
-            TCPLib.Server.Server server = new(new BanSaver(), new SettingsSaver() { settings = new Settings() { port = 2024 } });
+            server = new(new BanSaver(), new SettingsSaver() { settings = new Settings() { port = port } });
             TCPLib.Server.Server.TestingMode = true;
             server.Start();
-            
-            _started = true;
+
+            started = true;
         }
-        
     }
     [Fact]
     public async Task StartAndConnectionTest()
     {
-        var port = 2025;
         TCPLib.Client.Client client = new();
-        
+        StartServer();
+
         await client.Connect(System.Net.IPAddress.Parse("127.0.0.1"), port);
         if (Client.clients.Count == 0)
             Assert.Fail("The client was unable to connect");
@@ -41,10 +42,7 @@ public class NetTest
     [Fact]
     public void GetInfoTest()
     {
-        var port = 2026;
-        TCPLib.Server.Server server = new(new BanSaver(), new SettingsSaver() { settings = new Settings() { port = (ushort)port } });
-        TCPLib.Server.Server.TestingMode = true;
-        server.Start();
+        StartServer();
 
         UdpClient client = new UdpClient();
         TCPLib.Client.Net.ServerInfo info = null!;
@@ -67,21 +65,20 @@ public class NetTest
     [Fact]
     public async Task TransferMessage()
     {
-        var port = 2027;
         TCPLib.Client.Client client = new();
-        TCPLib.Server.Server server = new(new BanSaver(), new SettingsSaver() { settings = new Settings() { port = (ushort)port } });
-        TCPLib.Server.Server.TestingMode = true;
-        server.Start();
+        StartServer();
 
         var sserver = await client.Connect(System.Net.IPAddress.Parse("127.0.0.1"), port);
         if (Client.clients.Count == 0)
             Assert.Fail("The client was unable to connect");
 
+        string t = sserver.client.Client.LocalEndPoint!.ToString()!.Split(':')[4];
+        var sclient = Client.clients.First(x => x.client.Client.RemoteEndPoint!.ToString()!.Split(':')[1] == t);
+
         Message message = new Message() { Data = "eb" };
 
         await sserver.SendAsync(message);
-        var sclient = Client.clients.First();
-        // Äîáàâëÿåì òàéì-àóò
+        
         var receiveTask = sclient.ReceiveAsync<Message>();
         if (await Task.WhenAny(receiveTask, Task.Delay(5000)) == receiveTask)
         {
@@ -93,7 +90,7 @@ public class NetTest
             Assert.Fail("Receiving message timed out.");
         }
 
-        await Client.clients.First().SendAsync(message);
+        await sclient.SendAsync(message);
 
         receiveTask = sserver.ReceiveAsync<Message>();
         if (await Task.WhenAny(receiveTask, Task.Delay(5000)) == receiveTask)
@@ -112,19 +109,19 @@ public class NetTest
     [Fact]
     public async Task Disconnect()
     {
-        var port = 2028;
         TCPLib.Client.Client client = new();
-        TCPLib.Server.Server server = new(new BanSaver(), new SettingsSaver() { settings = new Settings() { port = (ushort)port } });
-        TCPLib.Server.Server.TestingMode = true;
-        server.Start();
+        StartServer();
         int clientsOnStart = Client.clients.Count;
 
-        var cclient = await client.Connect(System.Net.IPAddress.Parse("127.0.0.1"), port);
+        await client.Connect(System.Net.IPAddress.Parse("127.0.0.1"), port);
         if (Client.clients.Count == 0)
             Assert.Fail("The client was unable to connect");
 
+        string t = client.ConnectedServer.client.Client.LocalEndPoint!.ToString()!.Split(':')[4];
+        var sclient = Client.clients.First(x => x.client.Client.RemoteEndPoint!.ToString()!.Split(':')[1] == t);
+
         await client.ConnectedServer.Disconnect();
-        await cclient.ReceiveSourceAsync();
+        await sclient.ReceiveSourceAsync();
 
         Assert.True(clientsOnStart - Client.clients.Count <= 0);
 

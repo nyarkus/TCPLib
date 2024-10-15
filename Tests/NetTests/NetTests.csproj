@@ -18,9 +18,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Client\TCPLib.Client\TCPLib.Client.csproj" />
-    <ProjectReference Include="..\Server\TCPLib.Server\TCPLib.Server.csproj" />
-    <ProjectReference Include="..\Shared\TCPLib.Shared\TCPLib.Shared.csproj" />
+    <ProjectReference Include="..\..\Client\TCPLib.Client\TCPLib.Client.csproj" />
+    <ProjectReference Include="..\..\Server\TCPLib.Server\TCPLib.Server.csproj" />
+    <ProjectReference Include="..\..\Shared\TCPLib.Shared\TCPLib.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>

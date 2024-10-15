@@ -10,7 +10,7 @@ using TCPLib.Server.SaveFiles;
 
 namespace Tests
 {
-#if false
+#if true
     public class DPDispatcher
     {
         internal bool Received = false;
@@ -24,7 +24,7 @@ namespace Tests
         [Fact]
         public async Task DPDispatcherClient()
         {
-            var port = 2024;
+            var port = 2029;
             TCPLib.Client.Client client = new();
             TCPLib.Server.Server server = new(new BanSaver(), new SettingsSaver() { settings = new Settings() { port = (ushort)port } });
             TCPLib.Server.Server.TestingMode = true;
