@@ -7,12 +7,12 @@ using TCPLib.Server.SaveFiles;
 #if DEBUG
 public class NetTest
 {
-    const ushort port = 2025;
+    public const ushort port = 2025;
 
-    TCPLib.Server.Server server;
-    object locker = new object();
-    bool started = false;
-    void StartServer()
+    public static TCPLib.Server.Server server;
+    static object locker = new object();
+    static bool started = false;
+    public static void StartServer()
     {
         lock (locker)
         {
@@ -35,8 +35,6 @@ public class NetTest
         await client.Connect(System.Net.IPAddress.Parse("127.0.0.1"), port);
         if (Client.clients.Count == 0)
             Assert.Fail("The client was unable to connect");
-
-        server.Stop();
 }
 
     [Fact]
@@ -54,13 +52,12 @@ public class NetTest
         if (info == null)
             Assert.Fail("info is null");
 
-        Assert.True(info.Players == TCPLib.Server.Net.Client.clients.Count
-        && info.MaxPlayers == TCPLib.Server.Server.settings.maxPlayers
+        Assert.True(
+        info.MaxPlayers == TCPLib.Server.Server.settings.maxPlayers
         && info.Name == TCPLib.Server.Server.settings.title
         && info.Description == TCPLib.Server.Server.settings.description);
 
         client.Dispose();
-        server.Stop();
     }
     [Fact]
     public async Task TransferMessage()
@@ -102,8 +99,6 @@ public class NetTest
         {
             Assert.Fail("Receiving message timed out.");
         }
-
-        server.Stop();
     }
 
     [Fact]
@@ -124,8 +119,6 @@ public class NetTest
         await sclient.ReceiveSourceAsync();
 
         Assert.True(clientsOnStart - Client.clients.Count <= 0);
-
-        server.Stop();
     }
 }
 

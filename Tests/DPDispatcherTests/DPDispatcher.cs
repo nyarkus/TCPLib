@@ -10,7 +10,7 @@ using TCPLib.Server.SaveFiles;
 
 namespace Tests
 {
-#if true
+#if DEBUG
     public class DPDispatcher
     {
         internal bool Received = false;
@@ -24,26 +24,27 @@ namespace Tests
         [Fact]
         public async Task DPDispatcherClient()
         {
-            var port = 2029;
             TCPLib.Client.Client client = new();
-            TCPLib.Server.Server server = new(new BanSaver(), new SettingsSaver() { settings = new Settings() { port = (ushort)port } });
-            TCPLib.Server.Server.TestingMode = true;
-            server.Start();
+            NetTest.StartServer();
 
-            await client.Connect(System.Net.IPAddress.Parse("127.0.0.1"), port);
+            var sserver = await client.Connect(System.Net.IPAddress.Parse("127.0.0.1"), NetTest.port);
             if (TCPLib.Server.Net.Client.clients.Count == 0)
                 Assert.Fail("The client was unable to connect");
+
+            string t = sserver.client.Client.LocalEndPoint!.ToString()!.Split(':')[4];
+            var sclient = TCPLib.Server.Net.Client.clients.First(x => x.client.Client.RemoteEndPoint!.ToString()!.Split(':')[1] == t);
 
             var handler = DataPackageHandlerRegistry.Create(DataPackageFilter.Equals("Message"), new DataPackageReceive(OnReceived));
             var dispatcher = new DPDispatcherBuilder(client.ConnectedServer, handler).Build();
             _ = Task.Run(dispatcher.Start);
 
-            await TCPLib.Server.Net.Client.clients.First().SendAsync(new Message() { Data = "meow" });
+            
+
+            await sclient.SendAsync(new Message() { Data = "meow" });
             await Task.Delay(1000);
             Assert.True(Received);
 
             dispatcher.Stop();
-            server.Stop();
         }
     }
 #endif
