@@ -120,17 +120,7 @@ for proj in csprojfiles do
             
     Completed()
 
-if System.Environment.GetCommandLineArgs().Contains("-preCompile") then
-    System.Environment.Exit(0)
-
-printHeader "State: Compilation"
-printfn "Building..."
-
-runCommand "dotnet build" (Directory.GetCurrentDirectory()) true
-runCommand "dotnet build" (Directory.GetCurrentDirectory()) false
-
 printfn "Compiled for: %s" (formatTimeSpan(System.DateTime.UtcNow - startCompilation))
 System.Console.ForegroundColor <- System.ConsoleColor.Green
 printfn "Completed!"
 System.Console.ResetColor()
-printfn "You can find the build along this path: \"%s\"" (Path.Combine(Directory.GetCurrentDirectory(), "Build"))
