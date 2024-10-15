@@ -9,18 +9,18 @@ using TCPLib.Net;
 namespace TCPLib.Client.DPDispatcher
 {
     public delegate Task DataPackageReceive(DataPackageSource package);
-    public class DataPackageHandlerRegistry
+    public class DPHandlerRegistry
     {
         public event DataPackageReceive OnReceived;
 
-        public DataPackageFilter filter;
+        public DPFilter filter;
 
-        public static DataPackageHandlerRegistry Create(DataPackageFilter filter, params DataPackageReceive[] methods)
+        public static DPHandlerRegistry Create(DPFilter filter, params DataPackageReceive[] methods)
         {
             if (methods.Length == 0)
                 throw new ArgumentException("There is a lack of methods", nameof(methods));
 
-            var dpd = new DataPackageHandlerRegistry();
+            var dpd = new DPHandlerRegistry();
             foreach (var method in methods)
                 dpd.OnReceived += method;
 
@@ -31,6 +31,6 @@ namespace TCPLib.Client.DPDispatcher
         internal async Task Invoke(DataPackageSource package)
             => await OnReceived.Invoke(package);
 
-        private DataPackageHandlerRegistry() { }
+        private DPHandlerRegistry() { }
     }
 }

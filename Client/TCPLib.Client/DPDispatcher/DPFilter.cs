@@ -7,47 +7,47 @@ using System.Threading.Tasks;
 
 namespace TCPLib.Client.DPDispatcher
 {
-    public class DataPackageFilter
+    public class DPFilter
     {
         private string _pattern;
         private ConditionType _conditionType;
 
         #region builder
-        public static DataPackageFilter Equals(string pattern)
+        public static DPFilter Equals(string pattern)
         {
             if(string.IsNullOrWhiteSpace(pattern))
                 throw new ArgumentNullException(nameof(pattern));
-           return new DataPackageFilter() { _pattern = pattern, _conditionType = ConditionType.Equals };
+           return new DPFilter() { _pattern = pattern, _conditionType = ConditionType.Equals };
         }
-        public static DataPackageFilter NotEquals(string pattern)
+        public static DPFilter NotEquals(string pattern)
         {
             if (string.IsNullOrWhiteSpace(pattern))
                 throw new ArgumentNullException(nameof(pattern));
-            return new DataPackageFilter() { _pattern = pattern, _conditionType = ConditionType.NotEquals };
+            return new DPFilter() { _pattern = pattern, _conditionType = ConditionType.NotEquals };
         }
-        public static DataPackageFilter Contains(string pattern)
+        public static DPFilter Contains(string pattern)
         {
             if (string.IsNullOrWhiteSpace(pattern))
                 throw new ArgumentNullException(nameof(pattern));
-            return new DataPackageFilter() { _pattern = pattern, _conditionType = ConditionType.Contains };
+            return new DPFilter() { _pattern = pattern, _conditionType = ConditionType.Contains };
         }
-        public static DataPackageFilter NotContains(string pattern)
+        public static DPFilter NotContains(string pattern)
         {
             if (string.IsNullOrWhiteSpace(pattern))
                 throw new ArgumentNullException(nameof(pattern));
-            return new DataPackageFilter() { _pattern = pattern, _conditionType = ConditionType.NotContains };
+            return new DPFilter() { _pattern = pattern, _conditionType = ConditionType.NotContains };
         }
-        public static DataPackageFilter MatchesRegex(string pattern)
+        public static DPFilter MatchesRegex(string pattern)
         {
             if (string.IsNullOrWhiteSpace(pattern))
                 throw new ArgumentNullException(nameof(pattern));
-            return new DataPackageFilter() { _pattern = pattern, _conditionType = ConditionType.MatchesRegex };
+            return new DPFilter() { _pattern = pattern, _conditionType = ConditionType.MatchesRegex };
         }
-        public static DataPackageFilter NotMatchesRegex(string pattern)
+        public static DPFilter NotMatchesRegex(string pattern)
         {
             if (string.IsNullOrWhiteSpace(pattern))
                 throw new ArgumentNullException(nameof(pattern));
-            return new DataPackageFilter() { _pattern = pattern, _conditionType = ConditionType.NotMatchesRegex };
+            return new DPFilter() { _pattern = pattern, _conditionType = ConditionType.NotMatchesRegex };
         }
         #endregion
         internal bool Check(string input)
@@ -73,7 +73,7 @@ namespace TCPLib.Client.DPDispatcher
         #region Operators and overrided methods
         public override bool Equals(object obj)
         {
-            return obj is DataPackageFilter filter &&
+            return obj is DPFilter filter &&
                    _pattern == filter._pattern &&
                    _conditionType == filter._conditionType;
         }
@@ -107,10 +107,10 @@ namespace TCPLib.Client.DPDispatcher
             throw new InvalidOperationException("Unknown condition type.");
         }
 
-        private DataPackageFilter() { }
-        public static bool operator ==(DataPackageFilter value1, DataPackageFilter value2)
+        private DPFilter() { }
+        public static bool operator ==(DPFilter value1, DPFilter value2)
             => value1._pattern == value2._pattern && value1._conditionType == value2._conditionType;
-        public static bool operator !=(DataPackageFilter value1, DataPackageFilter value2)
+        public static bool operator !=(DPFilter value1, DPFilter value2)
             => (value1 == value2) == false;
         #endregion
     }

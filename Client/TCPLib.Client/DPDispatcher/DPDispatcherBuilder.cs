@@ -11,18 +11,18 @@ namespace TCPLib.Client.DPDispatcher
     public class DPDispatcherBuilder
     {
         private TCPLib.Client.Net.Server _client;
-        private List<DataPackageHandlerRegistry> _handlers = new List<DataPackageHandlerRegistry>();
+        private List<DPHandlerRegistry> _handlers = new List<DPHandlerRegistry>();
         public bool UseDecryption = true;
         public bool ThrowIfNotHandled = true;
 
-        public DPDispatcherBuilder(TCPLib.Client.Net.Server client, params DataPackageHandlerRegistry[] handlers)
+        public DPDispatcherBuilder(TCPLib.Client.Net.Server client, params DPHandlerRegistry[] handlers)
         {
             _client = client;
-            _handlers = new List<DataPackageHandlerRegistry>(handlers);
+            _handlers = new List<DPHandlerRegistry>(handlers);
         }
-        public DPDispatcherBuilder AddDataPackageHandlerRegistry(DataPackageHandlerRegistry handler)
+        public DPDispatcherBuilder AddDataPackageHandlerRegistry(DPHandlerRegistry handler)
         {
-            var handlers = new List<DataPackageHandlerRegistry>(_handlers)
+            var handlers = new List<DPHandlerRegistry>(_handlers)
             {
                 handler
             };
@@ -37,9 +37,9 @@ namespace TCPLib.Client.DPDispatcher
             return new DPDispatcher(_client, handlers, UseDecryption, ThrowIfNotHandled);
         }
 
-        private static void CheckDuplications(DataPackageHandlerRegistry[] handlers)
+        private static void CheckDuplications(DPHandlerRegistry[] handlers)
         {
-            var uniqueHandlers = new HashSet<DataPackageFilter>();
+            var uniqueHandlers = new HashSet<DPFilter>();
 
             foreach (var handler in handlers)
             {

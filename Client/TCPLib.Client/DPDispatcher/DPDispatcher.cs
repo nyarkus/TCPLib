@@ -10,7 +10,7 @@ namespace TCPLib.Client.DPDispatcher
     public class DPDispatcher
     {
         private TCPLib.Client.Net.Server _client;
-        private DataPackageHandlerRegistry[] _handlers;
+        private DPHandlerRegistry[] _handlers;
 
         public bool UseDecryption;
         public bool ThrowIfNotHandled;
@@ -47,7 +47,7 @@ namespace TCPLib.Client.DPDispatcher
             _cancellationTokenSource.Cancel();
         }
 
-        internal DPDispatcher(TCPLib.Client.Net.Server client, DataPackageHandlerRegistry[] handlers, bool UseDecryption, bool ThrowIfNotHandled)
+        internal DPDispatcher(TCPLib.Client.Net.Server client, DPHandlerRegistry[] handlers, bool UseDecryption, bool ThrowIfNotHandled)
         {
             _client = client;
             _handlers = handlers;
