@@ -8,7 +8,6 @@ using TCPLib.Net.DPDispatcher;
 
 namespace TCPLib.Client.DPDispatcher
 {
-    public delegate Task DataPackageReceive(DataPackageSource package);
     public class DPHandlerRegistry
     {
         public event DataPackageReceive OnReceived;

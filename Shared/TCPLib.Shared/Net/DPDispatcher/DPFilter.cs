@@ -50,7 +50,7 @@ namespace TCPLib.Net.DPDispatcher
             return new DPFilter() { _pattern = pattern, _conditionType = ConditionType.NotMatchesRegex };
         }
         #endregion
-        internal bool Check(string input)
+        public bool Check(string input)
         {
             switch (_conditionType)
             {
