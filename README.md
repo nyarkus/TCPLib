@@ -19,13 +19,12 @@
 
 # What is this?!
 
-**TCPLib** - It's a low-level library for exchanging packets with a remote computer (🤓). 
+**TCPLib** - It's a high-level library for exchanging packets with a remote computer (🤓). 
 TCPLib works on the TCP protocol and supports AES and RSA encryption.
 For packet exchange, TCPLib uses [Protocol Buffers](https://github.com/protocolbuffers/protobuf).
 
 # How do I use this thing? :0
 
-Since this is a low-level library, using it can be quite tricky : (
 
 ## Implementing the Server Side
 
