@@ -24,6 +24,6 @@ jobs:
     - name: Test
       run: |
         cd Tests/NetTests
-        dotnet test Tests.csproj
+        dotnet test NetTests.csproj
         cd ../DPDispatcherTests
         dotnet test DPDispatcherTests.csproj
