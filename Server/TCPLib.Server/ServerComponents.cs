@@ -9,9 +9,9 @@ namespace TCPLib.Server
     [Flags]
     public enum ServerComponents
     {
-        None,
-        BaseCommands,
-        UDPStateSender,
-        All,
+        None = 0,
+        BaseCommands = 1 << 0,
+        UDPStateSender = 1 << 1,
+        All = 1 << 2,
     }
 }

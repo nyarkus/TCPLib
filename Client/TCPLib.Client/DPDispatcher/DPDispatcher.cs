@@ -26,7 +26,7 @@ namespace TCPLib.Client.DPDispatcher
             set { _throwIfNotHandled = value; }
         }
 
-        private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+        private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
         public async Task Start()
         {
             while(!_cancellationTokenSource.IsCancellationRequested)
@@ -61,6 +61,7 @@ namespace TCPLib.Client.DPDispatcher
         public void Dispose()
         {
             _cancellationTokenSource.Cancel();
+            _cancellationTokenSource.Dispose();
         }
 
         internal DPDispatcher(TCPLib.Client.Net.Server client, DPHandlerRegistry[] handlers, bool UseDecryption, bool ThrowIfNotHandled)

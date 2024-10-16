@@ -6,8 +6,8 @@ namespace TCPLib.Client.Net
 {
     public class Encryptor
     {
-        RSAProvider RSA;
-        AESProvider AES;
+        readonly RSAProvider RSA;
+        AESProvider AES { get; set; }
         internal static int AesKeySize;
         public Encryptor()
         {

@@ -90,7 +90,7 @@ namespace TCPLib.Server.Commands
         }
         public Ban()
         {
-            Synonyms = new string[] { "block", "ban" };
+            Synonyms = new [] { "block", "ban" };
             Name = "ban";
             Description = "Blocks a user by ip or id. Usage: ban {ip/id} {reason}";
         }

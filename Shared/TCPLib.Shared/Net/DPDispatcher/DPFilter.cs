@@ -17,37 +17,37 @@ namespace TCPLib.Net.DPDispatcher
         {
             if(string.IsNullOrWhiteSpace(pattern))
                 throw new ArgumentNullException(nameof(pattern));
-           return new DPFilter() { _pattern = pattern, _conditionType = ConditionType.Equals };
+           return new DPFilter { _pattern = pattern, _conditionType = ConditionType.Equals };
         }
         public static DPFilter NotEquals(string pattern)
         {
             if (string.IsNullOrWhiteSpace(pattern))
                 throw new ArgumentNullException(nameof(pattern));
-            return new DPFilter() { _pattern = pattern, _conditionType = ConditionType.NotEquals };
+            return new DPFilter { _pattern = pattern, _conditionType = ConditionType.NotEquals };
         }
         public static DPFilter Contains(string pattern)
         {
             if (string.IsNullOrWhiteSpace(pattern))
                 throw new ArgumentNullException(nameof(pattern));
-            return new DPFilter() { _pattern = pattern, _conditionType = ConditionType.Contains };
+            return new DPFilter { _pattern = pattern, _conditionType = ConditionType.Contains };
         }
         public static DPFilter NotContains(string pattern)
         {
             if (string.IsNullOrWhiteSpace(pattern))
                 throw new ArgumentNullException(nameof(pattern));
-            return new DPFilter() { _pattern = pattern, _conditionType = ConditionType.NotContains };
+            return new DPFilter { _pattern = pattern, _conditionType = ConditionType.NotContains };
         }
         public static DPFilter MatchesRegex(string pattern)
         {
             if (string.IsNullOrWhiteSpace(pattern))
                 throw new ArgumentNullException(nameof(pattern));
-            return new DPFilter() { _pattern = pattern, _conditionType = ConditionType.MatchesRegex };
+            return new DPFilter { _pattern = pattern, _conditionType = ConditionType.MatchesRegex };
         }
         public static DPFilter NotMatchesRegex(string pattern)
         {
             if (string.IsNullOrWhiteSpace(pattern))
                 throw new ArgumentNullException(nameof(pattern));
-            return new DPFilter() { _pattern = pattern, _conditionType = ConditionType.NotMatchesRegex };
+            return new DPFilter { _pattern = pattern, _conditionType = ConditionType.NotMatchesRegex };
         }
         #endregion
         public bool Check(string input)
@@ -66,9 +66,9 @@ namespace TCPLib.Net.DPDispatcher
                     return new Regex(_pattern).IsMatch(input);
                 case ConditionType.NotMatchesRegex:
                     return !new Regex(_pattern).IsMatch(input);
+                default:
+                    throw new InvalidOperationException("Unknown condition type.");
             }
-
-            throw new InvalidOperationException("Unknown condition type.");
         }
         #region Operators and overrided methods
         public override bool Equals(object obj)
@@ -108,10 +108,7 @@ namespace TCPLib.Net.DPDispatcher
         }
 
         private DPFilter() { }
-        public static bool operator ==(DPFilter value1, DPFilter value2)
-            => value1._pattern == value2._pattern && value1._conditionType == value2._conditionType;
-        public static bool operator !=(DPFilter value1, DPFilter value2)
-            => (value1 == value2) == false;
+
         #endregion
     }
     internal enum ConditionType

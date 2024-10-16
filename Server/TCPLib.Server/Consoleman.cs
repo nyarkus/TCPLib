@@ -9,11 +9,11 @@ namespace TCPLib.Server
     public static class Console
     {
         private static readonly NLog.Logger _logger = LogManager.GetCurrentClassLogger();
-        private static bool _inited = false;
+        private static bool _inited;
         public static LogLevel LogLevel { get; set; } = LogLevel.Debug;
         public static string LogPath { get; private set; } = @"Logs";
         public static bool SaveLogs { get; set; } = true;
-        public static bool SetupNLog = true;
+        public static bool SetupNLog { get; set; } = true;
 
         internal static void Initialize(int deleteLogsAfterDays)
         {

@@ -9,12 +9,12 @@ namespace TCPLib.Server
 {
     public class ServerConfiguration
     {
-        private IBanListSaver banSaver;
-        private ISettingsSaver settingsSaver;
+        private readonly IBanListSaver banSaver;
+        private readonly ISettingsSaver settingsSaver;
         private ServerComponents components;
 
-        private int aesKeySize = 128;
-        private int rsaKeyStrength = 2048;
+        private int aesKeySize { get; set; } = 128;
+        private int rsaKeyStrength { get; set; } = 2048;
 
         public ServerConfiguration(IBanListSaver banSaver, ISettingsSaver settingsSaver, ServerComponents components)
         {

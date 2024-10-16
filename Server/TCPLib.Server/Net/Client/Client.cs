@@ -16,6 +16,7 @@ namespace TCPLib.Server.Net
         public TcpClient client { get; set; }
         public NetworkStream stream { get; set; }
         public uint id { get; private set; }
+
         public static IReadOnlyCollection<Client> clients
         {
             get
@@ -25,6 +26,7 @@ namespace TCPLib.Server.Net
         }
         protected static List<Client> _clients = new List<Client>();
         public Encryptor Encryptor { get; set; }
+        public bool IsAlive { get; private set; }
 
         protected CancellationTokenSource OnKick;
         public Client(TcpClient client, NetworkStream stream)
@@ -49,6 +51,7 @@ namespace TCPLib.Server.Net
         {
             OnKick.Cancel();
 
+            IsAlive = false;
             client.Close();
             _clients.Remove(this);
             _semaphore.Dispose();

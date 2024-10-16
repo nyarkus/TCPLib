@@ -10,7 +10,7 @@ using TCPLib.Classes;
 
 namespace TCPLib.Server.Net
 {
-    public partial class Client
+    public partial class Client : IDisposable
     {
         private async Task<byte[]> Read(int count, Stream stream)
         {

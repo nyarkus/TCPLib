@@ -6,7 +6,7 @@ namespace Tests
 #nullable disable
     public class Message : IDataSerializable<Message>
     {
-        public string Data;
+        public string Data { get; set; }
 
         public Message FromBytes(byte[] bytes)
         {

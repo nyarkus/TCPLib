@@ -5,12 +5,19 @@ namespace TCPLib.Server.Commands
 {
     public static class CommandManager
     {
-        public static List<ICommand> commands { get; private set; } = new List<ICommand>();
+        public static IReadOnlyCollection<ICommand> Commands
+        {
+            get
+            {
+                return _commands;
+            }
+        }
+        private static List<ICommand> _commands = new List<ICommand>();
         public static void RegCommand(ICommand command)
         {
             try
             {
-                foreach (var cmd in commands)
+                foreach (var cmd in _commands)
                 {
                     if (cmd == null)
                         continue;
@@ -19,7 +26,7 @@ namespace TCPLib.Server.Commands
                     checkForDuplicateName(cmd, command);
                 }
 
-                commands.Add(command);
+                _commands.Add(command);
                 Console.Debug($"The new \"{command.Name}\" command has been registered");
             }
             catch (Exception ex)
@@ -53,15 +60,17 @@ namespace TCPLib.Server.Commands
             if (line == null)
                 return;
 
-            while (line.StartsWith(" ")) line = line.TrimStart();
-                if (line is null || line.Length == 0)
-                {
-                    Console.Error($"Command \"{line}\" was not found.");
-                    return;
-                }
+            while (line.StartsWith(" ")) 
+                line = line.TrimStart();
+
+            if (line is null || line.Length == 0)
+            {
+                Console.Error($"Command \"{line}\" was not found.");
+                return;
+            }
 
             var splited = line.Split(' ');
-            foreach (var cmd in commands)
+            foreach (var cmd in _commands)
             {
                 if (cmd.Synonyms.Contains(splited[0]))
                 {

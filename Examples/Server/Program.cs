@@ -22,7 +22,7 @@ namespace ExampleServer
 
         private static async Task OnConnected(Client client)
         {
-            while (true)
+            while (client.IsAlive)
             {
                 var message = await client.ReceiveSourceAsync();
                 TCPLib.Server.Console.Info(UTF8Encoding.UTF8.GetString(message.Data));

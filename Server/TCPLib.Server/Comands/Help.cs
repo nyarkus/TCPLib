@@ -26,7 +26,7 @@ namespace TCPLib.Server.Commands
         {
             StringBuilder sb = new StringBuilder();
 
-            foreach (var command in CommandManager.commands)
+            foreach (var command in CommandManager.Commands)
             {
                 bool found = CheckCommandSynonyms(command, arg, sb);
                 if (found || command.Name == arg)
@@ -66,7 +66,7 @@ namespace TCPLib.Server.Commands
         {
             StringBuilder sb = new StringBuilder();
 
-            foreach (var command in CommandManager.commands)
+            foreach (var command in CommandManager.Commands)
             {
                 foreach (var syn in command.Synonyms)
                 {

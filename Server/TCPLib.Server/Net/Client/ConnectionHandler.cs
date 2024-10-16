@@ -9,12 +9,12 @@ using TCPLib.Classes;
 
 namespace TCPLib.Server.Net
 {
-    public partial class Client
+    public partial class Client : IDisposable
     {
         public delegate Task TcpConnetion(ResponseCode code, TcpClient client);
         public delegate Task ClientConnetion(Client client);
-        public static ClientConnetion SuccessfulConnection;
-        public static TcpConnetion FailedConnection;
+        public static ClientConnetion SuccessfulConnection { get; set; }
+        public static TcpConnetion FailedConnection { get; set; }
         static async Task _failConnection(TcpClient client, Client net, ResponseCode code, string reason = "")
         {
             Console.Info($"Connection from {client.Client.RemoteEndPoint} rejected because: {code}.");
@@ -26,7 +26,6 @@ namespace TCPLib.Server.Net
         {
             try
             {
-                CancellationTokenSource cancellation = new CancellationTokenSource();
                 Console.Info($"Connection request from {client.Client.RemoteEndPoint}");
                 var net = new Client(client, client.GetStream());
                 if (Server.settings.maxPlayers <= clients.Count())
@@ -45,7 +44,7 @@ namespace TCPLib.Server.Net
                 }
                 var serverenc = Encrypt.Encryptor.GetServerEncryptor();
 
-                await net.SendAsync(new Key() { Value = serverenc.GetRSAPublicKey(), MaxAESSize = Encrypt.Encryptor.aesKey }, false);
+                await net.SendAsync(new Key { Value = serverenc.GetRSAPublicKey(), MaxAESSize = Encrypt.Encryptor.aesKey }, false);
                 net.Encryptor = serverenc;
 
                 Console.Debug("Wait a new keys...");
@@ -70,14 +69,14 @@ namespace TCPLib.Server.Net
 
                 if(SuccessfulConnection != null)
                     await SuccessfulConnection.Invoke(net);
-
                 return net;
             }
             catch (Exception ex)
             {
                 Console.Error($"There were unexpected errors when connecting from {client.Client.RemoteEndPoint}.");
                 Console.Debug(ex);
-                FailedConnection?.Invoke(ResponseCode.ServerError, client);
+                if(FailedConnection != null)
+                    await FailedConnection?.Invoke(ResponseCode.ServerError, client);
 #if DEBUG
                 if (TCPLib.Server.Server.TestingMode) throw;
 #endif

@@ -1,10 +1,11 @@
 // This file uses Protocol Buffers from Google, which is licensed under BSD-3-Clause.
 
 using Google.Protobuf;
+using System;
 
 namespace TCPLib.Net
 {
-    public struct DataPackage<T> where T : IDataSerializable<T>, new()
+    public struct DataPackage<T> : IEquatable<DataPackage<T>> where T : IDataSerializable<T>, new()
     {
         public string Type { get; set; }
         public byte[] Data { get; set; }
@@ -23,13 +24,19 @@ namespace TCPLib.Net
             _cached = false;
         }
         public byte[] Pack()
-        => new TCPLib.Protobuf.DataPackage() { Data = ByteString.CopyFrom(Data), Type = Type }.ToByteArray();
+        => new TCPLib.Protobuf.DataPackage { Data = ByteString.CopyFrom(Data), Type = Type }.ToByteArray();
 
         public T Unpack()
         {
             T instance = new T();
             return instance.FromBytes(Data);
         }
+
+        public bool Equals(DataPackage<T> other)
+        {
+            return Data.Equals(other.Data) && other.Type == Type;
+        }
+
         private T _cache;
         bool _cached;
         public T Value
