@@ -12,7 +12,7 @@ namespace TCPLib.Client.DPDispatcher
     {
         public event DataPackageReceive OnReceived;
 
-        public DPFilter filter;
+        public DPFilter filter { get; set; }
 
         public static DPHandlerRegistry Create(DPFilter filter, params DataPackageReceive[] methods)
         {

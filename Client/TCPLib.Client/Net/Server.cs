@@ -14,8 +14,6 @@ namespace TCPLib.Client.Net
 
         public delegate Task ServerKicked(KickMessage response);
         public event ServerKicked Kicked;
-        public event ServerKicked Banned;
-        public event ServerKicked ServerShutdown;
 
         public IPAddress IP { get; set; }
         public int Port { get; set; }
@@ -40,11 +38,7 @@ namespace TCPLib.Client.Net
         public async Task Disconnect()
         {
             var kicked = new KickMessage(ResponseCode.DisconnectedByUser);
-            try
-            {
-                await SendAsync(kicked);
-            }
-            catch { }
+            await SendAsync(kicked);
             OnKick.Cancel();
 
             stream.Close();

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using System.Linq;
 using TCPLib.Classes;
+using System.Text;
 
 namespace TCPLib.Server.Commands
 {
@@ -59,17 +60,18 @@ namespace TCPLib.Server.Commands
             }
             if (args.Length > 1)
             {
-                string reason = "";
+                StringBuilder reason = new StringBuilder();
                 for (int i = 1; i < args.Length; i++)
                 {
-                    reason += args[i] + " ";
+                    reason.Append(args[i] + " ");
                 }
-                var ban = SaveFiles.Ban.CreateBan(ip, reason.Trim(' '));
+                var strReason = reason.ToString();
+                var ban = SaveFiles.Ban.CreateBan(ip, strReason.Trim(' '));
                 list.Add(ban);
                 SaveFiles.Ban.Save(list.ToArray());
                 if (client != null)
                 {
-                    await client.Kick(new KickMessage(ResponseCode.Blocked, reason));
+                    await client.Kick(new KickMessage(ResponseCode.Blocked, strReason));
                 }
                 Console.Info($"{ip} has been blocked with reason: {reason}");
             }

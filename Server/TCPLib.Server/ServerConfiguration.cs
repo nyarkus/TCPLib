@@ -36,6 +36,7 @@ namespace TCPLib.Server
         public ServerComponents Components
         {
             get { return components; }
+            internal set { components = value; }
         }
 
         public int AESKeySize

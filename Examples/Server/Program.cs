@@ -20,7 +20,7 @@ namespace ExampleServer
             server.ConsoleRead();
         }
 
-        private static async Task OnConnected(TCPLib.Classes.ResponseCode code, Client client)
+        private static async Task OnConnected(Client client)
         {
             while (true)
             {

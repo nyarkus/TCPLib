@@ -37,13 +37,13 @@ namespace TCPLib.Server
         }
         public Server(ServerConfiguration configuration)
         {
-            Ban.saver = configuration.banSaver;
-            Settings.saver = configuration.settingsSaver;
-            if (configuration.components == ServerComponents.All)
+            Ban.saver = configuration.BanSaver;
+            Settings.saver = configuration.SettingsSaver;
+            if (configuration.Components == ServerComponents.All)
             {
-                configuration.components = ServerComponents.BaseCommands | ServerComponents.UDPStateSender;
+                configuration.Components = ServerComponents.BaseCommands | ServerComponents.UDPStateSender;
             }
-            _components = configuration.components;
+            _components = configuration.Components;
 
             Encryptor.rsaKey = configuration.RSAKeyStrength;
             Encryptor.aesKey = configuration.AESKeySize;

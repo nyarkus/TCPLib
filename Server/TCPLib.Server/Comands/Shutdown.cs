@@ -18,7 +18,7 @@ namespace TCPLib.Server.Commands
         }
         public Shutdown(Server server)
         {
-            Synonyms = new string[] { "shutdown", "stop" };
+            Synonyms = new [] { "shutdown", "stop" };
             Name = "shutdown";
             Description = "Shuts down the server";
             this.server = server;

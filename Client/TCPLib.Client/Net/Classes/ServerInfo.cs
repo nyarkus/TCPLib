@@ -39,15 +39,15 @@ namespace TCPLib.Client.Net
         {
             var client = new UdpClient(address.Port);
 
-            DateTime start = DateTime.UtcNow;
+            DateTimeOffset start = DateTimeOffset.UtcNow;
 
             client.Send(new byte[] { 0 }, 1, address);
             var result = client.Receive(ref address);
-            var ping = DateTime.UtcNow - start;
+            var ping = DateTimeOffset.UtcNow - start;
 
             var jobject = JObject.Parse(System.Text.Encoding.UTF8.GetString(result));
 
-            var res = new ServerInfo()
+            var res = new ServerInfo
             {
                 MaxPlayers = (int)jobject["MaxPlayers"],
                 Players = (int)jobject["Players"],
@@ -87,11 +87,11 @@ namespace TCPLib.Client.Net
             {
 
 
-                DateTime start = DateTime.UtcNow;
+                DateTimeOffset start = DateTimeOffset.UtcNow;
 
                 client.Send(new byte[] { 0 }, 1, address);
                 var result = client.Receive(ref address);
-                DateTime end = DateTime.UtcNow;
+                DateTimeOffset end = DateTimeOffset.UtcNow;
                 var ping = end - start;
                 var jobject = JObject.Parse(System.Text.Encoding.UTF8.GetString(result));
 
@@ -107,7 +107,7 @@ namespace TCPLib.Client.Net
             }
             catch
             {
-                return null;
+                return Task.FromResult<ServerInfo>(null);
             }
         }
     }

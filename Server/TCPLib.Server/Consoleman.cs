@@ -6,7 +6,7 @@ using System.IO;
 
 namespace TCPLib.Server
 {
-    public class Console
+    public static class Console
     {
         private static readonly NLog.Logger _logger = LogManager.GetCurrentClassLogger();
         private static bool _inited = false;
@@ -19,12 +19,12 @@ namespace TCPLib.Server
         {
             if (_inited) return;
 
-            var time = DateTime.Now;
+            var time = DateTimeOffset.Now;
             Directory.CreateDirectory(LogPath);
 
             foreach (var file in Directory.GetFiles(LogPath))
             {
-                if (new FileInfo(file).CreationTime.AddDays(deleteLogsAfterDays) < DateTime.Now)
+                if (new FileInfo(file).CreationTime.ToUniversalTime().AddDays(deleteLogsAfterDays) < DateTimeOffset.UtcNow)
                 {
                     File.Delete(file);
                 }
@@ -97,34 +97,23 @@ namespace TCPLib.Server
             LogManager.ReconfigExistingLoggers();
         }
 
-        private static string GetTime()
-        {
-            return DateTime.Now.ToString("HH:mm:ss");
-        }
-
         public static void Debug(object log)
-        {
-            _logger.Debug(log);
-        }
+            => _logger.Debug(log);
+        
         public static void Trace(object log)
-        {
-            _logger.Trace(log);
-        }
+            => _logger.Trace(log);
+        
         public static void Info(object log)
-        {
-            _logger.Info(log);
-        }
+            => _logger.Info(log);
+        
         public static void Warning(object log)
-        {
-            _logger.Warn(log);
-        }
+            => _logger.Warn(log);
+        
         public static void Error(object log)
-        {
-            _logger.Error(log);
-        }
+            => _logger.Error(log);
+        
         public static void Fatal(object log)
-        {
-            _logger.Fatal(log);
-        }
+            => _logger.Fatal(log);
+        
     }
 }

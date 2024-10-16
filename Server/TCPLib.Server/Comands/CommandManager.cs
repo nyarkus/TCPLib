@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 namespace TCPLib.Server.Commands
 {
-    public class CommandManager
+    public static class CommandManager
     {
         public static List<ICommand> commands { get; private set; } = new List<ICommand>();
         public static void RegCommand(ICommand command)
@@ -15,24 +15,39 @@ namespace TCPLib.Server.Commands
                     if (cmd == null)
                         continue;
 
-                    foreach (var syn in cmd.Synonyms)
-                        foreach (var s in command.Synonyms)
-                            if (syn == s) throw new CommandAlreadyExists(s);
-
-                    if (cmd.Name == command.Name)
-                    {
-                        throw new CommandAlreadyExists(command.Name);
-                    }
+                    checkForDuplicateSynonyms(cmd, command);
+                    checkForDuplicateName(cmd, command);
                 }
+
                 commands.Add(command);
                 Console.Debug($"The new \"{command.Name}\" command has been registered");
             }
             catch (Exception ex)
             {
-                Console.Error($"Failed to register the {command.Name}\" command due to an unhandled exception");
+                Console.Error($"Failed to register the \"{command.Name}\" command due to an unhandled exception");
                 Console.Debug(ex);
             }
         }
+
+        private static void checkForDuplicateSynonyms(ICommand cmd, ICommand command)
+        {
+            foreach (var syn in cmd.Synonyms)
+            {
+                if (command.Synonyms.Contains(syn))
+                {
+                    throw new CommandAlreadyExists(syn);
+                }
+            }
+        }
+
+        private static void checkForDuplicateName(ICommand cmd, ICommand command)
+        {
+            if (cmd.Name == command.Name)
+            {
+                throw new CommandAlreadyExists(command.Name);
+            }
+        }
+
         public static void HandleLine(string line)
         {
             if (line == null)
@@ -54,8 +69,10 @@ namespace TCPLib.Server.Commands
                     if (splited.Length > 1)
                     {
                         var arg = new List<string>();
-                        for (int i = 1; i < splited.Length; i++) arg.Add(splited[i]);
-                            args = arg.ToArray();
+                        for (int i = 1; i < splited.Length; i++) 
+                            arg.Add(splited[i]);
+
+                        args = arg.ToArray();
                     }
                     cmd.Execute(args);
                     return;

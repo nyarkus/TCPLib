@@ -11,10 +11,10 @@ namespace TCPLib.Client.DPDispatcher
     
     public class DPDispatcherBuilder
     {
-        private TCPLib.Client.Net.Server _client;
+        private readonly TCPLib.Client.Net.Server _client;
         private List<DPHandlerRegistry> _handlers = new List<DPHandlerRegistry>();
-        public bool UseDecryption = true;
-        public bool ThrowIfNotHandled = true;
+        public bool UseDecryption { get; set; } = true;
+        public bool ThrowIfNotHandled { get; set; } = true;
 
         public DPDispatcherBuilder(TCPLib.Client.Net.Server client, params DPHandlerRegistry[] handlers)
         {

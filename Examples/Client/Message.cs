@@ -1,11 +1,17 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using TCPLib.Net;
 
 namespace ExampleClient
 {
-    internal struct Message : IDataSerializable<Message>
+    public struct Message : IDataSerializable<Message>, IEquatable<Message>
     {
         public string Data;
+
+        public bool Equals(Message other)
+        {
+            return Data == other.Data;
+        }
 
         public Message FromBytes(byte[] bytes)
         {

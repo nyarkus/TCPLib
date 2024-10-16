@@ -51,7 +51,6 @@ namespace TCPLib.Server.Net
 
             client.Close();
             _clients.Remove(this);
-            GC.Collect();
         }
 
         public async void Dispose()
@@ -73,7 +72,6 @@ namespace TCPLib.Server.Net
             else
                 list.Add(SaveFiles.Ban.CreateBan(this, Reason, DateTime.UtcNow + time));
             SaveFiles.Ban.Save(list.ToArray());
-            GC.Collect();
         }
     }
     public enum EncryptType

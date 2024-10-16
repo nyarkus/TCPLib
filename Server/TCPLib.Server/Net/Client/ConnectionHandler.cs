@@ -11,10 +11,10 @@ namespace TCPLib.Server.Net
 {
     public partial class Client
     {
-        public delegate Task Connetion(ResponseCode code, TcpClient client);
-        public delegate Task Connetion2(ResponseCode code, Client client);
-        public static Connetion2 SuccessfulConnection;
-        public static Connetion FailedConnection;
+        public delegate Task TcpConnetion(ResponseCode code, TcpClient client);
+        public delegate Task ClientConnetion(Client client);
+        public static ClientConnetion SuccessfulConnection;
+        public static TcpConnetion FailedConnection;
         static async Task _failConnection(TcpClient client, Client net, ResponseCode code)
         {
             Console.Info($"Connection from {client.Client.RemoteEndPoint} rejected because: {code}.");
@@ -67,7 +67,7 @@ namespace TCPLib.Server.Net
                 _clients.Add(net);
                 await net.SendAsync(new RespondCode(ResponseCode.Ok));
                 Console.Info($"Successful connection from {client.Client.RemoteEndPoint}");
-                SuccessfulConnection?.Invoke(ResponseCode.Ok, net);
+                await SuccessfulConnection?.Invoke(net);
                 return net;
             }
             catch (Exception ex)
