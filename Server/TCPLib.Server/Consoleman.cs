@@ -12,7 +12,13 @@ namespace TCPLib.Server
         private static bool _inited;
         public static LogLevel LogLevel { get; set; } = LogLevel.Debug;
         public static string LogPath { get; private set; } = @"Logs";
+        /// <summary>
+        /// If <c>true</c>, a rule will be added during NLog initialisation to save the logs to a file.
+        /// </summary>
         public static bool SaveLogs { get; set; } = true;
+        /// <summary>
+        /// If <c>true</c>, the NLog will be initialised and configured during console initialisation 
+        /// </summary>
         public static bool SetupNLog { get; set; } = true;
 
         internal static void Initialize(int deleteLogsAfterDays)

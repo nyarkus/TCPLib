@@ -7,10 +7,15 @@ using System.Threading.Tasks;
 
 namespace TCPLib.Client.DPDispatcher
 {
+    /// <summary>
+    /// Data Package Dispatcher
+    /// This class is designed to listen for packets and may be more convenient in some cases.
+    /// For more information, visit the <a href="https://github.com/nyarkus/TCPLib/blob/master/documentation/DataPackageDispatcher.md">Documentation</a>.
+    /// </summary>
     public class DPDispatcher : IDisposable
     {
         private readonly TCPLib.Client.Net.Server _client;
-        private readonly DPHandlerRegistry[] _handlers;
+        private readonly DPHandler[] _handlers;
 
         private bool _useDecryption;
         private bool _throwIfNotHandled;
@@ -64,7 +69,7 @@ namespace TCPLib.Client.DPDispatcher
             _cancellationTokenSource.Dispose();
         }
 
-        internal DPDispatcher(TCPLib.Client.Net.Server client, DPHandlerRegistry[] handlers, bool UseDecryption, bool ThrowIfNotHandled)
+        internal DPDispatcher(TCPLib.Client.Net.Server client, DPHandler[] handlers, bool UseDecryption, bool ThrowIfNotHandled)
         {
             _client = client;
             _handlers = handlers;

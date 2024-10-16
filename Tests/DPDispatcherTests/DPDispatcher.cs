@@ -42,7 +42,7 @@ namespace Tests
             string t = sserver.client.Client.LocalEndPoint!.ToString()!.Split(':')[4];
             var sclient = TCPLib.Server.Net.Client.clients.First(x => x.client.Client.RemoteEndPoint!.ToString()!.Split(':')[1] == t);
 
-            var handler = DPHandlerRegistry.Create(DPFilter.Equals("Message"), new DataPackageReceive(OnReceived));
+            var handler = DPHandler.Create(DPFilter.Equals("Message"), new DataPackageReceive(OnReceived));
             var dispatcher = new DPDispatcherBuilder(client.ConnectedServer, handler).Build();
             _ = Task.Run(dispatcher.Start);
 
@@ -67,7 +67,7 @@ namespace Tests
             string t = sserver.client.Client.LocalEndPoint!.ToString()!.Split(':')[4];
             var sclient = TCPLib.Server.Net.Client.clients.First(x => x.client.Client.RemoteEndPoint!.ToString()!.Split(':')[1] == t);
 
-            var handler = TCPLib.Server.DPDispatcher.DPHandlerRegistry.Create(DPFilter.Equals("Message"), new DataPackageReceive(OnServerReceived));
+            var handler = TCPLib.Server.DPDispatcher.DPHandler.Create(DPFilter.Equals("Message"), new DataPackageReceive(OnServerReceived));
             var dispatcher = new TCPLib.Server.DPDispatcher.DPDispatcherBuilder(sclient, handler).Build();
             _ = Task.Run(dispatcher.Start);
 

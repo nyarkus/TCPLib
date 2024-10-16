@@ -11,7 +11,7 @@ namespace TCPLib.Server.Net
 {
     public partial class Client : IDisposable
     {
-        public EncryptType EncryptType { get; set; } = EncryptType.RSA;
+        public EncryptType EncryptType { get; private set; } = EncryptType.RSA;
 
         public TcpClient client { get; set; }
         public NetworkStream stream { get; set; }
@@ -26,6 +26,9 @@ namespace TCPLib.Server.Net
         }
         protected static List<Client> _clients = new List<Client>();
         public Encryptor Encryptor { get; set; }
+        /// <summary>
+        /// If the client disconnects from the server or terminates the connection unexpectedly - the value of this variable will be <c>false</c>
+        /// </summary>
         public bool IsAlive { get; private set; }
 
         protected CancellationTokenSource OnKick;

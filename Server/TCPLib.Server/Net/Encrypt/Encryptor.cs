@@ -21,7 +21,9 @@ namespace TCPLib.Server.Net.Encrypt
 
 
         static Encryptor ServerEncryptor;
-
+        /// <summary>
+        /// The server for RSA has a single <c>Encryptor</c> for all clients. This method returns this ‘server Encryptor’
+        /// </summary>
         public static Encryptor GetServerEncryptor()
         {
             if (ServerEncryptor != null)

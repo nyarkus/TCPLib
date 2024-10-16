@@ -38,6 +38,7 @@ namespace TCPLib.Server.Net
             }
         }
 
+        /// <param name="data">The method itself will create a package whose type will be equal to <c>typeof(T).Name</c></param>
         public async Task SendAsync<T>(T data, bool UseEncryption = true) where T : IDataSerializable<T>, new()
         {
             var package = new DataPackage<T>(typeof(T).Name, data);

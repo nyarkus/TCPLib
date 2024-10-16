@@ -34,6 +34,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Элементы решен
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "documentation", "documentation", "{781CD334-1831-47E8-989D-16DC73AF440E}"
+	ProjectSection(SolutionItems) = preProject
+		documentation\DataPackageDispatcher.md = documentation\DataPackageDispatcher.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -200,6 +205,7 @@ Global
 		{2E903667-E3C5-4355-B3D9-B7AE5E9099C8} = {D1135790-D25C-424F-A514-5BAD86DB26D2}
 		{BB33A2F5-153F-48EA-B660-8245D2481984} = {B62AFA1F-D80D-49B0-9D1A-9E2E0239670A}
 		{79F8A456-06FB-405F-955F-29E881EA648D} = {B62AFA1F-D80D-49B0-9D1A-9E2E0239670A}
+		{781CD334-1831-47E8-989D-16DC73AF440E} = {BE186F06-291A-4243-B2FB-A9CD8E4C6BFB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {91FC2AC4-FBA1-4753-9437-90475C303348}

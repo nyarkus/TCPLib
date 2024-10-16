@@ -8,22 +8,27 @@ using TCPLib.Net.DPDispatcher;
 
 namespace TCPLib.Server.DPDispatcher
 {
-    
+
+    /// <summary>
+    /// Data Package Dispatcher
+    /// This class is designed to listen for packets and may be more convenient in some cases.
+    /// For more information, visit the <a href="https://github.com/nyarkus/TCPLib/blob/master/documentation/DataPackageDispatcher.md">Documentation</a>.
+    /// </summary>
     public class DPDispatcherBuilder
     {
         private readonly TCPLib.Server.Net.Client _client;
-        private List<DPHandlerRegistry> _handlers = new List<DPHandlerRegistry>();
+        private List<DPHandler> _handlers = new List<DPHandler>();
         public bool UseDecryption { get; set; } = true;
         public bool ThrowIfNotHandled { get; set; } = true;
 
-        public DPDispatcherBuilder(TCPLib.Server.Net.Client client, params DPHandlerRegistry[] handlers)
+        public DPDispatcherBuilder(TCPLib.Server.Net.Client client, params DPHandler[] handlers)
         {
             _client = client;
-            _handlers = new List<DPHandlerRegistry>(handlers);
+            _handlers = new List<DPHandler>(handlers);
         }
-        public DPDispatcherBuilder AddDataPackageHandlerRegistry(DPHandlerRegistry handler)
+        public DPDispatcherBuilder AddDataPackageHandlerRegistry(DPHandler handler)
         {
-            var handlers = new List<DPHandlerRegistry>(_handlers)
+            var handlers = new List<DPHandler>(_handlers)
             {
                 handler
             };
@@ -38,7 +43,7 @@ namespace TCPLib.Server.DPDispatcher
             return new DPDispatcher(_client, handlers, UseDecryption, ThrowIfNotHandled);
         }
 
-        private static void CheckDuplications(DPHandlerRegistry[] handlers)
+        private static void CheckDuplications(DPHandler[] handlers)
         {
             var uniqueHandlers = new HashSet<DPFilter>();
 
