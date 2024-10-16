@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using System.Threading;
 using TCPLib.Classes;
@@ -13,7 +13,6 @@ namespace TCPLib.Server
     {
         private ServerListener _Server;
         private UDPStateSender _UDP;
-        public ushort Port;
 
         public static Settings settings;
         private ServerComponents _components;
@@ -60,7 +59,6 @@ namespace TCPLib.Server
             {
                 _UDP = new UDPStateSender(settings.port);
             }
-            Port = settings.port;
 
             Console.Initialize(settings.deleteLogsAfterDays);
             Console.SaveLogs = settings.saveLogs;
