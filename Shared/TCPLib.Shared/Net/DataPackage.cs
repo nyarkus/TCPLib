@@ -33,7 +33,7 @@ namespace TCPLib.Net
         {
             get
             {
-                if(_cache == null)
+                if(_cache.Equals(new T()))
                 {
                     _cache = Unpack();
                 }
