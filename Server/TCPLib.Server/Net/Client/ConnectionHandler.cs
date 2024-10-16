@@ -67,7 +67,10 @@ namespace TCPLib.Server.Net
                 _clients.Add(net);
                 await net.SendAsync(new RespondCode(ResponseCode.Ok));
                 Console.Info($"Successful connection from {client.Client.RemoteEndPoint}");
-                await SuccessfulConnection?.Invoke(net);
+
+                if(SuccessfulConnection != null)
+                    await SuccessfulConnection.Invoke(net);
+
                 return net;
             }
             catch (Exception ex)
