@@ -11,10 +11,10 @@ namespace TCPLib.Client
     {
         public TcpClient tcpClient { get; private set; }
         public Server ConnectedServer { get; private set; }
-        public Client() : this(new ClientSettings())
+        public Client() : this(new ClientConfiguration())
         {
         }
-        public Client(ClientSettings settings)
+        public Client(ClientConfiguration settings)
         {
             tcpClient = new TcpClient();
             Encryptor.AesKeySize = settings.AesKeySize;
