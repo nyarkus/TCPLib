@@ -71,7 +71,7 @@ namespace TCPLib.Server.Commands
                 SaveFiles.Ban.Save(list.ToArray());
                 if (client != null)
                 {
-                    await client.Kick(new KickMessage(ResponseCode.Blocked, strReason));
+                    await client.Kick(new KickMessage(ResponseCode.Kicked, $"You are blocked: \"{strReason}\""));
                 }
                 Console.Info($"{ip} has been blocked with reason: {reason}");
             }
@@ -82,7 +82,7 @@ namespace TCPLib.Server.Commands
                 SaveFiles.Ban.Save(list.ToArray());
                 if (client != null)
                 {
-                    await client.Kick(new KickMessage(ResponseCode.Blocked));
+                    await client.Kick(new KickMessage(ResponseCode.Kicked, "You are blocked"));
                 }
                 Console.Info($"{ip} has been blocked");
             }

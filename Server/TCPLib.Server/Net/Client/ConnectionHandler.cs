@@ -15,10 +15,10 @@ namespace TCPLib.Server.Net
         public delegate Task ClientConnetion(Client client);
         public static ClientConnetion SuccessfulConnection;
         public static TcpConnetion FailedConnection;
-        static async Task _failConnection(TcpClient client, Client net, ResponseCode code)
+        static async Task _failConnection(TcpClient client, Client net, ResponseCode code, string reason = "")
         {
             Console.Info($"Connection from {client.Client.RemoteEndPoint} rejected because: {code}.");
-            await net.SendAsync(new KickMessage(code));
+            await net.SendAsync(new KickMessage(code, reason));
             client.Close();
             FailedConnection?.Invoke(ResponseCode.ServerIsFull, client);
         }
@@ -39,7 +39,7 @@ namespace TCPLib.Server.Net
                 {
                     if (ban.IP == ip && (ban.Until is null || ban.Until > DateTime.UtcNow))
                     {
-                        await _failConnection(client, net, ResponseCode.Blocked);
+                        await _failConnection(client, net, ResponseCode.Kicked, "You are blocked" + (ban.Reason.Length > 0 ? ": \"{ban.Reason}\"" : ""));
                         return null;
                     }
                 }

@@ -39,18 +39,6 @@ namespace TCPLib.Client.Net
                             await Kicked.Invoke(kick);
                         }
                         return true;
-                    case ResponseCode.Blocked:
-                        if (Banned != null)
-                        {
-                            await Banned.Invoke(kick);
-                        }
-                        return true;
-                    case ResponseCode.ServerShutdown:
-                        if (ServerShutdown != null)
-                        {
-                            await ServerShutdown.Invoke(kick);
-                        }
-                        return true;
                 }
             }
             return false;
