@@ -12,11 +12,13 @@ namespace TCPLib.Net
         {
             Type = type;
             Data = value;
+            _cache = default;
         }
         public DataPackage(string type, IDataSerializable<T> value)
         {
             Type = type;
             Data = value.ToByteArray();
+            _cache = default;
         }
         public byte[] Pack()
         => new TCPLib.Protobuf.DataPackage() { Data = ByteString.CopyFrom(Data), Type = Type }.ToByteArray();
@@ -26,11 +28,16 @@ namespace TCPLib.Net
             T instance = new T();
             return instance.FromBytes(Data);
         }
+        private T _cache;
         public T Value
         {
             get
             {
-                return Unpack();
+                if(_cache == null)
+                {
+                    _cache = Unpack();
+                }
+                return _cache;
             }
         }
 
