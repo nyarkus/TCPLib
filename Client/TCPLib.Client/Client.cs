@@ -3,11 +3,10 @@ using System.Net.Sockets;
 using TCPLib.Client.Net;
 using System.Threading.Tasks;
 using TCPLib.Classes;
-using Org.BouncyCastle.Asn1.Cms;
 
 namespace TCPLib.Client
 {
-    public sealed partial class Client
+    public class Client
     {
         public TcpClient tcpClient { get; private set; }
         public Server ConnectedServer { get; private set; }

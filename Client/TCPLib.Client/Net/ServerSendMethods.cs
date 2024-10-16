@@ -5,7 +5,7 @@ using System.Threading;
 
 namespace TCPLib.Client.Net
 {
-    public partial class Server
+    public partial class Server : IDisposable
     {
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 

@@ -9,7 +9,7 @@ using TCPLib.Extentions;
 
 namespace TCPLib.Client.Net
 {
-    public partial class Server
+    public partial class Server : IDisposable
     {
         private static async Task<byte[]> Read(int count, Stream stream)
         {
