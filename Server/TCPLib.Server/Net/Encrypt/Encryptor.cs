@@ -8,8 +8,8 @@ namespace TCPLib.Server.Net.Encrypt
 {
     public class Encryptor
     {
-        internal static int rsaKey = 2048;
-        internal static int aesKey = 128;
+        internal static int rsaKey { get; set; } = 2048;
+        internal static int aesKey { get; set; } = 128;
 
         readonly RSAProvider RSA;
         readonly AESProvider AES;

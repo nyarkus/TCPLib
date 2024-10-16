@@ -8,8 +8,8 @@ namespace TCPLib.Classes
 {
     public struct AESKey : IDataSerializable<AESKey>
     {
-        public byte[] Key;
-        public byte[] IV;
+        public byte[] Key { get; set; }
+        public byte[] IV { get; set; }
 
         public AESKey FromBytes(byte[] bytes)
         {

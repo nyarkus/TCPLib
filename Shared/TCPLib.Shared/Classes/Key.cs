@@ -9,8 +9,8 @@ namespace TCPLib.Classes
 {
     public struct Key : IDataSerializable<Key>
     {
-        public byte[] Value;
-        public int MaxAESSize;
+        public byte[] Value { get; set; }
+        public int MaxAESSize { get; set; }
 
         public Key FromBytes(byte[] bytes)
         {

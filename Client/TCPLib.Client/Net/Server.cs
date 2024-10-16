@@ -57,6 +57,7 @@ namespace TCPLib.Client.Net
             {
                 await Disconnect();
             }
+            _semaphore.Dispose();
         }
     }
     public enum EncryptType

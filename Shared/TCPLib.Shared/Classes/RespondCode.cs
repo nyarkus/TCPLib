@@ -7,7 +7,7 @@ namespace TCPLib.Classes
 {
     public struct RespondCode : IDataSerializable<RespondCode>
     {
-        public ResponseCode code;
+        public ResponseCode code { get; set; }
 
         public RespondCode FromBytes(byte[] bytes)
         {

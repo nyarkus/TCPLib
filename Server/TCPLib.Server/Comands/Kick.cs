@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using System.Linq;
 using TCPLib.Classes;
+using System.Text;
 
 namespace TCPLib.Server.Commands
 {
@@ -49,15 +50,16 @@ namespace TCPLib.Server.Commands
             }
             if (args.Length > 1)
             {
-                string reason = "";
+                StringBuilder reason = new StringBuilder();
                 for (int i = 1; i < args.Length; i++)
                 {
-                    reason += args[i] + " ";
+                    reason.Append(args[i] + " ");
                 }
-                reason = reason.TrimEnd(' ');
-                reason = reason.TrimStart(' ');
-                await client.Kick(new KickMessage(ResponseCode.Kicked, reason));
-                Console.Info($"{ip} has been kicked with reason: {reason}");
+                string strReason = reason.ToString();
+                strReason = strReason.Trim(' ');
+
+                await client.Kick(new KickMessage(ResponseCode.Kicked, strReason));
+                Console.Info($"{ip} has been kicked with reason: {strReason}");
             }
             else
             {

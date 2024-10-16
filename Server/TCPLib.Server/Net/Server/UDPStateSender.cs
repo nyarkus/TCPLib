@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 
 namespace TCPLib.Server.Net
 {
-    public class UDPStateSender  : IDisposable
+    public class UDPStateSender : IDisposable
     {
         private UdpClient Listener;
-        private int Port;
+        private readonly int Port;
         private readonly CancellationTokenSource StopToken;
         public bool Started { get; private set; } = false;
 
@@ -21,31 +21,33 @@ namespace TCPLib.Server.Net
         public void Dispose()
         {
             StopToken.Cancel();
+            StopToken.Dispose();
             Listener.Dispose();
         }
 
         private void Start()
         {
-            Console.Debug("Initialisation of the UDP listening...");
+            Console.Debug("Initialisation of the UDP state sender...");
             try
             {
                 Listener = new UdpClient(Port);
             }
             catch (SocketException ex)
             {
-                if (ex.ErrorCode == 10048)
+                switch (ex.ErrorCode)
                 {
-                    Console.Error("IP address or port not port cannot be used as it is already in use");
-                }
-                else if (ex.ErrorCode == 10049)
-                {
-                    Console.Error("The specified IP address or port does not belong to this computer");
+                    case 10048:
+                        Console.Error("IP address or port not port cannot be used as it is already in use");
+                        break;
+                    case 10049:
+                        Console.Error("The specified IP address or port does not belong to this computer");
+                        break;
                 }
                 throw;
             }
         }
 
-        public async void Initialize()
+        public async Task Initialize()
         {
             Start();
             await Listen();
@@ -71,6 +73,7 @@ namespace TCPLib.Server.Net
 
                     await Listener.SendAsync(respond, respond.Length, result.RemoteEndPoint);
                 }
+                // Just to be safe ._.
                 catch { }
             }
         }

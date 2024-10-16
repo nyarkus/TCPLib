@@ -74,10 +74,10 @@ namespace TCPLib.Server
             Console.Info("Encryption key generation ...");
             Encryptor.GetServerEncryptor();
 
-            Thread tcplistenThread = new Thread(_Server.Initialize) { Priority = ThreadPriority.AboveNormal };
+            Thread tcplistenThread = new Thread(_Server.Initialize().Wait) { Priority = ThreadPriority.AboveNormal };
             if ((_components & ServerComponents.UDPStateSender) == ServerComponents.UDPStateSender)
             {
-                var udpListenThread = new Thread(_UDP.Initialize) { Priority = ThreadPriority.BelowNormal };
+                var udpListenThread = new Thread(_UDP.Initialize().Wait) { Priority = ThreadPriority.BelowNormal };
                 udpListenThread.Start();
             }
             tcplistenThread.Start();

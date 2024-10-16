@@ -2,8 +2,8 @@
 {
     public struct DataPackageSource
     {
-        public string Type;
-        public byte[] Data;
+        public string Type { get; set; }
+        public byte[] Data { get; set; }
 
         public DataPackageSource(string type, byte[] data)
         {

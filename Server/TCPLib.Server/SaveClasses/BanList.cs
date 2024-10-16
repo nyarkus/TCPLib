@@ -7,17 +7,17 @@ namespace TCPLib.Server.SaveFiles
 {
     public class Ban
     {
-        public string IP;
-        public string Reason;
-        public DateTime? Until;
-        public static IBanListSaver saver;
+        public string IP { get; set; }
+        public string Reason { get; set; }
+        public DateTime? Until { get; set; }
+        public static IBanListSaver saver { get; set; }
         public static Ban CreateBan(Client client, string Reason = "", DateTime? Until = null)
         {
-            return new Ban() { IP = client.client.Client.RemoteEndPoint.ToString().Split(':')[0], Reason = Reason, Until = Until };
+            return new Ban { IP = client.client.Client.RemoteEndPoint.ToString().Split(':')[0], Reason = Reason, Until = Until };
         }
         public static Ban CreateBan(string ip, string Reason = "", DateTime? Until = null)
         {
-            return new Ban() { IP = ip, Reason = Reason, Until = Until };
+            return new Ban { IP = ip, Reason = Reason, Until = Until };
         }
         public static Ban[] Load()
             => saver.Load();

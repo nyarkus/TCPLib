@@ -23,7 +23,7 @@ namespace TCPLib.Server.Net
                 {
                     int bytesRead = await stream.ReadAsync(buffer, totalRead, count - totalRead);
                     if (bytesRead == 0)
-                        throw new EndOfStreamException("Reached end of stream before reading expected number of bytes.");
+                        throw new EndOfStreamException($"Reached end of {nameof(stream)} before reading expected number of bytes.");
                     totalRead += bytesRead;
                 }
                 catch (IOException ex) when (ex.InnerException is System.Net.Sockets.SocketException socketEx)

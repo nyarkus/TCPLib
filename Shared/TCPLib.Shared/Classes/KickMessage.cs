@@ -7,8 +7,8 @@ namespace TCPLib.Classes
 {
     public struct KickMessage : IDataSerializable<KickMessage>
     {
-        public string reason;
-        public ResponseCode code;
+        public string reason { get; set; }
+        public ResponseCode code { get; set; }
         public KickMessage(ResponseCode code, string reason = "")
         {
             this.reason = reason;

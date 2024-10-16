@@ -51,6 +51,7 @@ namespace TCPLib.Server.Net
 
             client.Close();
             _clients.Remove(this);
+            _semaphore.Dispose();
         }
 
         public async void Dispose()
