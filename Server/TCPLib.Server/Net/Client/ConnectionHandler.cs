@@ -15,6 +15,13 @@ namespace TCPLib.Server.Net
         public delegate Task Connetion2(ResponseCode code, Client client);
         public static Connetion2 SuccessfulConnection;
         public static Connetion FailedConnection;
+        static async Task _failConnection(TcpClient client, Client net, ResponseCode code)
+        {
+            Console.Info($"Connection from {client.Client.RemoteEndPoint} rejected because: {code}.");
+            await net.SendAsync(new KickMessage(code));
+            client.Close();
+            FailedConnection?.Invoke(ResponseCode.ServerIsFull, client);
+        }
         public static async Task<Client> HandleConnections(TcpClient client, TimeSpan timeout)
         {
             try
@@ -24,10 +31,7 @@ namespace TCPLib.Server.Net
                 var net = new Client(client, client.GetStream());
                 if (Server.settings.maxPlayers <= clients.Count())
                 {
-                    Console.Info($"Connection from {client.Client.RemoteEndPoint} rejected because: {ResponseCode.ServerIsFull}.");
-                    await net.SendAsync(new KickMessage(ResponseCode.ServerIsFull));
-                    client.Close();
-                    FailedConnection?.Invoke(ResponseCode.ServerIsFull, client);
+                    await _failConnection(client, net, ResponseCode.ServerIsFull);
                     return null;
                 }
                 string ip = client.Client.RemoteEndPoint.ToString().Split(':')[0];
@@ -35,10 +39,7 @@ namespace TCPLib.Server.Net
                 {
                     if (ban.IP == ip && (ban.Until is null || ban.Until > DateTime.UtcNow))
                     {
-                        Console.Info($"Connection from {client.Client.RemoteEndPoint} rejected because: {ResponseCode.Blocked}.");
-                        await net.SendAsync(new KickMessage(ResponseCode.Blocked));
-                        client.Close();
-                        FailedConnection?.Invoke(ResponseCode.Blocked, client);
+                        await _failConnection(client, net, ResponseCode.Blocked);
                         return null;
                     }
                 }
@@ -48,17 +49,19 @@ namespace TCPLib.Server.Net
                 net.Encryptor = serverenc;
 
                 Console.Debug("Wait a new keys...");
-                var NewKeys = net.ReceiveAsync<AESKey>().Result.Unpack();
-                if(NewKeys.Key.Length > Encrypt.Encryptor.aesKey)
+                var NewKeys = net.ReceiveAsync<AESKey>(timeout).Result;
+                if(!NewKeys.HasValue)
                 {
-                    Console.Info($"Connection from {client.Client.RemoteEndPoint} rejected because: {ResponseCode.BadResponse}.");
-                    await net.SendAsync(new KickMessage(ResponseCode.BadResponse));
-                    client.Close();
-                    FailedConnection?.Invoke(ResponseCode.Blocked, client);
+                    await _failConnection(client, net, ResponseCode.Timeout);
+                    return null;
+                }
+                if(NewKeys.Value.Value.Key.Length > Encrypt.Encryptor.aesKey)
+                {
+                    await _failConnection(client, net, ResponseCode.BadResponse);
                     return null;
                 }
 
-                net.Encryptor = net.Encryptor.SetAESKey(NewKeys.Key.ToArray(), NewKeys.IV.ToArray());
+                net.Encryptor = net.Encryptor.SetAESKey(NewKeys.Value.Value.Key.ToArray(), NewKeys.Value.Value.IV.ToArray());
                 net.EncryptType = EncryptType.AES;
 
                 _clients.Add(net);
