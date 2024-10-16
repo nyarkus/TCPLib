@@ -6,8 +6,14 @@ namespace TCPLib.Client.Net
 {
     public class Encryptor
     {
-        RSAProvider RSA = new RSAProvider();
-        AESProvider AES = new AESProvider();
+        RSAProvider RSA;
+        AESProvider AES;
+        internal static int AesKeySize;
+        public Encryptor()
+        {
+            RSA = new RSAProvider();
+            AES = new AESProvider(AesKeySize);
+        }
 
         public Encryptor SetPrivateRSAKey(byte[] privatekey)
         {

@@ -11,9 +11,13 @@ namespace TCPLib.Client
     {
         public TcpClient tcpClient { get; private set; }
         public Server ConnectedServer { get; private set; }
-        public Client()
+        public Client() : this(new ClientSettings())
+        {
+        }
+        public Client(ClientSettings settings)
         {
             tcpClient = new TcpClient();
+            Encryptor.AesKeySize = settings.AesKeySize;
         }
         public async Task<Server> Connect(IPAddress address, int port)
         {
