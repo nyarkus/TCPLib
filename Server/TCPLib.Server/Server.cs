@@ -69,7 +69,8 @@ namespace TCPLib.Server
             }
             Ban.ClearInvalidBans();
 
-            await Starting?.Invoke();
+            if(Starting != null)
+                await Starting?.Invoke();
 
             Console.Info("Encryption key generation ...");
             Encryptor.GetServerEncryptor();
@@ -90,14 +91,17 @@ namespace TCPLib.Server
             Console.Info($"The server successfully started in {(Time.TimeProvider.Now - StartTime).TotalMilliseconds} ms");
 
 #if !NET48
-            new Thread(new ParameterizedThreadStart((_) => Started?.Invoke())).Start();
+            if(Started != null)
+                new Thread(new ParameterizedThreadStart((_) => Started?.Invoke())).Start();
 #else
-            new Thread(new ThreadStart(() => Started?.Invoke())).Start();
+            if(Started != null)
+                new Thread(new ThreadStart(() => Started?.Invoke())).Start();
 #endif
         }
         public void Stop()
         {
-            Stopped?.Invoke();
+            if(Stopped != null)
+                Stopped?.Invoke();
         }
         public void ConsoleRead(CancellationToken cancellation = default)
         {
