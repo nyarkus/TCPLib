@@ -16,10 +16,10 @@ namespace TCPLib.Classes
         {
             var rk = Protobuf.Key.Parser.ParseFrom(bytes);
 
-            return new Key() { Value = rk.Key_.ToArray(), MaxAESSize = rk.Mas };
+            return new Key { Value = rk.Key_.ToArray(), MaxAESSize = rk.Mas };
         }
 
         public byte[] ToByteArray()
-        => new Protobuf.Key() { Key_ = ByteString.CopyFrom(Value), Mas = MaxAESSize }.ToByteArray();
+        => new Protobuf.Key { Key_ = ByteString.CopyFrom(Value), Mas = MaxAESSize }.ToByteArray();
     }
 }

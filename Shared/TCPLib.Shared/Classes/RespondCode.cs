@@ -17,7 +17,7 @@ namespace TCPLib.Classes
         }
 
         public byte[] ToByteArray()
-        => new Protobuf.RespondCode() { Code = (Protobuf.Code)code }.ToByteArray();
+        => new Protobuf.RespondCode { Code = (Protobuf.Code)code }.ToByteArray();
 
         public RespondCode(ResponseCode code)
         { this.code = code; }

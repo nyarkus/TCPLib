@@ -15,11 +15,11 @@ namespace TCPLib.Classes
         {
             var aes = Protobuf.AESKey.Parser.ParseFrom(bytes);
 
-            return new AESKey() { Key = aes.Key.ToArray(), IV = aes.IV.ToArray() };
+            return new AESKey { Key = aes.Key.ToArray(), IV = aes.IV.ToArray() };
         }
 
         public byte[] ToByteArray() =>
-            new Protobuf.AESKey() { Key = ByteString.CopyFrom(Key), IV = ByteString.CopyFrom(IV) }.ToByteArray();
+            new Protobuf.AESKey { Key = ByteString.CopyFrom(Key), IV = ByteString.CopyFrom(IV) }.ToByteArray();
 
     }
 }

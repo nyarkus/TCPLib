@@ -62,6 +62,6 @@ namespace TCPLib.Server.Net.Encrypt
             => RSA.SerializePrivateKey();
 
         public AESKey GetAESKey()
-            => new AESKey() { Key = AES.GetKey(), IV = AES.GetIV() };
+            => new AESKey { Key = AES.GetKey(), IV = AES.GetIV() };
     }
 }

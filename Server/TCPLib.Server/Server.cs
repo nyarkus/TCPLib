@@ -17,10 +17,10 @@ namespace TCPLib.Server
         public static Settings settings;
         private ServerComponents _components;
 
-        public delegate Task ServerD();
-        public event ServerD Started;
-        public event ServerD Starting;
-        public event ServerD Stopped;
+        public delegate Task ServerStateChanged();
+        public event ServerStateChanged Started;
+        public event ServerStateChanged Starting;
+        public event ServerStateChanged Stopped;
 
 #if DEBUG
         public static bool TestingMode = false;

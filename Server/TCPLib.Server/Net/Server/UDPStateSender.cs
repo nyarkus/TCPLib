@@ -56,7 +56,7 @@ namespace TCPLib.Server.Net
         public virtual async Task Listen()
         {
 
-            byte[] respond = System.Text.Encoding.UTF8.GetBytes(Newtonsoft.Json.JsonConvert.SerializeObject(new ServerInfo()
+            byte[] respond = System.Text.Encoding.UTF8.GetBytes(Newtonsoft.Json.JsonConvert.SerializeObject(new ServerInfo
             {
                 Description = Server.settings.description,
                 Name = Server.settings.title,

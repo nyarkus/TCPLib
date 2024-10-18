@@ -95,7 +95,7 @@ namespace TCPLib.Client.Net
                 var ping = end - start;
                 var jobject = JObject.Parse(System.Text.Encoding.UTF8.GetString(result));
 
-                var res = new ServerInfo()
+                var res = new ServerInfo
                 {
                     MaxPlayers = (int)jobject["MaxPlayers"],
                     Players = (int)jobject["Players"],

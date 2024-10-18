@@ -24,7 +24,7 @@ namespace TCPLib.Classes
 
         public byte[] ToByteArray()
         {
-            return new TCPLib.Protobuf.KickMessage() { Code = (TCPLib.Protobuf.Code)code, Reason = reason }.ToByteArray();
+            return new TCPLib.Protobuf.KickMessage { Code = (TCPLib.Protobuf.Code)code, Reason = reason }.ToByteArray();
         }
     }
 }
