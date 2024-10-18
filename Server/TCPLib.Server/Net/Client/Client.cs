@@ -6,6 +6,7 @@ using System;
 using TCPLib.Server.Net.Encrypt;
 using TCPLib.Classes;
 using System.Threading;
+using TCPLib.Net;
 
 namespace TCPLib.Server.Net
 {
@@ -16,6 +17,13 @@ namespace TCPLib.Server.Net
         public TcpClient client { get; set; }
         public NetworkStream stream { get; set; }
         public uint id { get; private set; }
+        public IP IP
+        {
+            get
+            {
+                return client.Client.RemoteEndPoint.ToString();
+            }
+        }
 
         public static IReadOnlyCollection<Client> clients
         {

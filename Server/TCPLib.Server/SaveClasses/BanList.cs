@@ -2,22 +2,23 @@
 using System.IO;
 using System.Collections.Generic;
 using TCPLib.Server.Net;
+using TCPLib.Net;
 
 namespace TCPLib.Server.SaveFiles
 {
     public class Ban
     {
-        public string IP { get; set; }
+        public IP IP { get; set; }
         public string Reason { get; set; }
         public DateTime? Until { get; set; }
         public static IBanListSaver saver { get; set; }
         public static Ban CreateBan(Client client, string Reason = "", DateTime? Until = null)
         {
-            return new Ban { IP = client.client.Client.RemoteEndPoint.ToString().Split(':')[0], Reason = Reason, Until = Until };
+            return new Ban { IP = client.IP.RemovePort(), Reason = Reason, Until = Until };
         }
-        public static Ban CreateBan(string ip, string Reason = "", DateTime? Until = null)
+        public static Ban CreateBan(IP ip, string Reason = "", DateTime? Until = null)
         {
-            return new Ban { IP = ip, Reason = Reason, Until = Until };
+            return new Ban { IP = ip.RemovePort(), Reason = Reason, Until = Until };
         }
         public static Ban[] Load()
             => saver.Load();

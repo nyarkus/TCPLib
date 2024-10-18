@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TCPLib.Classes;
 using TCPLib.Client;
 using TCPLib.Client.DPDispatcher;
+using TCPLib.Net;
 using TCPLib.Net.DPDispatcher;
 
 namespace Tests
@@ -35,7 +36,7 @@ namespace Tests
             TCPLib.Client.Client client = new();
             NetTest.StartServer();
 
-            var sserver = await client.Connect(System.Net.IPAddress.Parse("127.0.0.1"), NetTest.port);
+            var sserver = await client.Connect(IP.Parse($"127.0.0.1:{NetTest.port}"));
             if (TCPLib.Server.Net.Client.clients.Count == 0)
                 Assert.Fail("The client was unable to connect");
 
@@ -60,7 +61,7 @@ namespace Tests
             TCPLib.Client.Client client = new();
             NetTest.StartServer();
 
-            var sserver = await client.Connect(System.Net.IPAddress.Parse("127.0.0.1"), NetTest.port);
+            var sserver = await client.Connect($"127.0.0.1:{NetTest.port}");
             if (TCPLib.Server.Net.Client.clients.Count == 0)
                 Assert.Fail("The client was unable to connect");
 

@@ -8,7 +8,7 @@ namespace TCPLib.Client.Net
     {
         readonly RSAProvider RSA;
         AESProvider AES { get; set; }
-        internal static int AesKeySize;
+        internal static int AesKeySize { get; set; }
         public Encryptor()
         {
             RSA = new RSAProvider();

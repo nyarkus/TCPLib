@@ -5,6 +5,7 @@ using System.Threading;
 using TCPLib.Client.Net;
 using TCPLib.Server.Net;
 using TCPLib.Server.SaveFiles;
+using TCPLib.Net;
 #if DEBUG
 public class NetTest
 {
@@ -33,7 +34,7 @@ public class NetTest
         TCPLib.Client.Client client = new();
         StartServer();
 
-        await client.Connect(System.Net.IPAddress.Parse("127.0.0.1"), port);
+        await client.Connect(IP.Parse($"127.0.0.1:{port}"));
         if (Client.clients.Count == 0)
             Assert.Fail("The client was unable to connect");
 }
@@ -66,7 +67,7 @@ public class NetTest
         TCPLib.Client.Client client = new();
         StartServer();
 
-        var sserver = await client.Connect(System.Net.IPAddress.Parse("127.0.0.1"), port);
+        var sserver = await client.Connect(IP.Parse($"127.0.0.1:{port}"));
         if (Client.clients.Count == 0)
             Assert.Fail("The client was unable to connect");
 
@@ -109,7 +110,7 @@ public class NetTest
         StartServer();
         int clientsOnStart = Client.clients.Count;
 
-        await client.Connect(System.Net.IPAddress.Parse("127.0.0.1"), port);
+        await client.Connect(IP.Parse($"127.0.0.1:{port}"));
         if (Client.clients.Count == 0)
             Assert.Fail("The client was unable to connect");
 

@@ -3,6 +3,7 @@ using System.Net.Sockets;
 using TCPLib.Client.Net;
 using System.Threading.Tasks;
 using TCPLib.Classes;
+using TCPLib.Net;
 
 namespace TCPLib.Client
 {
@@ -18,12 +19,12 @@ namespace TCPLib.Client
             tcpClient = new TcpClient();
             Encryptor.AesKeySize = settings.AesKeySize;
         }
-        public async Task<Server> Connect(IPAddress address, int port)
+        public async Task<Server> Connect(IP ip)
         {
-            if (tcpClient.Connected) throw new Exceptions.ClientAlredyConnected($"{ConnectedServer?.IP}:{ConnectedServer?.Port}");
-            tcpClient.Connect(address, port);
+            if (tcpClient.Connected) throw new Exceptions.ClientAlredyConnected($"{ConnectedServer?.IP}");
+            tcpClient.Connect(ip.RemovePort(), ip.Port.Value);
             
-            Server server = new Server(address, port, tcpClient, tcpClient.GetStream());
+            Server server = new Server(ip, tcpClient, tcpClient.GetStream());
 
             var key = await server.ReceiveAsync<Key>(false);
 
