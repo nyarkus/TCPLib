@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace TCPLib.Net
 {
+    /// <summary>
+    /// Structure storing IP address and port
+    /// </summary>
     public struct IP : IEquatable<IP>
     {
         public byte First { get; set; }
@@ -43,14 +46,18 @@ namespace TCPLib.Net
 
         public bool Equals(IP other)
         {
-            if(_portSeted)
-                return _port == other._port && other._portSeted && First == other.First && Second == other.Second && Third == other.Third && Fourth == other.Fourth;
+            if (_portSeted)
+                return _port == other._port && other._portSeted && EqualsIP(other);
             else
-                return !other._portSeted && First == other.First && Second == other.Second && Third == other.Third && Fourth == other.Fourth;
+                return EqualsIP(other);
+        }
+        private bool EqualsIP(IP other)
+        {
+            return First == other.First && Second == other.Second && Third == other.Third && Fourth == other.Fourth;
         }
         public IP RemovePort()
         {
-            var ip = new IP()
+            var ip = new IP
             {
                 First = First,
                 Second = Second,
@@ -85,6 +92,10 @@ namespace TCPLib.Net
         {
             return first.ToString();
         }
+        /// <summary>
+        /// You may not use this method, because the string can be implicitly converted to this structure
+        /// </summary>
+        /// <param name="s">A string of the form: ‘127.0.0.1:2025’</param>
         public static IP Parse(string s)
         {
             var bytes = s.Split('.');

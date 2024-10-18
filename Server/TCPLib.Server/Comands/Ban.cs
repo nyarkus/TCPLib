@@ -80,7 +80,7 @@ namespace TCPLib.Server.Commands
             }
             Console.Info($"{client.IP.RemovePort()} has been blocked with reason: {reason}");
         }
-        private async Task BanWithoutReason(string[] args, Client client)
+        private async Task BanWithoutReason(Client client)
         {
             var list = SaveFiles.Ban.Load().ToList();
             var ban = SaveFiles.Ban.CreateBan(client.IP);
@@ -117,7 +117,7 @@ namespace TCPLib.Server.Commands
             }
             else
             {
-               await BanWithoutReason(args, client);
+               await BanWithoutReason(client);
             }
             return true;
         }

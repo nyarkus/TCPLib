@@ -49,7 +49,7 @@ namespace TCPLib.Client.Net
                 await Kicked.Invoke(kicked);
             }
         }
-        private bool disposed = false;
+        private bool disposed;
         public void Dispose()
         {
             Dispose(true);
