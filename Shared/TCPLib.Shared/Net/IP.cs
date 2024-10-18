@@ -23,7 +23,7 @@ namespace TCPLib.Net
             }
             set
             {
-                if(value.HasValue)
+                if(!value.HasValue)
                 {
                     _port = 0;
                     _portSeted = false;
@@ -87,7 +87,7 @@ namespace TCPLib.Net
         }
         public static IP Parse(string s)
         {
-            var bytes = s.Split(',');
+            var bytes = s.Split('.');
             var ip = new IP();
             ip.First = byte.Parse(bytes[0]);
             ip.Second = byte.Parse(bytes[1]);
@@ -96,9 +96,9 @@ namespace TCPLib.Net
             bytes = bytes[3].Split(':');
 
             ip.Fourth = byte.Parse(bytes[0]);
-            if (!string.IsNullOrWhiteSpace(bytes[1]))
+            if (bytes.Length > 1 && !string.IsNullOrWhiteSpace(bytes[1]))
             {
-                ip.Port = byte.Parse(bytes[1]);
+                ip.Port = int.Parse(bytes[1]);
             }
 
             return ip;
