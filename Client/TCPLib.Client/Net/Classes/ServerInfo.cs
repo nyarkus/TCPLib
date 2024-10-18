@@ -39,11 +39,11 @@ namespace TCPLib.Client.Net
         {
             var client = new UdpClient(address.Port);
 
-            DateTimeOffset start = DateTimeOffset.UtcNow;
+            DateTimeOffset start = Time.TimeProvider.Now;
 
             client.Send(new byte[] { 0 }, 1, address);
             var result = client.Receive(ref address);
-            var ping = DateTimeOffset.UtcNow - start;
+            var ping = Time.TimeProvider.Now - start;
 
             var jobject = JObject.Parse(System.Text.Encoding.UTF8.GetString(result));
 
@@ -85,13 +85,11 @@ namespace TCPLib.Client.Net
         {
             try
             {
-
-
-                DateTimeOffset start = DateTimeOffset.UtcNow;
+                DateTimeOffset start = Time.TimeProvider.Now;
 
                 client.Send(new byte[] { 0 }, 1, address);
                 var result = client.Receive(ref address);
-                DateTimeOffset end = DateTimeOffset.UtcNow;
+                DateTimeOffset end = Time.TimeProvider.Now;
                 var ping = end - start;
                 var jobject = JObject.Parse(System.Text.Encoding.UTF8.GetString(result));
 

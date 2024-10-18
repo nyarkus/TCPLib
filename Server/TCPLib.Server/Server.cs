@@ -50,7 +50,7 @@ namespace TCPLib.Server
         }
         public void Start()
         {
-            var StartTime = DateTime.UtcNow;
+            var StartTime = Time.TimeProvider.Now;
 
             settings = Settings.Load();
 
@@ -87,7 +87,7 @@ namespace TCPLib.Server
             else
                 { while (!_Server.Started) ; }
 
-            Console.Info($"The server successfully started in {(DateTime.UtcNow - StartTime).TotalMilliseconds} ms");
+            Console.Info($"The server successfully started in {(Time.TimeProvider.Now - StartTime).TotalMilliseconds} ms");
 
 #if !NET48
             new Thread(new ParameterizedThreadStart((_) => Started?.Invoke())).Start();

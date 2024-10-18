@@ -25,12 +25,12 @@ namespace TCPLib.Server
         {
             if (_inited) return;
 
-            var time = DateTimeOffset.Now;
+            var time = Time.TimeProvider.Now;
             Directory.CreateDirectory(LogPath);
 
             foreach (var file in Directory.GetFiles(LogPath))
             {
-                if (new FileInfo(file).CreationTime.ToUniversalTime().AddDays(deleteLogsAfterDays) < DateTimeOffset.UtcNow)
+                if (new FileInfo(file).CreationTime.ToUniversalTime().AddDays(deleteLogsAfterDays) < Time.TimeProvider.Now)
                 {
                     File.Delete(file);
                 }

@@ -62,13 +62,27 @@ namespace TCPLib.Client.DPDispatcher
         {
             _cancellationTokenSource.Cancel();
         }
-
+        private bool disposed = false;
         public void Dispose()
         {
-            _cancellationTokenSource.Cancel();
-            _cancellationTokenSource.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed) 
+                return;
 
+            if(disposing)
+            {
+                _cancellationTokenSource.Cancel();
+                _cancellationTokenSource.Dispose();
+            }
+        }
+        ~DPDispatcher()
+        {
+            Dispose(false);
+        }
         internal DPDispatcher(TCPLib.Client.Net.Server client, DPHandler[] handlers, bool UseDecryption, bool ThrowIfNotHandled)
         {
             _client = client;

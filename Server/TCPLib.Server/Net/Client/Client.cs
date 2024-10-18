@@ -85,7 +85,7 @@ namespace TCPLib.Server.Net
             if (time is null)
                 list.Add(SaveFiles.Ban.CreateBan(this, Reason));
             else
-                list.Add(SaveFiles.Ban.CreateBan(this, Reason, DateTime.UtcNow + time));
+                list.Add(SaveFiles.Ban.CreateBan(this, Reason, Time.TimeProvider.Now + time));
             SaveFiles.Ban.Save(list.ToArray());
         }
     }

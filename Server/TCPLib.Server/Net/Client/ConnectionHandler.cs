@@ -36,7 +36,7 @@ namespace TCPLib.Server.Net
                 string ip = client.Client.RemoteEndPoint.ToString().Split(':')[0];
                 foreach (var ban in SaveFiles.Ban.Load())
                 {
-                    if (ban.IP == ip && (ban.Until is null || ban.Until > DateTime.UtcNow))
+                    if (ban.IP == ip && (ban.Until is null || ban.Until > Time.TimeProvider.Now))
                     {
                         await _failConnection(client, net, ResponseCode.Kicked, "You are blocked" + (ban.Reason.Length > 0 ? ": \"{ban.Reason}\"" : ""));
                         return null;

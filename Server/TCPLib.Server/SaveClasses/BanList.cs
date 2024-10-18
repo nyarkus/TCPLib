@@ -10,13 +10,13 @@ namespace TCPLib.Server.SaveFiles
     {
         public IP IP { get; set; }
         public string Reason { get; set; }
-        public DateTime? Until { get; set; }
+        public DateTimeOffset? Until { get; set; }
         public static IBanListSaver saver { get; set; }
-        public static Ban CreateBan(Client client, string Reason = "", DateTime? Until = null)
+        public static Ban CreateBan(Client client, string Reason = "", DateTimeOffset? Until = null)
         {
             return new Ban { IP = client.IP.RemovePort(), Reason = Reason, Until = Until };
         }
-        public static Ban CreateBan(IP ip, string Reason = "", DateTime? Until = null)
+        public static Ban CreateBan(IP ip, string Reason = "", DateTimeOffset? Until = null)
         {
             return new Ban { IP = ip.RemovePort(), Reason = Reason, Until = Until };
         }
@@ -30,7 +30,7 @@ namespace TCPLib.Server.SaveFiles
             var list = saver.Load();
             var newlist = new List<Ban>();
             foreach (Ban b in list)
-                if (b.Until is null || b.Until > DateTime.UtcNow) newlist.Add(b);
+                if (b.Until is null || b.Until > Time.TimeProvider.Now) newlist.Add(b);
             saver.Save(newlist.ToArray());
             GC.Collect();
             Console.Info("The ban list has been cleared!");
