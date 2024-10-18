@@ -20,9 +20,27 @@ namespace TCPLib.Server.Net
 
         public void Dispose()
         {
-            StopToken.Cancel();
-            StopToken.Dispose();
-            Listener.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        bool disposed;
+        protected virtual void Dispose(bool disposing)
+        {
+            if(disposed) 
+                return;
+
+            if(disposing)
+            {
+                StopToken.Cancel();
+                StopToken.Dispose();
+                Listener.Dispose();
+            }
+
+            disposed = true;
+        }
+        ~UDPStateSender()
+        {
+            Dispose(false);
         }
 
         private void Start()
@@ -41,6 +59,9 @@ namespace TCPLib.Server.Net
                         break;
                     case 10049:
                         Console.Error("The specified IP address or port does not belong to this computer");
+                        break;
+                    default:
+                        Console.Error("Unknown error code: " + ex.ErrorCode);
                         break;
                 }
                 throw;
@@ -73,8 +94,10 @@ namespace TCPLib.Server.Net
 
                     await Listener.SendAsync(respond, respond.Length, result.RemoteEndPoint);
                 }
-                // Just to be safe ._.
-                catch { }
+                catch 
+                {
+                    // Just to be safe ._.
+                }
             }
         }
     }

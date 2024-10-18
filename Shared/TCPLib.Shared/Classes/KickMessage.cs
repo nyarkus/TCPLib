@@ -1,11 +1,12 @@
 ﻿// This file uses Protocol Buffers from Google, which is licensed under BSD-3-Clause.
 
 using Google.Protobuf;
+using System;
 using TCPLib.Net;
 
 namespace TCPLib.Classes
 {
-    public struct KickMessage : IDataSerializable<KickMessage>
+    public struct KickMessage : IDataSerializable<KickMessage>, IEquatable<KickMessage>
     {
         public string reason { get; set; }
         public ResponseCode code { get; set; }
@@ -26,5 +27,8 @@ namespace TCPLib.Classes
         {
             return new TCPLib.Protobuf.KickMessage { Code = (TCPLib.Protobuf.Code)code, Reason = reason }.ToByteArray();
         }
+
+        public bool Equals(KickMessage other)
+            => reason == other.reason && code == other.code;
     }
 }

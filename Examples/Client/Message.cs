@@ -6,7 +6,7 @@ namespace ExampleClient
 {
     public struct Message : IDataSerializable<Message>, IEquatable<Message>
     {
-        public string Data;
+        public string Data { get; set; }
 
         public bool Equals(Message other)
         {

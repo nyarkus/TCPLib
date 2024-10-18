@@ -10,11 +10,11 @@ namespace TCPLib.Encrypt
 {
     public class AESProvider
     {
-        byte[] Key;
-        byte[] IV;
+        private byte[] Key;
+        private byte[] IV;
 
-        IBufferedCipher ForEncrypt;
-        IBufferedCipher ForDecrypt;
+        private IBufferedCipher ForEncrypt;
+        private IBufferedCipher ForDecrypt;
 
         public byte[] Encrypt(byte[] data)
             => ForEncrypt.DoFinal(data);

@@ -11,10 +11,19 @@ namespace TCPLib.Extentions
     {
         public static async Task<bool> TimeoutAsync(this Task task, TimeSpan timeout, CancellationToken cancellationToken = default)
         {
+            CheckParameters(task, timeout);
+            return await WaitForTaskWithTimeout(task, timeout, cancellationToken);
+        }
+
+        private static void CheckParameters(Task task, TimeSpan timeout)
+        {
             if (task == null) throw new ArgumentNullException(nameof(task));
+            if (timeout < TimeSpan.Zero) throw new ArgumentOutOfRangeException(nameof(timeout), "Timeout must be non-negative.");
+        }
 
+        private static async Task<bool> WaitForTaskWithTimeout(Task task, TimeSpan timeout, CancellationToken cancellationToken)
+        {
             var delayTask = Task.Delay(timeout, cancellationToken);
-
             var completedTask = await Task.WhenAny(task, delayTask);
 
             if (cancellationToken.IsCancellationRequested)
@@ -22,11 +31,8 @@ namespace TCPLib.Extentions
                 throw new OperationCanceledException(cancellationToken);
             }
 
-            if (completedTask == delayTask)
-            {
-                return false;
-            }
-            return true;
+            return completedTask != delayTask;
         }
+
     }
 }

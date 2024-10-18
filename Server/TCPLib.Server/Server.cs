@@ -9,13 +9,13 @@ namespace TCPLib.Server
     using TCPLib.Server.Net.Encrypt;
     using TCPLib.Server.SaveFiles;
 
-    public class Server
+    public class Server : IDisposable
     {
         private ServerListener _Server;
         private UDPStateSender _UDP;
 
-        public static Settings settings;
-        private ServerComponents _components;
+        public static Settings settings { get; set; }
+        private readonly ServerComponents _components;
 
         public delegate Task ServerStateChanged();
         public event ServerStateChanged Started;
@@ -48,7 +48,7 @@ namespace TCPLib.Server
             Encryptor.rsaKey = configuration.RSAKeyStrength;
             Encryptor.aesKey = configuration.AESKeySize;
         }
-        public void Start()
+        public async Task Start()
         {
             var StartTime = Time.TimeProvider.Now;
 
@@ -69,7 +69,7 @@ namespace TCPLib.Server
             }
             Ban.ClearInvalidBans();
 
-            Starting?.Invoke().Wait();
+            await Starting?.Invoke();
 
             Console.Info("Encryption key generation ...");
             Encryptor.GetServerEncryptor();
@@ -97,18 +97,44 @@ namespace TCPLib.Server
         }
         public void Stop()
         {
-            _Server.Dispose();
-            if( _UDP != null )
-            { _UDP.Dispose(); }
             Stopped?.Invoke();
         }
-        public void ConsoleRead()
+        public void ConsoleRead(CancellationToken cancellation = default)
         {
-            while (true)
+            while (!cancellation.IsCancellationRequested)
             {
                 Commands.CommandManager.HandleLine(System.Console.ReadLine());
             }
         }
 
+        private bool disposed;
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        protected virtual void Dispose(bool disposing)
+        {
+            if(disposed) return;
+
+            if (disposing)
+            {
+                _Server.Dispose();
+                if (_UDP != null)
+                { _UDP.Dispose(); }
+
+                settings = null;
+
+                Started = null;
+                Starting = null;
+                Stopped = null;
+            }
+
+            disposed = true;
+        }
+        ~Server() 
+        {
+            Dispose(false);
+        }
     }
 }

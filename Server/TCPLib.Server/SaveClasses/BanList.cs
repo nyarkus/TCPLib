@@ -32,7 +32,7 @@ namespace TCPLib.Server.SaveFiles
             foreach (Ban b in list)
                 if (b.Until is null || b.Until > Time.TimeProvider.Now) newlist.Add(b);
             saver.Save(newlist.ToArray());
-            GC.Collect();
+
             Console.Info("The ban list has been cleared!");
         }
     }

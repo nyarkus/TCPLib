@@ -6,11 +6,12 @@ using System.Linq;
 using TCPLib.Net;
 using TCPLib.Extentions;
 using TCPLib.Classes;
+using Org.BouncyCastle.Utilities;
 
 
 namespace TCPLib.Server.Net
 {
-    public partial class Client : IDisposable
+    public partial class Client
     {
         private async Task<byte[]> Read(int count, Stream stream)
         {
@@ -53,7 +54,20 @@ namespace TCPLib.Server.Net
             }
             return false;
         }
+        private byte[] _decrypt(byte[] input)
+        {
+            byte[] bytes = input;
+            if (EncryptType == EncryptType.AES)
+            {
+                bytes = Encryptor.AESDecrypt(bytes);
+            }
+            else
+            {
+                bytes = Encryptor.RSADecrypt(bytes);
+            }
 
+            return bytes;
+        }
         public async Task<DataPackageSource> ReceiveSourceAsync(bool UseDecryption = true, CancellationToken cancellation = default)
         {
             while (true)
@@ -70,14 +84,7 @@ namespace TCPLib.Server.Net
                     var bytes = await Read(length, stream);
                     if (UseDecryption)
                     {
-                        if (EncryptType == EncryptType.AES)
-                        {
-                            bytes = Encryptor.AESDecrypt(bytes);
-                        }
-                        else
-                        {
-                            bytes = Encryptor.RSADecrypt(bytes);
-                        }
+                        bytes = _decrypt(bytes);
                     }
 
                     var package = Protobuf.DataPackage.Parser.ParseFrom(bytes);
@@ -136,14 +143,7 @@ namespace TCPLib.Server.Net
                     var bytes = await Read(length, stream);
                     if (UseDecryption)
                     {
-                        if (EncryptType == EncryptType.AES)
-                        {
-                            bytes = Encryptor.AESDecrypt(bytes);
-                        }
-                        else
-                        {
-                            bytes = Encryptor.RSADecrypt(bytes);
-                        }
+                        bytes = _decrypt(bytes);
                     }
 
                     var package = Protobuf.DataPackage.Parser.ParseFrom(bytes);

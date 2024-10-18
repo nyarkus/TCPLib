@@ -36,6 +36,9 @@ namespace TCPLib.Server.Net
                     case 10049:
                         Console.Error("The specified IP address or port does not belong to this computer");
                         break;
+                    default:
+                        Console.Error("Unknown error code: " + ex.ErrorCode);
+                        break;
                 }
                 throw;
             }

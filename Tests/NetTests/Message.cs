@@ -10,7 +10,7 @@ namespace Tests
 
         public Message FromBytes(byte[] bytes)
         {
-            return new Message() { Data = Encoding.UTF8.GetString(bytes) };
+            return new Message { Data = Encoding.UTF8.GetString(bytes) };
         }
 
         public byte[] ToByteArray()

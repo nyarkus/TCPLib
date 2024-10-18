@@ -6,7 +6,7 @@ using TCPLib.Server.Net;
 
 namespace ExampleServer
 {
-    internal class Program
+    public static class Program
     {
         static void Main(string[] args)
         {

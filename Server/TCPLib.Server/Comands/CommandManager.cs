@@ -69,20 +69,24 @@ namespace TCPLib.Server.Commands
                 return;
             }
 
+            string[] args = { };
+
             var splited = line.Split(' ');
+
+            if (splited.Length > 1)
+            {
+                var arg = new List<string>();
+                for (int i = 1; i < splited.Length; i++)
+                    arg.Add(splited[i]);
+
+                args = arg.ToArray();
+            }
+
             foreach (var cmd in _commands)
             {
                 if (cmd.Synonyms.Contains(splited[0]))
                 {
-                    string[] args = { };
-                    if (splited.Length > 1)
-                    {
-                        var arg = new List<string>();
-                        for (int i = 1; i < splited.Length; i++) 
-                            arg.Add(splited[i]);
-
-                        args = arg.ToArray();
-                    }
+                    
                     cmd.Execute(args);
                     return;
                 }

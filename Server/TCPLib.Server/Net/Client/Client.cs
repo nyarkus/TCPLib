@@ -32,7 +32,7 @@ namespace TCPLib.Server.Net
                 return _clients;
             }
         }
-        protected static List<Client> _clients = new List<Client>();
+        protected static List<Client> _clients { get; set; } = new List<Client>();
         public Encryptor Encryptor { get; set; }
         /// <summary>
         /// If the client disconnects from the server or terminates the connection unexpectedly - the value of this variable will be <c>false</c>
@@ -68,16 +68,34 @@ namespace TCPLib.Server.Net
             _semaphore.Dispose();
         }
 
-        public async void Dispose()
+        public void Dispose()
         {
-            if(stream != null)
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        private bool disposed;
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed) 
+                return;
+
+            if(disposing)
             {
-                await Kick(new KickMessage(ResponseCode.DisconnectedByUser));
+                if (stream != null)
+                {
+                    Kick(new KickMessage(ResponseCode.DisconnectedByUser)).Wait();
+                }
+                else
+                {
+                    OnDisconnected();
+                }
             }
-            else
-            {
-                OnDisconnected();
-            }
+
+            disposed = true;
+        }
+        ~Client()
+        {
+            Dispose(false);
         }
         public void Ban(string Reason = "", TimeSpan? time = null)
         {

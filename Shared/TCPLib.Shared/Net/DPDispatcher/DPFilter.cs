@@ -67,7 +67,7 @@ namespace TCPLib.Net.DPDispatcher
                 case ConditionType.NotMatchesRegex:
                     return !new Regex(_pattern).IsMatch(input);
                 default:
-                    throw new InvalidOperationException("Unknown condition type.");
+                    return false;
             }
         }
         #region Operators and overrided methods

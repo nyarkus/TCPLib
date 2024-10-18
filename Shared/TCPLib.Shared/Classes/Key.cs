@@ -3,14 +3,18 @@
 using Google.Protobuf;
 using TCPLib.Net;
 using System.Linq;
+using System;
 
 
 namespace TCPLib.Classes
 {
-    public struct Key : IDataSerializable<Key>
+    public struct Key : IDataSerializable<Key>, IEquatable<Key>
     {
         public byte[] Value { get; set; }
         public int MaxAESSize { get; set; }
+
+        public bool Equals(Key other)
+            => MaxAESSize == other.MaxAESSize && Value.Equals(other.Value);
 
         public Key FromBytes(byte[] bytes)
         {

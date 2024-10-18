@@ -58,7 +58,7 @@ namespace TCPLib.Server
             {
                 Layout = "${date:format=HH\\:MM\\:ss} ${level:uppercase=true:color=level} ${message}",    
             };
-            coloredConsoleTarget.WordHighlightingRules.Add(new ConsoleWordHighlightingRule()
+            coloredConsoleTarget.WordHighlightingRules.Add(new ConsoleWordHighlightingRule
             {
                 Condition = "level == LogLevel.Debug",
                 Regex = @"\b(DEBUG|INFO|WARN|ERROR|FATAL)\b?",
@@ -66,28 +66,28 @@ namespace TCPLib.Server
                 ForegroundColor = ConsoleOutputColor.Black,
                 BackgroundColor = ConsoleOutputColor.Yellow,
             });
-            coloredConsoleTarget.WordHighlightingRules.Add(new ConsoleWordHighlightingRule()
+            coloredConsoleTarget.WordHighlightingRules.Add(new ConsoleWordHighlightingRule
             {
                 Condition = "level == LogLevel.Info",
                 Regex = @"\b(DEBUG|INFO|WARN|ERROR|FATAL)\b?",
                 CompileRegex = true,
                 ForegroundColor = ConsoleOutputColor.Green,
             });
-            coloredConsoleTarget.WordHighlightingRules.Add(new ConsoleWordHighlightingRule()
+            coloredConsoleTarget.WordHighlightingRules.Add(new ConsoleWordHighlightingRule
             {
                 Condition = "level == LogLevel.Warn",
                 Regex = @"\b(DEBUG|INFO|WARN|ERROR|FATAL)\b?",
                 CompileRegex = true,
                 ForegroundColor = ConsoleOutputColor.Yellow,
             });
-            coloredConsoleTarget.WordHighlightingRules.Add(new ConsoleWordHighlightingRule()
+            coloredConsoleTarget.WordHighlightingRules.Add(new ConsoleWordHighlightingRule
             {
                 Condition = "level == LogLevel.Error",
                 Regex = @"\b(DEBUG|INFO|WARN|ERROR|FATAL)\b?",
                 CompileRegex = true,
                 ForegroundColor = ConsoleOutputColor.Red,
             });
-            coloredConsoleTarget.WordHighlightingRules.Add(new ConsoleWordHighlightingRule()
+            coloredConsoleTarget.WordHighlightingRules.Add(new ConsoleWordHighlightingRule
             {
                 Condition = "level == LogLevel.Fatal",
                 Regex = @"\b(DEBUG|INFO|WARN|ERROR|FATAL)\b?",

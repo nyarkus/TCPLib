@@ -62,7 +62,7 @@ namespace TCPLib.Client.DPDispatcher
         {
             _cancellationTokenSource.Cancel();
         }
-        private bool disposed = false;
+        private bool disposed;
         public void Dispose()
         {
             Dispose(true);
@@ -78,6 +78,8 @@ namespace TCPLib.Client.DPDispatcher
                 _cancellationTokenSource.Cancel();
                 _cancellationTokenSource.Dispose();
             }
+
+            disposed = true;
         }
         ~DPDispatcher()
         {

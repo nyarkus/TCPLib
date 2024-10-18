@@ -70,7 +70,7 @@ namespace TCPLib.Server.Commands
         }
         public Kick()
         {
-            Synonyms = new string[] { "kick" };
+            Synonyms = new [] { "kick" };
             Name = "kick";
             Description = "Excludes a user by ip or id. Usage: kick {ip/id} {reason}";
         }

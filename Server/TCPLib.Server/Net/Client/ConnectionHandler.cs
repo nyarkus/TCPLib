@@ -9,7 +9,7 @@ using TCPLib.Classes;
 
 namespace TCPLib.Server.Net
 {
-    public partial class Client : IDisposable
+    public partial class Client
     {
         public delegate Task TcpConnetion(ResponseCode code, TcpClient client);
         public delegate Task ClientConnetion(Client client);
