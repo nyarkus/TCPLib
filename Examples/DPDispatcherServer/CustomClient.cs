@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 using TCPLib.Classes;
 using TCPLib.Net.DPDispatcher;
 using TCPLib.Server.DPDispatcher;
@@ -25,7 +21,6 @@ namespace DPDispatcherServer
 
             // Create a dispatcher
             dispatcher = new DPDispatcherBuilder(client, messageHandler, stateHandler).Build();
-            
         }
 
         private Task OnState(DataPackageSource package)

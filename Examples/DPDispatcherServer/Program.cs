@@ -1,10 +1,6 @@
 ﻿using ExampleServer;
 using TCPLib.Server;
-using TCPLib.Server.DPDispatcher;
-using TCPLib.Net.DPDispatcher;
-using TCPLib.Classes;
 using TCPLib.Server.Net;
-using System.Text;
 
 namespace DPDispatcherServer
 {
@@ -17,15 +13,14 @@ namespace DPDispatcherServer
 
             Client.SuccessfulConnection += OnConnection;
             await server.Start();
-
         }
 
         private static async Task OnConnection(Client client)
         {
             // Creating custom client class
             var cc = new CustomClient(client);
-            // Start the dispatcher. While the dispatcher is running, the thread will be blocked.
 
+            // Start the dispatcher. While the dispatcher is running, the thread will be blocked.
             await cc.dispatcher.Start();
         }
     }
