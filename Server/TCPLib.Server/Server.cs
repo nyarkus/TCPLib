@@ -24,20 +24,11 @@ namespace TCPLib.Server
 #if DEBUG
         public static bool TestingMode = false;
 #endif
-        public Server(IBanListSaver banSaver, ISettingsSaver settingsSaver, ServerComponents components)
-        {
-            Ban.saver = banSaver;
-            Settings.saver = settingsSaver;
-            if(components == ServerComponents.All)
-            {
-                components = ServerComponents.BaseCommands | ServerComponents.UDPStateSender;
-            }
-            _components = components;
-        }
+        public Server(IBanListSaver banSaver, ISettingsSaver settingsSaver, ServerComponents components) : this(new ServerConfiguration(banSaver, settingsSaver, components)) { }
         public Server(ServerConfiguration configuration)
-        {
-            Ban.saver = configuration.BanSaver;
-            Settings.saver = configuration.SettingsSaver;
+        {   
+            Settings.DefaultPort = configuration.DefaultPort;
+
             if (configuration.Components == ServerComponents.All)
             {
                 configuration.Components = ServerComponents.BaseCommands | ServerComponents.UDPStateSender;
@@ -46,6 +37,9 @@ namespace TCPLib.Server
 
             ServerEncryptor.RsaKeySize = configuration.RSAKeyStrength;
             ServerEncryptor.AesKeySize = configuration.AESKeySize;
+
+            Ban.saver = configuration.BanSaver;
+            Settings.saver = configuration.SettingsSaver;
         }
         public async Task Start()
         {

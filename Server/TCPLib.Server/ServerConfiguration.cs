@@ -15,6 +15,7 @@ namespace TCPLib.Server
 
         private int aesKeySize { get; set; } = 128;
         private int rsaKeyStrength { get; set; } = 2048;
+        public ushort DefaultPort { get; set; } = 2024;
 
         public ServerConfiguration(IBanListSaver banSaver, ISettingsSaver settingsSaver, ServerComponents components)
         {
