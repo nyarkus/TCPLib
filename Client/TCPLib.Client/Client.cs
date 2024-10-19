@@ -4,6 +4,7 @@ using TCPLib.Client.Net;
 using System.Threading.Tasks;
 using TCPLib.Classes;
 using TCPLib.Net;
+using TCPLib.Encrypt;
 
 namespace TCPLib.Client
 {
@@ -11,13 +12,16 @@ namespace TCPLib.Client
     {
         public TcpClient tcpClient { get; private set; }
         public Server ConnectedServer { get; private set; }
+
+        internal static int _aesKeySize;
+
         public Client() : this(new ClientConfiguration())
         {
         }
         public Client(ClientConfiguration settings)
         {
             tcpClient = new TcpClient();
-            Encryptor.AesKeySize = settings.AesKeySize;
+            _aesKeySize = settings.AesKeySize;
         }
         public async Task<Server> Connect(IP ip)
         {
@@ -28,20 +32,20 @@ namespace TCPLib.Client
 
             var key = await server.ReceiveAsync<Key>(false);
 
-            server.encryptor = new Encryptor();
-            server.encryptor.SetPublicRSAKey(key.Value.Value);
+            server.Encryptor = new Encryptor(_aesKeySize);
+            server.Encryptor.SetPublicRSAKey(key.Value.Value);
             
             var maxAESSize = key.Value.MaxAESSize;
-            var aesKey = server.encryptor.GetAESKey();
+            var aesKey = server.Encryptor.GetAESKey();
             if (aesKey.Key.Length > maxAESSize)
             {
-                server.encryptor.RegenerateAESKey(maxAESSize);
-                aesKey = server.encryptor.GetAESKey();
+                server.Encryptor.RegenerateAESKey(maxAESSize);
+                aesKey = server.Encryptor.GetAESKey();
             }
 
             await server.SendAsync(aesKey);
 
-            server.encryptor.SetAESKey(aesKey.Key, aesKey.IV);
+            server.Encryptor.SetAESKey(aesKey.Key, aesKey.IV);
             server.EncryptType = EncryptType.AES;
 
             var code = await server.ReceiveAsync<RespondCode>();

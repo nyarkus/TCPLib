@@ -1,18 +1,19 @@
 using Org.BouncyCastle.Security.Certificates;
 using System;
-using System.Net;
+using TCPLib.Encrypt;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using TCPLib.Classes;
 using TCPLib.Net;
+using TCPLib.Shared.Base;
+using System.IO;
 
 namespace TCPLib.Client.Net
 {
     public delegate Task ServerKicked(KickMessage response);
-    public partial class Server : IDisposable
+    public class Server : NetworkingBase, IDisposable
     {
-        public EncryptType EncryptType { get; set; } = EncryptType.RSA;
 
         public event ServerKicked Kicked;
 
@@ -21,9 +22,32 @@ namespace TCPLib.Client.Net
         public TcpClient client { get; set; }
         public NetworkStream stream { get; set; }
 
-        public Encryptor encryptor { get; set; }
-
-        protected CancellationTokenSource OnKick;
+        #region Networking
+        protected override Stream Stream
+        {
+            get
+            {
+                return stream;
+            }
+        }
+        protected override async Task<bool> Handle(DataPackageSource package)
+        {
+            if (package.Type == "KickMessage")
+            {
+                var kick = new KickMessage().FromBytes(package.Data);
+                switch (kick.code)
+                {
+                    case ResponseCode.Kicked:
+                        if (Kicked != null)
+                        {
+                            await Kicked.Invoke(kick);
+                        }
+                        return true;
+                }
+            }
+            return false;
+        }
+        #endregion
 
         public Server(IP ip, TcpClient client, NetworkStream stream)
         {
@@ -50,7 +74,7 @@ namespace TCPLib.Client.Net
             }
         }
         private bool disposed;
-        public void Dispose()
+        public override void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
@@ -75,9 +99,5 @@ namespace TCPLib.Client.Net
             Dispose(false);
         }
     }
-    public enum EncryptType
-    {
-        AES,
-        RSA
-    }
+    
 }

@@ -6,7 +6,6 @@ using TCPLib.Classes;
 namespace TCPLib.Server
 {
     using TCPLib.Server.Net;
-    using TCPLib.Server.Net.Encrypt;
     using TCPLib.Server.SaveFiles;
 
     public class Server : IDisposable
@@ -45,8 +44,8 @@ namespace TCPLib.Server
             }
             _components = configuration.Components;
 
-            Encryptor.rsaKey = configuration.RSAKeyStrength;
-            Encryptor.aesKey = configuration.AESKeySize;
+            ServerEncryptor.RsaKeySize = configuration.RSAKeyStrength;
+            ServerEncryptor.AesKeySize = configuration.AESKeySize;
         }
         public async Task Start()
         {
@@ -73,7 +72,7 @@ namespace TCPLib.Server
                 await Starting?.Invoke();
 
             Console.Info("Encryption key generation ...");
-            Encryptor.GetServerEncryptor();
+            ServerEncryptor.GetServerEncryptor();
 
             Thread tcplistenThread = new Thread(_Server.Initialize().Wait) { Priority = ThreadPriority.AboveNormal };
             if ((_components & ServerComponents.UDPStateSender) == ServerComponents.UDPStateSender)

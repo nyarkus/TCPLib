@@ -3,17 +3,16 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using System;
-using TCPLib.Server.Net.Encrypt;
 using TCPLib.Classes;
 using System.Threading;
 using TCPLib.Net;
+using TCPLib.Shared.Base;
+using System.IO;
 
 namespace TCPLib.Server.Net
 {
-    public partial class Client : IDisposable
+    public partial class Client : NetworkingBase, IDisposable
     {
-        public EncryptType EncryptType { get; private set; } = EncryptType.RSA;
-
         public TcpClient client { get; set; }
         public NetworkStream stream { get; set; }
         public uint id { get; private set; }
@@ -33,13 +32,32 @@ namespace TCPLib.Server.Net
             }
         }
         protected static List<Client> _clients { get; set; } = new List<Client>();
-        public Encryptor Encryptor { get; set; }
         /// <summary>
         /// If the client disconnects from the server or terminates the connection unexpectedly - the value of this variable will be <c>false</c>
         /// </summary>
         public bool IsAlive { get; private set; }
 
-        protected CancellationTokenSource OnKick;
+        #region Networking
+        protected override Stream Stream
+        {
+            get
+            {
+                return stream; 
+            }
+        }
+        protected override Task<bool> Handle(DataPackageSource package)
+        {
+            if (package.Type == "KickMessage")
+            {
+                var kick = new KickMessage().FromBytes(package.Data);
+                if (kick.code == ResponseCode.DisconnectedByUser)
+                    OnDisconnected();
+                return Task.FromResult(true);
+            }
+            return Task.FromResult(false);
+        }
+        #endregion
+
         public Client(TcpClient client, NetworkStream stream)
         {
             this.client = client;
@@ -68,7 +86,7 @@ namespace TCPLib.Server.Net
             _semaphore.Dispose();
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
@@ -106,10 +124,7 @@ namespace TCPLib.Server.Net
                 list.Add(SaveFiles.Ban.CreateBan(this, Reason, Time.TimeProvider.Now + time));
             SaveFiles.Ban.Save(list.ToArray());
         }
-    }
-    public enum EncryptType
-    {
-        AES,
-        RSA
+
+        
     }
 }

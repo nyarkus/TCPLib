@@ -2,16 +2,15 @@
 using TCPLib.Classes;
 
 
-namespace TCPLib.Client.Net
+namespace TCPLib.Encrypt
 {
     public class Encryptor
     {
         readonly RSAProvider RSA;
         AESProvider AES { get; set; }
-        internal static int AesKeySize { get; set; }
-        public Encryptor()
+        public Encryptor(int AesKeySize = 128, int RsaKeySize = 2048)
         {
-            RSA = new RSAProvider();
+            RSA = new RSAProvider(RsaKeySize);
             AES = new AESProvider(AesKeySize);
         }
 

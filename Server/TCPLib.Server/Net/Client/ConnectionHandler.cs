@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using TCPLib.Classes;
+using TCPLib.Shared.Base;
 
 namespace TCPLib.Server.Net
 {
@@ -42,9 +43,9 @@ namespace TCPLib.Server.Net
                         return null;
                     }
                 }
-                var serverenc = Encrypt.Encryptor.GetServerEncryptor();
+                var serverenc = ServerEncryptor.GetServerEncryptor();
 
-                await net.SendAsync(new Key { Value = serverenc.GetRSAPublicKey(), MaxAESSize = Encrypt.Encryptor.aesKey }, false);
+                await net.SendAsync(new Key { Value = serverenc.GetRSAPublicKey(), MaxAESSize = ServerEncryptor.AesKeySize }, false);
                 net.Encryptor = serverenc;
 
                 Console.Debug("Wait a new keys...");
@@ -54,14 +55,14 @@ namespace TCPLib.Server.Net
                     await _failConnection(client, net, ResponseCode.Timeout);
                     return null;
                 }
-                if(NewKeys.Value.Value.Key.Length > Encrypt.Encryptor.aesKey)
+                if(NewKeys.Value.Value.Key.Length > ServerEncryptor.AesKeySize)
                 {
                     await _failConnection(client, net, ResponseCode.BadResponse);
                     return null;
                 }
 
                 net.Encryptor = net.Encryptor.SetAESKey(NewKeys.Value.Value.Key.ToArray(), NewKeys.Value.Value.IV.ToArray());
-                net.EncryptType = EncryptType.AES;
+                net.EncryptType = Encrypt.EncryptType.AES;
 
                 _clients.Add(net);
                 await net.SendAsync(new RespondCode(ResponseCode.Ok));
