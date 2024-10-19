@@ -43,18 +43,20 @@ namespace ExampleServer
 {
     public class SettingsSaver : ISettingsSaver
     {
+        const string path = "Settings.yml";
         public void Save(TCPLib.Server.SaveFiles.Settings settings)
         {
             var serializer = new SerializerBuilder().WithNamingConvention(CamelCaseNamingConvention.Instance)
                 .Build();
-            File.WriteAllText("Settings.yml", serializer.Serialize(settings));
+            File.WriteAllText(path, serializer.Serialize(settings));
         }
         public TCPLib.Server.SaveFiles.Settings Load()
         {
-            if (!File.Exists("Settings.yml"))
+            if (!File.Exists(path))
                 new TCPLib.Server.SaveFiles.Settings().Save();
+
             var deserializer = new DeserializerBuilder().Build();
-            return deserializer.Deserialize<TCPLib.Server.SaveFiles.Settings>(File.ReadAllText("Settings.yml"));
+            return deserializer.Deserialize<TCPLib.Server.SaveFiles.Settings>(File.ReadAllText(path));
         }
     }
 }
@@ -93,16 +95,16 @@ using TCPLib.Server;
 
 namespace ExampleServer
 {
-    internal class Program
+    public static class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            TCPLib.Server.Server server = new Server(new BanSaver(), new SettingsSaver());
+            TCPLib.Server.Server server = new Server(new BanSaver(), new SettingsSaver(), ServerComponents.BaseCommands);
 
             server.Stopped += OnStopped; // If you type the standard "stop" command in the console,
             // the server won't terminate the process, so we subscribe to this event.
 
-            server.Start();
+            await server.Start();
             server.ConsoleRead(); // We want to send commands to the server :0
         }
 
@@ -130,7 +132,7 @@ namespace ExampleServer
 {
     internal class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             TCPLib.Server.Server server = new Server(new BanSaver(), new SettingsSaver());
 
@@ -138,16 +140,16 @@ namespace ExampleServer
 
             TCPLib.Server.Net.Client.SuccessfulConnection += OnConnected;
 
-            server.Start();
+            await server.Start();
             server.ConsoleRead();
         }
 
-        private static async Task OnConnected(TCPLib.Classes.ResponseCode code, Client client)
+        private static async Task OnConnected(Client client)
         {
-            while (true)
+            while (client.IsAlive)
             {
-                var message = await client.ReceiveSourceAsync(); // Here we get the raw byte array of the packet (this is basically a hack)
-                TCPLib.Server.Console.Info(UTF8Encoding.UTF8.GetString(message.Data));
+                var message = await client.ReceiveSourceAsync();
+                TCPLib.Server.Console.Info(Encoding.UTF8.GetString(message.Data));
             }
         }
 
@@ -195,7 +197,7 @@ namespace ExampleClient
 {
     internal class Message : IDataSerializable<Message>
     {
-        public string Data;
+        public string Data { get; set; }
 
         public Message FromBytes(byte[] bytes)
         {
@@ -206,8 +208,6 @@ namespace ExampleClient
         {
             return Encoding.UTF8.GetBytes(Data);
         }
-
-        public Message() { } // A parameterless constructor is required
     }
 }
 ```
