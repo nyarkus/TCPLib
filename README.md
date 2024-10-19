@@ -233,8 +233,10 @@ namespace ExampleClient
             while (true)
             {
                 string input = Console.ReadLine();
+                if (input == null)
+                    return;
 
-                await server.SendAsync(new Message() { Data = input });
+                await server.SendAsync(new Message { Data = input });
             }
         }
     }
