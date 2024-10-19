@@ -12,7 +12,13 @@ namespace TCPLib.Time
     }
     public class UtcTime : ITimeProvider
     {
-        public DateTimeOffset Now { get; } = DateTimeOffset.UtcNow;
+        public DateTimeOffset Now
+        {
+            get
+            {
+                return DateTimeOffset.UtcNow;
+            }
+        }
     }
     public static class TimeProvider
     {
