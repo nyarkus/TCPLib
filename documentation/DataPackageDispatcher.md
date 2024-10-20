@@ -97,9 +97,9 @@ namespace DPDispatcherServer
     }
 }
 ```
-In our case, we could do without it, but in the future, I want to show a convenient feature when working with DPDispatcher.
+In our case, we could do without it, but in the future, I want to show a convenient feature when working with `DPDispatcher`.
 
-To work with DPDispatcher, we need to create our own class for the client:
+To work with `DPDispatcher`, we need to create our own class for the client:
 ```csharp
 using System.Text;
 using TCPLib.Classes;
@@ -367,3 +367,8 @@ In this case, we calculate and send it the delay between sending and receiving t
 
 ## Note
 The client/server passed to `DPDispatcher` must be connected before starting the dispatcher.
+
+### Source Code
+
+- The client can be found [here](https://github.com/nyarkus/TCPLib/tree/master/Examples/DPDispatcherClient)
+- The server can be found [here](https://github.com/nyarkus/TCPLib/tree/master/Examples/DPDispatcherServer)
