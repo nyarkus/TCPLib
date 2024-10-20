@@ -28,15 +28,11 @@ namespace DPDispatcherClient
 
             Console.WriteLine("Write something");
             var input = Console.ReadLine();
-            if(input == null)
-            {
-                dispatcher.Stop();
-                await server.Disconnect();
-                return;
-            }
+
             await server.SendAsync(new DataPackageSource("msg", Encoding.UTF8.GetBytes(input)));
 
-            // Use of TimeProvider is optional and is synonymous with DateTimeOffster.UtcNow;
+
+            // Use of TimeProvider is optional and is synonymous with DateTimeOffset.UtcNow;
             SendTime = TCPLib.Time.TimeProvider.Now;
             while (Running)
             {
