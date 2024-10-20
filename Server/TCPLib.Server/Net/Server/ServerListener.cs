@@ -8,10 +8,10 @@ namespace TCPLib.Server.Net
 
     public class ServerListener : IDisposable
     {
-        private TcpListener Listener;
-        public int Port;
+        private readonly TcpListener Listener;
+        private readonly int Port;
         private readonly CancellationTokenSource StopToken;
-        public bool Started { get; private set; } = false;
+        public bool Started { get; private set; }
 
         public ServerListener(int port)
         {
@@ -28,20 +28,23 @@ namespace TCPLib.Server.Net
             }
             catch (SocketException ex)
             {
-                if (ex.ErrorCode == 10048)
+                switch(ex.ErrorCode)
                 {
-                    Console.Error("IP address or port not port cannot be used as it is already in use");
-                    throw;
+                    case 10048:
+                        Console.Error("IP address or port not port cannot be used as it is already in use");
+                        break;
+                    case 10049:
+                        Console.Error("The specified IP address or port does not belong to this computer");
+                        break;
+                    default:
+                        Console.Error("Unknown error code: " + ex.ErrorCode);
+                        break;
                 }
-                else if (ex.ErrorCode == 10049)
-                {
-                    Console.Error("The specified IP address or port does not belong to this computer");
-                    throw;
-                }
+                throw;
             }
 
         }
-        public async void Initialize()
+        public async Task Initialize()
         {
             Start();
             await Listen();
@@ -52,28 +55,25 @@ namespace TCPLib.Server.Net
             Started = true;
             while (true)
             {
-                try
-                {
-                    if (StopToken.IsCancellationRequested) return;
-                    Console.Debug("Wait connetction...");
-                    var client = await Listener.AcceptTcpClientAsync();
-                    Console.Debug("Connection request! Handle...");
-                    new Thread(async () =>
-                    {
-                        await Client.HandleConnections(client, TimeSpan.FromSeconds(5));
-                        GC.Collect();
-                    }).Start();
-                }
-                catch
-                {
+                if (StopToken.IsCancellationRequested) 
+                    return;
 
-                }
+                Console.Debug("Wait connetction...");
+
+                var client = await Listener.AcceptTcpClientAsync();
+                Console.Debug("Connection request! Handle...");
+
+                new Thread(async () =>
+                {
+                    await Client.HandleConnections(client, TimeSpan.FromSeconds(5));
+                }).Start();
             }
         }
 
         public void Dispose()
         {
             StopToken.Cancel();
+            StopToken.Dispose();
 #if NET8_0_OR_GREATER
             Listener.Dispose();
 #endif

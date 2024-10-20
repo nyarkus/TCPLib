@@ -8,11 +8,11 @@ namespace TCPLib.Encrypt
 {
     public partial class RSAProvider
     {
-        AsymmetricKeyParameter Public;
-        AsymmetricKeyParameter Private;
+        private AsymmetricKeyParameter Public;
+        private AsymmetricKeyParameter Private;
 
-        IAsymmetricBlockCipher forEncrypt;
-        IAsymmetricBlockCipher forDecrypt;
+        private IAsymmetricBlockCipher forEncrypt;
+        private IAsymmetricBlockCipher forDecrypt;
 
         public byte[] Encrypt(byte[] input)
         {

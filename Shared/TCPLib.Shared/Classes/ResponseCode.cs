@@ -8,8 +8,6 @@
         DifferentVersions,
         Timeout,
         ServerError,
-        ServerShutdown,
-        Blocked,
         Kicked,
         DisconnectedByUser
     }

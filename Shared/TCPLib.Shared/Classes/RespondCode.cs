@@ -2,12 +2,13 @@
 
 using TCPLib.Net;
 using Google.Protobuf;
+using System;
 
 namespace TCPLib.Classes
 {
-    public struct RespondCode : IProtobufSerializable<RespondCode>
+    public struct RespondCode : IDataSerializable<RespondCode>, IEquatable<RespondCode>
     {
-        public ResponseCode code;
+        public ResponseCode code { get; set; }
 
         public RespondCode FromBytes(byte[] bytes)
         {
@@ -17,7 +18,10 @@ namespace TCPLib.Classes
         }
 
         public byte[] ToByteArray()
-        => new Protobuf.RespondCode() { Code = (Protobuf.Code)code }.ToByteArray();
+        => new Protobuf.RespondCode { Code = (Protobuf.Code)code }.ToByteArray();
+
+        public bool Equals(RespondCode other)
+            => code == other.code;
 
         public RespondCode(ResponseCode code)
         { this.code = code; }

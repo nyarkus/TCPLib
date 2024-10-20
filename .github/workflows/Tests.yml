@@ -23,5 +23,7 @@ jobs:
     - uses: actions/checkout@v4
     - name: Test
       run: |
-        cd Tests
-        dotnet test Tests.csproj
+        cd Tests/NetTests
+        dotnet test NetTests.csproj
+        cd ../DPDispatcherTests
+        dotnet test DPDispatcherTests.csproj

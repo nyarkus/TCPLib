@@ -24,12 +24,13 @@ namespace TCPLib.Protobuf {
     static PackageReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "ChNwcm90by9QYWNrYWdlLnByb3RvIiUKB1BhY2thZ2USDAoEZGF0YRgBIAEo",
-            "DBIMCgR0eXBlGAIgASgJQhKqAg9UQ1BMaWIuUHJvdG9idWZiBnByb3RvMw=="));
+            "ChNwcm90by9QYWNrYWdlLnByb3RvIikKC0RhdGFQYWNrYWdlEgwKBGRhdGEY",
+            "ASABKAwSDAoEdHlwZRgCIAEoCUISqgIPVENQTGliLlByb3RvYnVmYgZwcm90",
+            "bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::TCPLib.Protobuf.Package), global::TCPLib.Protobuf.Package.Parser, new[]{ "Data", "Type" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::TCPLib.Protobuf.DataPackage), global::TCPLib.Protobuf.DataPackage.Parser, new[]{ "Data", "Type" }, null, null, null, null)
           }));
     }
     #endregion
@@ -38,16 +39,16 @@ namespace TCPLib.Protobuf {
   #region Messages
   [global::System.SerializableAttribute]
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
-  public sealed partial class Package : pb::IMessage<Package>
+  public sealed partial class DataPackage : pb::IMessage<DataPackage>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
   {
-    private static readonly pb::MessageParser<Package> _parser = new pb::MessageParser<Package>(() => new Package());
+    private static readonly pb::MessageParser<DataPackage> _parser = new pb::MessageParser<DataPackage>(() => new DataPackage());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pb::MessageParser<Package> Parser { get { return _parser; } }
+    public static pb::MessageParser<DataPackage> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -63,7 +64,7 @@ namespace TCPLib.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public Package() {
+    public DataPackage() {
       OnConstruction();
     }
 
@@ -71,7 +72,7 @@ namespace TCPLib.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public Package(Package other) : this() {
+    public DataPackage(DataPackage other) : this() {
       data_ = other.data_;
       type_ = other.type_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
@@ -79,8 +80,8 @@ namespace TCPLib.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public Package Clone() {
-      return new Package(this);
+    public DataPackage Clone() {
+      return new DataPackage(this);
     }
 
     /// <summary>Field number for the "data" field.</summary>
@@ -110,12 +111,12 @@ namespace TCPLib.Protobuf {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
-      return Equals(other as Package);
+      return Equals(other as DataPackage);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(Package other) {
+    public bool Equals(DataPackage other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
@@ -201,7 +202,7 @@ namespace TCPLib.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(Package other) {
+    public void MergeFrom(DataPackage other) {
       if (other == null) {
         return;
       }

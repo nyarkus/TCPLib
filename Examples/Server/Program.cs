@@ -6,26 +6,26 @@ using TCPLib.Server.Net;
 
 namespace ExampleServer
 {
-    internal class Program
+    public static class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            TCPLib.Server.Server server = new Server(new BanSaver(), new SettingsSaver());
+            TCPLib.Server.Server server = new Server(new BanSaver(), new SettingsSaver(), ServerComponents.BaseCommands);
 
             server.Stopped += OnStopped;
 
             TCPLib.Server.Net.Client.SuccessfulConnection += OnConnected;
 
-            server.Start();
+            await server.Start();
             server.ConsoleRead();
         }
 
-        private static async Task OnConnected(TCPLib.Classes.ResponseCode code, Client client)
+        private static async Task OnConnected(Client client)
         {
-            while (true)
+            while (client.IsAlive)
             {
                 var message = await client.ReceiveSourceAsync();
-                TCPLib.Server.Console.Info(UTF8Encoding.UTF8.GetString(message.Data));
+                TCPLib.Server.Console.Info(Encoding.UTF8.GetString(message.Data));
             }
         }
 

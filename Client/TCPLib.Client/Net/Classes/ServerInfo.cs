@@ -39,15 +39,15 @@ namespace TCPLib.Client.Net
         {
             var client = new UdpClient(address.Port);
 
-            DateTime start = DateTime.UtcNow;
+            DateTimeOffset start = Time.TimeProvider.Now;
 
             client.Send(new byte[] { 0 }, 1, address);
             var result = client.Receive(ref address);
-            var ping = DateTime.UtcNow - start;
+            var ping = Time.TimeProvider.Now - start;
 
             var jobject = JObject.Parse(System.Text.Encoding.UTF8.GetString(result));
 
-            var res = new ServerInfo()
+            var res = new ServerInfo
             {
                 MaxPlayers = (int)jobject["MaxPlayers"],
                 Players = (int)jobject["Players"],
@@ -60,41 +60,40 @@ namespace TCPLib.Client.Net
         /// <summary>
         /// Method receiving information about the server
         /// </summary>
-        /// <param name="address">IP address of the server whose information you want to know</param>
-        /// <param name="client">client, through which the request for information will be made</param>
-        /// <returns></returns>
         /// <exception cref="TimeoutException"></exception>
-        public static ServerInfo GetFrom(IPEndPoint address, UdpClient client)
+        public static ServerInfo GetFrom(IPEndPoint address, UdpClient client, TimeSpan timeout)
         {
-#if DEBUG
             var task = Task.Run(() => _GetFrom(ref address, ref client));
-            if (task.Wait(TimeSpan.FromSeconds(5 * 60)))
+            if (task.Wait(timeout))
                 return task.Result;
             else
                 throw new TimeoutException();
-#else
+        }
+        /// <summary>
+        /// Method receiving information about the server
+        /// </summary>
+        /// <exception cref="TimeoutException"></exception>
+        public static ServerInfo GetFrom(IPEndPoint address, UdpClient client)
+        {
             var task = Task.Run(() => _GetFrom(ref address, ref client));
-                    if (task.Wait(TimeSpan.FromSeconds(30)))
-                        return task.Result;
-                    else
-                        throw new TimeoutException();
-#endif
+            if (task.Wait(TimeSpan.FromSeconds(30)))
+                return task.Result;
+            else
+                throw new TimeoutException();
         }
         private static Task<ServerInfo> _GetFrom(ref IPEndPoint address, ref UdpClient client)
         {
             try
             {
-
-
-                DateTime start = DateTime.UtcNow;
+                DateTimeOffset start = Time.TimeProvider.Now;
 
                 client.Send(new byte[] { 0 }, 1, address);
                 var result = client.Receive(ref address);
-                DateTime end = DateTime.UtcNow;
+                DateTimeOffset end = Time.TimeProvider.Now;
                 var ping = end - start;
                 var jobject = JObject.Parse(System.Text.Encoding.UTF8.GetString(result));
 
-                var res = new ServerInfo()
+                var res = new ServerInfo
                 {
                     MaxPlayers = (int)jobject["MaxPlayers"],
                     Players = (int)jobject["Players"],
@@ -106,7 +105,7 @@ namespace TCPLib.Client.Net
             }
             catch
             {
-                return null;
+                return Task.FromResult<ServerInfo>(null);
             }
         }
     }

@@ -1,70 +1,106 @@
 using Org.BouncyCastle.Security.Certificates;
 using System;
-using System.Net;
+using TCPLib.Encrypt;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using TCPLib.Classes;
+using TCPLib.Net;
+using TCPLib.Shared.Base;
+using System.IO;
 
 namespace TCPLib.Client.Net
 {
-    public partial class Server : IDisposable
+    public delegate Task ServerKicked(KickMessage response);
+    public class Server : NetworkingBase, IDisposable
     {
-        public EncryptType EncryptType { get; set; } = EncryptType.RSA;
 
-        public delegate Task ServerKicked(KickMessage response);
         public event ServerKicked Kicked;
-        public event ServerKicked Banned;
-        public event ServerKicked ServerShutdown;
 
-        public IPAddress IP { get; set; }
-        public int Port { get; set; }
+        public IP IP { get; private set; }
 
         public TcpClient client { get; set; }
         public NetworkStream stream { get; set; }
 
-        public Encryptor encryptor { get; set; }
+        #region Networking
+        protected override Stream Stream
+        {
+            get
+            {
+                return stream;
+            }
+        }
+        protected override async Task<bool> Handle(DataPackageSource package)
+        {
+            if (package.Type == "KickMessage")
+            {
+                var kick = new KickMessage().FromBytes(package.Data);
+                switch (kick.code)
+                {
+                    case ResponseCode.Kicked:
+                        if (Kicked != null)
+                        {
+                            await Kicked.Invoke(kick);
+                        }
+                        return true;
+                    default:
+                        break;
+                }
+            }
+            return false;
+        }
+        #endregion
 
-        protected CancellationTokenSource OnKick;
-
-        public Server(IPAddress ip, int port, TcpClient client, NetworkStream stream)
+        public Server(IP ip, TcpClient client, NetworkStream stream)
         {
             IP = ip;
-            Port = port;
             this.client = client;
             this.stream = stream;
 
             OnKick = new CancellationTokenSource();
         }
+        internal void setEncryptionType(EncryptType type)
+            => EncryptType = type;
 
         public async Task Disconnect()
         {
             var kicked = new KickMessage(ResponseCode.DisconnectedByUser);
-
             await SendAsync(kicked);
             OnKick.Cancel();
 
-            stream.Close();
-            stream.Dispose();
-            client.Dispose();
+            stream?.Close();
+            stream?.Dispose();
+            client?.Dispose();
 
             if(Kicked != null)
             {
                 await Kicked.Invoke(kicked);
             }
         }
-
-        public async void Dispose()
+        private bool disposed;
+        public override void Dispose()
         {
-            if(stream != null)
+            Dispose(true);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed)
+                return;
+
+            if (disposing)
             {
-                await Disconnect();
+                Disconnect().GetAwaiter().GetResult();
+                _semaphore.Dispose();
             }
+
+            disposed = true;
+        }
+
+        ~Server()
+        {
+            Dispose(false);
         }
     }
-    public enum EncryptType
-    {
-        AES,
-        RSA
-    }
+    
 }

@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://github.com/Kacianoki/TCPLib/actions/workflows/Tests.yml">
-	  <img src="https://github.com/Kacianoki/TCPLib/actions/workflows/Tests.yml/badge.svg?branch=master">
+   <img src="https://github.com/Kacianoki/TCPLib/actions/workflows/Tests.yml/badge.svg?branch=master">
   </a>
   <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FKacianoki%2FTCPLib&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false"></img>
   <a href="https://github.com/Kacianoki/TCPLib/pulse" alt="Activity">
@@ -19,13 +19,12 @@
 
 # What is this?!
 
-**TCPLib** - It's a low-level library for exchanging packets with a remote computer (🤓). 
+**TCPLib** - It's a high-level library for exchanging packets with a remote computer (🤓). 
 TCPLib works on the TCP protocol and supports AES and RSA encryption.
 For packet exchange, TCPLib uses [Protocol Buffers](https://github.com/protocolbuffers/protobuf).
 
 # How do I use this thing? :0
 
-Since this is a low-level library, using it can be quite tricky : (
 
 ## Implementing the Server Side
 
@@ -44,18 +43,20 @@ namespace ExampleServer
 {
     public class SettingsSaver : ISettingsSaver
     {
+        const string path = "Settings.yml";
         public void Save(TCPLib.Server.SaveFiles.Settings settings)
         {
             var serializer = new SerializerBuilder().WithNamingConvention(CamelCaseNamingConvention.Instance)
                 .Build();
-            File.WriteAllText("Settings.yml", serializer.Serialize(settings));
+            File.WriteAllText(path, serializer.Serialize(settings));
         }
         public TCPLib.Server.SaveFiles.Settings Load()
         {
-            if (!File.Exists("Settings.yml"))
+            if (!File.Exists(path))
                 new TCPLib.Server.SaveFiles.Settings().Save();
+
             var deserializer = new DeserializerBuilder().Build();
-            return deserializer.Deserialize<TCPLib.Server.SaveFiles.Settings>(File.ReadAllText("Settings.yml"));
+            return deserializer.Deserialize<TCPLib.Server.SaveFiles.Settings>(File.ReadAllText(path));
         }
     }
 }
@@ -94,16 +95,16 @@ using TCPLib.Server;
 
 namespace ExampleServer
 {
-    internal class Program
+    public static class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            TCPLib.Server.Server server = new Server(new BanSaver(), new SettingsSaver());
+            TCPLib.Server.Server server = new Server(new BanSaver(), new SettingsSaver(), ServerComponents.BaseCommands);
 
             server.Stopped += OnStopped; // If you type the standard "stop" command in the console,
             // the server won't terminate the process, so we subscribe to this event.
 
-            server.Start();
+            await server.Start();
             server.ConsoleRead(); // We want to send commands to the server :0
         }
 
@@ -131,7 +132,7 @@ namespace ExampleServer
 {
     internal class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             TCPLib.Server.Server server = new Server(new BanSaver(), new SettingsSaver());
 
@@ -139,16 +140,16 @@ namespace ExampleServer
 
             TCPLib.Server.Net.Client.SuccessfulConnection += OnConnected;
 
-            server.Start();
+            await server.Start();
             server.ConsoleRead();
         }
 
-        private static async Task OnConnected(TCPLib.Classes.ResponseCode code, Client client)
+        private static async Task OnConnected(Client client)
         {
-            while (true)
+            while (client.IsAlive)
             {
-                var message = await client.ReceiveSourceAsync(); // Here we get the raw byte array of the packet (this is basically a hack)
-                TCPLib.Server.Console.Info(UTF8Encoding.UTF8.GetString(message.Data));
+                var message = await client.ReceiveSourceAsync();
+                TCPLib.Server.Console.Info(Encoding.UTF8.GetString(message.Data));
             }
         }
 
@@ -161,7 +162,7 @@ namespace ExampleServer
     }
 }
 ```
-It would be more appropriate to use `ReceiveAsync()` here, but for that, you would need to write a Protobuf schema, compile it, and implement the *TCPLib.Net.IProtobufSerializable* interface, which we don't need right now, so we made a hack instead 😎.
+It would be more appropriate to use `ReceiveAsync()` here, but for that, you would need to write a Protobuf schema, compile it, and implement the *TCPLib.Net.IDataSerializable* interface, which we don't need right now, so we made a hack instead 😎.
 
 ## Implementing the Client Side
 
@@ -194,9 +195,9 @@ using TCPLib.Net;
 
 namespace ExampleClient 
 {
-    internal class Message : IProtobufSerializable<Message>
+    internal class Message : IDataSerializable<Message>
     {
-        public string Data;
+        public string Data { get; set; }
 
         public Message FromBytes(byte[] bytes)
         {
@@ -207,8 +208,6 @@ namespace ExampleClient
         {
             return Encoding.UTF8.GetBytes(Data);
         }
-
-        public Message() { } // A parameterless constructor is required
     }
 }
 ```
@@ -234,8 +233,10 @@ namespace ExampleClient
             while (true)
             {
                 string input = Console.ReadLine();
+                if (input == null)
+                    return;
 
-                await server.SendAsync(new Message() { Data = input });
+                await server.SendAsync(new Message { Data = input });
             }
         }
     }

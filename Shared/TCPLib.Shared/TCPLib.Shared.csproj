@@ -1,21 +1,32 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net8.0;net6.0;net48;netstandard2.0;netstandard2.1</TargetFrameworks>
+		<TargetFrameworks>net462;net47;net471;net472;net48;net481;netstandard2.0;netstandard2.1;net6.0;net8.0</TargetFrameworks>
 		<Protobuf>enable</Protobuf>
 		<Title>TCPLib.Shared</Title>
-		<Description>Dependent package for TCPLib</Description>
-		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+		<DataPackageLicenseFile>LICENSE.txt</DataPackageLicenseFile>
+		<GenerateDataPackageOnBuild>True</GenerateDataPackageOnBuild>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<PackageIcon>icon.png</PackageIcon>
+		<PackageReadmeFile>PackageReadme.md</PackageReadmeFile>
+		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <DataPackageReference Include="BouncyCastle.Cryptography" Version="2.4.0" />
+	  <DataPackageReference Include="Google.Protobuf" Version="3.28.2" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="..\..\icon.png">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
 	  <None Include="..\..\LICENSE.txt">
 	    <Pack>True</Pack>
 	    <PackagePath>\</PackagePath>
 	  </None>
-	  <None Include="..\..\README.md">
+	  <None Include="..\..\PackageReadme.md">
 	    <Pack>True</Pack>
 	    <PackagePath>\</PackagePath>
 	  </None>

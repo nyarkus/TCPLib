@@ -52,7 +52,7 @@ namespace TCPLib.Server.Commands
         }
         public Pardon()
         {
-            Synonyms = new string[] { "pardon", "unban" };
+            Synonyms = new [] { "pardon", "unban" };
             Name = "pardon";
             Description = "Unblocks the user using his ip. Usage: pardon {ip}";
         }
