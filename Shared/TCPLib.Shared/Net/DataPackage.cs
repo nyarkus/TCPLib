@@ -2,6 +2,7 @@
 
 using Google.Protobuf;
 using System;
+using TCPLib.Classes;
 
 namespace TCPLib.Net
 {
@@ -25,6 +26,8 @@ namespace TCPLib.Net
         }
         public byte[] Pack()
         => new TCPLib.Protobuf.DataPackage { Data = ByteString.CopyFrom(Data), Type = Type }.ToByteArray();
+        public DataPackageSource ToSource()
+            => new DataPackageSource(Type, Data);
 
         public T Unpack()
         {
