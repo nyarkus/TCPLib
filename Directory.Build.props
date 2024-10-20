@@ -4,5 +4,22 @@
     <Authors>nyarkus_</Authors>
     <RepositoryUrl>https://github.com/nyarkus/TCPLib</RepositoryUrl>
     <Version>3.0.0</Version>
+	<Description>high-level library for exchanging packets with a remote computer</Description>
+	<DataPackageLicenseFile>LICENSE.txt</DataPackageLicenseFile>
+	<Copyright>Copyright (c) 2024 Yahor Klimenko</Copyright>
+    <PackageTags>TCP, Networking, Sockets, Client-Server, Encryption, AES, RSA, Protocol Buffers, Serialization, Library, Remote Communication, Cross-Platform</PackageTags>
+	<PackageReleaseNotes>
+		- [`DPDispatcher`](https://github.com/nyarkus/TCPLib/blob/master/documentation/DataPackageDispatcher.md) for convenient packet handling.
+		- `DataPackageSource` can now be converted to `DataPackage`.
+		- `DataPackage` can be converted to `DataPackageSource`.
+		- Configuration can be specified when creating the server and client.
+		- Required components can be specified when creating the server.
+		- Reduction in the number of Receive methods.
+		- Merging `NetClient` and `Client` into `TCPLib.Server`.
+		- New variable `IsAlive` in `TCPLib.Server.Net.Client`.
+		- `IProtobufSerializable` is now `IDataSerializable`.
+		- New data structure `IP` in `TCPLib.Net` designed to store IP address and port.
+		- Various minor improvements enhancing usability and code readability.
+	</PackageReleaseNotes>
   </PropertyGroup>
 </Project>

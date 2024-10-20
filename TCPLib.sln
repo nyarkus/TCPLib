@@ -30,8 +30,12 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Elements", "Solution Elements", "{BE186F06-291A-4243-B2FB-A9CD8E4C6BFB}"
 	ProjectSection(SolutionItems) = preProject
 		Directory.Build.props = Directory.Build.props
+		icon.png = icon.png
+		icon.svg = icon.svg
 		LICENSE.txt = LICENSE.txt
+		PackageReadme.md = PackageReadme.md
 		README.md = README.md
+		ReleaseNotes.md = ReleaseNotes.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "documentation", "documentation", "{781CD334-1831-47E8-989D-16DC73AF440E}"
@@ -39,9 +43,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "documentation", "documentat
 		documentation\DataPackageDispatcher.md = documentation\DataPackageDispatcher.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DPDispatcherClient", "Examples\DPDispatcherClient\DPDispatcherClient.csproj", "{955F9161-0DEA-46B8-BD73-71D98A611B44}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DPDispatcherClient", "Examples\DPDispatcherClient\DPDispatcherClient.csproj", "{955F9161-0DEA-46B8-BD73-71D98A611B44}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DPDispatcherServer", "Examples\DPDispatcherServer\DPDispatcherServer.csproj", "{0DF3DCBB-02AF-4967-A799-1BEECD0EF3AC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DPDispatcherServer", "Examples\DPDispatcherServer\DPDispatcherServer.csproj", "{0DF3DCBB-02AF-4967-A799-1BEECD0EF3AC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

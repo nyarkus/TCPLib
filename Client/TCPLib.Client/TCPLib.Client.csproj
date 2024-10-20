@@ -3,12 +3,28 @@
   <PropertyGroup>
     <TargetFrameworks>net462;net47;net471;net472;net48;net481;netstandard2.0;netstandard2.1;net6.0;net8.0</TargetFrameworks>
     <Title>TCPLib.Client</Title>
-    <Description>low-level library for exchanging packets with a remote computer</Description>
-    <DataPackageReadmeFile>README.md</DataPackageReadmeFile>
-    <DataPackageLicenseFile>LICENSE.txt</DataPackageLicenseFile>
     <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
     <GenerateDataPackageOnBuild>True</GenerateDataPackageOnBuild>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageReadmeFile>PackageReadme.md</PackageReadmeFile>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\icon.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\..\LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\..\PackageReadme.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="BouncyCastle.Cryptography" Version="2.4.0" />
