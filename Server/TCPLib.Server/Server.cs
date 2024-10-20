@@ -76,11 +76,6 @@ namespace TCPLib.Server
             }
             tcplistenThread.Start();
 
-            if (_UDP != null)
-                { while (!_Server.Started && !_UDP.Started) ; }
-            else
-                { while (!_Server.Started) ; }
-
             Console.Info($"The server successfully started in {(Time.TimeProvider.Now - StartTime).TotalMilliseconds} ms");
 
 #if !NET48

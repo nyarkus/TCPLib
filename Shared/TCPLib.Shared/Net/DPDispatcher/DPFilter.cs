@@ -102,9 +102,9 @@ namespace TCPLib.Net.DPDispatcher
                     return $"if type matches regex pattern: {_pattern}";
                 case ConditionType.NotMatchesRegex:
                     return $"if type not matches regex pattern: {_pattern}";
+                default:
+                    return $"Unknown condition type. Pattenr: {_pattern}";
             }
-
-            throw new InvalidOperationException("Unknown condition type.");
         }
 
         private DPFilter() { }
