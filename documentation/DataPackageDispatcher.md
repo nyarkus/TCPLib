@@ -1,17 +1,17 @@
 ﻿# Что такое DPDispatcher??!?!
 
 ## 👆🤓
-**DPDispatcher** - это класс, введённый в версии **3.0.0**, который предназначен для приёма и __обработки пакетов__. В отличие от традиционных методов приёма пакетов, **DPDispatcher** использует механизм фильтрации, позволяя более гибко управлять обработкой входящих данных.
+**DPDispatcher** is a class introduced in version **3.0.0** that is designed for receiving and __processing packets__. Unlike traditional methods of packet reception, **DPDispatcher** uses a filtering mechanism, allowing for more flexible management of incoming data processing.
 
-При получении пакета, **DPDispatcher** вызывает соответствующие методы, зарегистрированные в обработчиках, что позволяет легко расширять функциональность обработки данных.
+Upon receiving a packet, **DPDispatcher** calls the corresponding methods registered in the handlers, making it easy to extend the functionality of data processing.
 
 ## 🗿🤫🧏‍♀️🗿🤫🧏‍♀️🗿🤫🧏‍♀️🗿🤫🧏‍♀️ ERM WHAT THE SIGMAA!?!?!?!? 🗿🤫🧏‍♀️🗿🤫🧏‍♀️🗿🤫🧏‍♀️🗿🤫🧏‍♀️🗿🤫🧏‍♀️
-**DPDispatcher** удобная, в некоторых случаев, штука для приёма пакетов.
+**DPDispatcher** is a convenient tool for receiving packets in some cases.
 
-Покажу на примере как писать с помощью этой штуки
+Let me show you how to write using this tool with an example.
 
-### Серверная часть
-Для начала создадим сейверы данных:
+### Server Side
+First, let's create data savers:
 ```csharp
 using System;
 using System.IO;
@@ -51,9 +51,9 @@ namespace ExampleServer
     }
 }
 ```
-Сильно заморачиваться надними я не стал, т.к. это всего-лишь пример.
+I didn't put too much effort into them since this is just an example.
 
-Теперь напишем логику для запуска сервера:
+Now let's write the logic to start the server:
 ```csharp
 using ExampleServer;
 using TCPLib.Server;
@@ -73,9 +73,9 @@ namespace DPDispatcherServer
     }
 }
 ```
-`BanSaver` и `SettingsSaver` - классы сохранения всяких данных сервера :000
+`BanSaver` and `SettingsSaver` are classes for saving various server data :000
 
-Теперь сделаем свою структуру для состояния:
+Now let's create our own structure for the state:
 ```csharp
 using System.Text;
 using TCPLib.Net;
@@ -97,10 +97,9 @@ namespace DPDispatcherServer
     }
 }
 ```
-В нашем случае можно было бы обойтись без неё, однако в будущем я хочу показать одну удобную фичу
-при работае с DPDispatcher.
+In our case, we could do without it, but in the future, I want to show a convenient feature when working with DPDispatcher.
 
-Чтобы работать с DPDispatcher, нам нужно сделать свой класс для клиента:
+To work with DPDispatcher, we need to create our own class for the client:
 ```csharp
 using System.Text;
 using TCPLib.Classes;
@@ -149,15 +148,15 @@ namespace DPDispatcherServer
     }
 }
 ```
-Я не знаю как по-другому сделать адекватную реализацию работы с DPDispatcher.
+I don't know how to implement a proper working solution with `DPDispatcher` in any other way.
 
-У нас есть диспетчер пакетов:
+We have a packet dispatcher:
 ```csharp
 public DPDispatcher dispatcher;
 ```
-Он и будет принимать и фильровать пакеты.
+It will receive and filter packets.
 
-Далее мы создаём методы, которые будут обрабатывать полученые пакеты:
+Next, we create methods that will handle the received packets:
 ```csharp
 private Task OnState(DataPackageSource package)
 {
@@ -179,28 +178,28 @@ private async Task OnMessage(DataPackageSource package)
     await client.SendAsync(new State() { Content = "I got your message!" });
 }
 ```
-Вот здесь я использую ту самую фичу **(ВСТАВИТЬ URL СЮДА ПОТОМ)**:
+Here I use that very feature **(ВСТАВИТЬ URL СЮДА ПОТОМ)**:
 ```csharp
 var state = package.As<State>();
 ```
-**DataPackageSource** умеет явно преобразовываться в пакеты с известными типами данных.
+`DataPackageSource` can be explicitly converted into packets with known data types.
 
-После всего этого ужаса, мы создаём обработчики и указываем фильтры:
+After all this chaos, we create handlers and specify filters:
 ```csharp
 var messageHandler = DPHandler.Create(DPFilter.Equals("msg"), new DataPackageReceive(OnMessage));
 var stateHandler = DPHandler.Create(DPFilter.Equals("State"), new DataPackageReceive(OnState));
 ```
-- `DPFilter` - фильтр применяющийся на тип полученого пакета.
-- `DataPackageReceive` - Делегат определяющий структуру методов, которые будут вызываться в случаее прохождения пакета через фильт(`DPFilter`)
+- `DPFilter` - a filter applied to the type of the received packet.
+- `DataPackageReceive` - a delegate that defines the structure of the methods that will be called if the packet passes through the filter (`DPFilter`).
 
-На этой строчке:
+On this line:
 ```csharp
 dispatcher = new DPDispatcherBuilder(client, messageHandler, stateHandler).Build();
 ```
-Мы создаём экземпляр класса `DPDispatcherBuilder` и передаём ему уже подключенного клиента.
-`DPDispatcherBuilder` содержит некоторые методы для работы с ним, однако они нам не нужны и мы сразу собираем `DPDispatcher` с помощью метода `Build()`.
+We create an instance of the `DPDispatcherBuilder` class and pass it the already connected client. 
+`DPDispatcherBuilder` contains some methods for working with it, but we don't need them, and we immediately build the `DPDispatcher` using the `Build()` method.
 
-Теперь дополним основной код сервера:
+Now let's add to the main server code:
 ```csharp
 using ExampleServer;
 using TCPLib.Server;
@@ -231,11 +230,10 @@ namespace DPDispatcherServer
     }
 }
 ```
-Мы подписываемся на ивент `SuccessfulConnection` чтобы получать новых клиентов при новых подключениях.
-При новом подключении мы создаём новый объект класса `CustomClient` и запускаем диспетчер.
+We subscribe to the `SuccessfulConnection` event to receive new clients upon new connections. When a new connection occurs, we create a new object of the `CustomClient` class and start the dispatcher.
 
-### Клиентская часть
-Поскольку серверу мы сделали структуру `State`, то и клиента не будем обделять, а то обидеться:
+### Client Side
+Since we created a `State` structure for the server, we won't leave the client out either, or it might get upset:
 ```csharp
 using System.Text;
 using TCPLib.Net;
@@ -257,7 +255,7 @@ namespace DPDispatcherClient
     }
 }
 ```
-Диспетчер для клиента работает точно так же, поэтому я сразу покажу весь исходный код и объясню его:
+The dispatcher for the client works exactly the same way, so I'll show the entire source code right away and explain it:
 
 ```csharp
 using System.Text;
@@ -317,7 +315,7 @@ namespace DPDispatcherClient
 }
 ```
 
-На этих строках:
+On these lines:
 ```csharp
 // Creating package handler
 var stateHandler = DPHandler.Create(DPFilter.Equals("State"), new DataPackageReceive(OnState));
@@ -331,9 +329,9 @@ var dispatcher = new DPDispatcherBuilder(server, stateHandler).Build();
 // Start the dispatcher in a new thread.
 _ = Task.Run(dispatcher.Start);
 ```
-Мы создаём диспетчер, подключаемся к серверу и запускаем диспетчер в новом потоке, чтобы он не блокировал основной.
+We create the dispatcher, connect to the server, and run the dispatcher in a new thread so that it doesn't block the main one.
 
-Потом мы получаем ввод с консоли, отправляем серверу пакет с типом `msg` и записываем время отправки:
+Then we get input from the console, send a packet of type `msg` to the server, and record the time of sending:
 ```csharp
 Console.WriteLine("Write something");
 var input = Console.ReadLine();
@@ -343,7 +341,7 @@ await server.SendAsync(new DataPackageSource("msg", Encoding.UTF8.GetBytes(input
 // Use of TimeProvider is optional and is synonymous with DateTimeOffset.UtcNow;
 SendTime = TCPLib.Time.TimeProvider.Now;
 ```
-После этого мы начинаем блокировать основной поток, пока сервер не ответит и после его ответа отключаемся:
+After that, we start blocking the main thread until the server responds, and after its response, we disconnect:
 ```csharp
 while (Running)
 {
@@ -356,7 +354,7 @@ await client.ConnectedServer.Disconnect();
 return;
 ```
 
-Когда мы получаем ответ от сервера, перед завершением программы, мы отправляем ему сообщение:
+When we receive a response from the server, before the program ends, we send it a message:
 ```csharp
 private static async Task OnState(DataPackageSource package)
 {
@@ -365,4 +363,7 @@ private static async Task OnState(DataPackageSource package)
     Running = false;
 }
 ```
-В этом случае, мы вычисляем и отправляем ему задержку между отправкой и ответом.
+In this case, we calculate and send it the delay between sending and receiving the response.
+
+## Note
+The client/server passed to `DPDispatcher` must be connected before starting the dispatcher.
