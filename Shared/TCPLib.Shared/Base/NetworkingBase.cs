@@ -16,7 +16,7 @@ namespace TCPLib.Shared.Base
         protected CancellationTokenSource OnKick;
         protected abstract Stream Stream { get; }
         public Encryptor Encryptor;
-        public EncryptType EncryptType = EncryptType.RSA;
+        protected EncryptType EncryptType = EncryptType.RSA;
         protected readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
         #region Receive
@@ -29,13 +29,26 @@ namespace TCPLib.Shared.Base
             {
                 int bytesRead = await stream.ReadAsync(buffer, totalRead, count - totalRead);
                 if (bytesRead == 0)
-                    throw new EndOfStreamException("Reached end of stream before reading expected number of bytes.");
+                    throw new EndOfStreamException($"Reached end of {nameof(stream)} before reading expected number of bytes.");
                 totalRead += bytesRead;
             }
 
             return buffer;
         }
         protected abstract Task<bool> Handle(DataPackageSource package);
+        private byte[] _decrypt(byte[] bytes)
+        {
+            if (EncryptType == EncryptType.AES)
+            {
+                bytes = Encryptor.AESDecrypt(bytes);
+            }
+            else
+            {
+                bytes = Encryptor.RSADecrypt(bytes);
+            }
+
+            return bytes;
+        }
 
         public async Task<DataPackageSource> ReceiveSourceAsync(bool UseDecryption = true, CancellationToken cancellation = default)
         {
@@ -52,16 +65,8 @@ namespace TCPLib.Shared.Base
 
                     var bytes = await Read(length, Stream);
                     if (UseDecryption)
-                    {
-                        if (EncryptType == EncryptType.AES)
-                        {
-                            bytes = Encryptor.AESDecrypt(bytes);
-                        }
-                        else
-                        {
-                            bytes = Encryptor.RSADecrypt(bytes);
-                        }
-                    }
+                        bytes = _decrypt(bytes);
+                    
 
                     var package = Protobuf.DataPackage.Parser.ParseFrom(bytes);
                     var source = new DataPackageSource(package.Type, package.Data.ToArray());
@@ -96,7 +101,7 @@ namespace TCPLib.Shared.Base
             var result = await task.TimeoutAsync(timeout, cancellation);
             if (result)
             {
-                return task.Result;
+                return await task;
             }
             else
             {
@@ -118,16 +123,7 @@ namespace TCPLib.Shared.Base
 
                     var bytes = await Read(length, Stream);
                     if (UseDecryption)
-                    {
-                        if (EncryptType == EncryptType.AES)
-                        {
-                            bytes = Encryptor.AESDecrypt(bytes);
-                        }
-                        else
-                        {
-                            bytes = Encryptor.RSADecrypt(bytes);
-                        }
-                    }
+                        bytes = _decrypt(bytes);
 
                     var package = Protobuf.DataPackage.Parser.ParseFrom(bytes);
                     var source = new DataPackageSource(package.Type, package.Data.ToArray());
@@ -162,7 +158,7 @@ namespace TCPLib.Shared.Base
             var result = await task.TimeoutAsync(timeout, cancellation);
             if (result)
             {
-                return task.Result;
+                return await task;
             }
             else
             {
@@ -172,16 +168,20 @@ namespace TCPLib.Shared.Base
         #endregion
         #region Send
 
+        private byte[] _encrypt(byte[] bytes)
+        {
+            if (EncryptType == EncryptType.AES)
+                bytes = Encryptor.AESEncrypt(bytes);
+            else
+                bytes = Encryptor.RSAEncrypt(bytes);
+
+            return bytes;
+        }
         public async Task SendAsync(DataPackageSource data, bool UseEncryption = true)
         {
             var bytes = data.Pack();
             if (UseEncryption)
-            {
-                if (EncryptType == EncryptType.AES)
-                    bytes = Encryptor.AESEncrypt(bytes);
-                else
-                    bytes = Encryptor.RSAEncrypt(bytes);
-            }
+                bytes = _encrypt(bytes);
             var bl = BitConverter.GetBytes(bytes.Length);
 
             if (OnKick.IsCancellationRequested)

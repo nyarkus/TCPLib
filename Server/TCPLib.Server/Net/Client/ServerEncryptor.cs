@@ -10,8 +10,8 @@ namespace TCPLib.Server.Net
     internal static class ServerEncryptor
     {
         private static Encryptor _serverEncryptor;
-        internal static int AesKeySize = 128;
-        internal static int RsaKeySize = 2048;
+        internal static int AesKeySize { get; set; } = 128; 
+        internal static int RsaKeySize { get; set; } = 2048;
         internal static Encryptor GetServerEncryptor()
         {
             if (_serverEncryptor != null)

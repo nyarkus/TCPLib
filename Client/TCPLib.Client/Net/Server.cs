@@ -43,6 +43,8 @@ namespace TCPLib.Client.Net
                             await Kicked.Invoke(kick);
                         }
                         return true;
+                    default:
+                        break;
                 }
             }
             return false;
@@ -57,6 +59,8 @@ namespace TCPLib.Client.Net
 
             OnKick = new CancellationTokenSource();
         }
+        internal void setEncryptionType(EncryptType type)
+            => EncryptType = type;
 
         public async Task Disconnect()
         {
@@ -77,7 +81,6 @@ namespace TCPLib.Client.Net
         public override void Dispose()
         {
             Dispose(true);
-            GC.SuppressFinalize(this);
         }
 
         protected virtual void Dispose(bool disposing)

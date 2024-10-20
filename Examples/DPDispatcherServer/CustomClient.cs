@@ -8,8 +8,8 @@ namespace DPDispatcherServer
 {
     public class CustomClient
     {
-        public Client client;
-        public DPDispatcher dispatcher;
+        private Client client;
+        public DPDispatcher dispatcher { get; private set; }
 
         public CustomClient(Client client)
         {

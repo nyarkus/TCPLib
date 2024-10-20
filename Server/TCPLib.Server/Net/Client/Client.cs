@@ -73,7 +73,10 @@ namespace TCPLib.Server.Net
             {
                 await SendAsync(message);
             }
-            catch { }
+            catch 
+            {
+                // If the client is already disconnected, an exception will be thrown and we don't need it.
+            }
             OnDisconnected();
         }
         private void OnDisconnected()

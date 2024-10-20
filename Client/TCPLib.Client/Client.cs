@@ -13,7 +13,7 @@ namespace TCPLib.Client
         public TcpClient tcpClient { get; private set; }
         public Server ConnectedServer { get; private set; }
 
-        internal static int _aesKeySize;
+        private static int _aesKeySize;
 
         public Client() : this(new ClientConfiguration())
         {
@@ -46,7 +46,7 @@ namespace TCPLib.Client
             await server.SendAsync(aesKey);
 
             server.Encryptor.SetAESKey(aesKey.Key, aesKey.IV);
-            server.EncryptType = EncryptType.AES;
+            server.setEncryptionType(EncryptType.AES);
 
             var code = await server.ReceiveAsync<RespondCode>();
             if (code.Value.code != ResponseCode.Ok)
