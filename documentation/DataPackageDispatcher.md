@@ -1,4 +1,4 @@
-﻿# Что такое DPDispatcher??!?!
+# What is DPDispatcher??!?!
 
 ## 👆🤓
 **DPDispatcher** is a class introduced in version **3.0.0** that is designed for receiving and __processing packets__. Unlike traditional methods of packet reception, **DPDispatcher** uses a filtering mechanism, allowing for more flexible management of incoming data processing.
@@ -178,7 +178,7 @@ private async Task OnMessage(DataPackageSource package)
     await client.SendAsync(new State() { Content = "I got your message!" });
 }
 ```
-Here I use that very feature **(ВСТАВИТЬ URL СЮДА ПОТОМ)**:
+Here I use that very feature:
 ```csharp
 var state = package.As<State>();
 ```
