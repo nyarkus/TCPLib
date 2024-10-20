@@ -38,8 +38,7 @@ jobs:
     - if: matrix.build-mode == 'manual'
       name: Build the project
       run: |
-        cd Tests
-        dotnet build Tests.csproj
+        dotnet build
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
