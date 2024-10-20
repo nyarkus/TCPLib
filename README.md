@@ -181,7 +181,7 @@ namespace ExampleClient
         {
             TCPLib.Client.Client client = new Client();
 
-            var server = await client.Connect(IPAddress.Parse("127.0.0.1"), 2024); // 127.0.0.1 - local IP
+            var server = await client.Connect("127.0.0.1:2024"); // 127.0.0.1 - local IP
         }
     }
 }
@@ -228,7 +228,7 @@ namespace ExampleClient
         {
             TCPLib.Client.Client client = new Client();
 
-            var server = await client.Connect(IPAddress.Parse("127.0.0.1"), 2024);
+            var server = await client.Connect("127.0.0.1:2024");
 
             while (true)
             {
